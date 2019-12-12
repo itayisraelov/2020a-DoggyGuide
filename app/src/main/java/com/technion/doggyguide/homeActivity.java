@@ -2,12 +2,15 @@ package com.technion.doggyguide;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class homeActivity extends AppCompatActivity {
 
@@ -42,5 +45,31 @@ public class homeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setOnNavigationItemSelectedListener(navListener);
     }
+    private BottomNavigationView.OnNavigationItemSelectedListener navListener =
+            new BottomNavigationView.OnNavigationItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                    Fragment selectedFragement = null;
+                    switch (menuItem.getItemId()){
+                        case R.id.nav_home:
+                            selectedFragement = new HomeFragment();
+                            break;
+                        case R.id.nav_events:
+                            selectedFragement = new EventsFragment();
+                            break;
+                        case R.id.nav_chat:
+                            selectedFragement = new ChatFragment();
+                            break;
+                        case R.id.nav_notifications:
+                            selectedFragement = new NotificationsFragment();
+                            break;
+                    }
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                            selectedFragement).commit();
+                    return true;
+                }
+            };
 }

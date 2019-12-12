@@ -21,4 +21,13 @@
     <string name="Profile">Profile</string>
     <string name="Settings">Settings</string>
     <string name="Logout">Logout</string>
+    <string name="home">home</string>
+    <string name="events">events</string>
+    <string name="notifications">notifications</string>
+    <string name="chat">chat</string>
+    <string name="notifications_fragment">Notifications Fragment</string>
+    <string name="chat_fragment">chat fragment</string>
+    <string name="events_fragment">Events Fragment</string>
+    <string name="Chat_Fragment">Chat_Fragment</string>
+    <string name="Chat__Fragment">Chat Fragment</string>
 </resources>
