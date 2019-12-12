@@ -30,4 +30,5 @@
     <string name="events_fragment">Events Fragment</string>
     <string name="Chat_Fragment">Chat_Fragment</string>
     <string name="Chat__Fragment">Chat Fragment</string>
+    <string name="home_fragment">Home Fragment</string>
 </resources>
