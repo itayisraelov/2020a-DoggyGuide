@@ -1,6 +1,7 @@
 package com.technion.doggyguide;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -9,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 
 /**
@@ -30,6 +32,8 @@ public class DogOwnerConnectionFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+    private Button mLoginBtn;
+    private Button mSignUpBtn;
 
     public DogOwnerConnectionFragment() {
         // Required empty public constructor
@@ -66,7 +70,18 @@ public class DogOwnerConnectionFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_dog_owner_connection, container, false);
+        View view =  inflater.inflate(R.layout.fragment_dog_owner_connection, container, false);
+        mLoginBtn = view.findViewById(R.id.btnLogin);
+        mSignUpBtn = view.findViewById(R.id.btnLogup);
+
+        mLoginBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), homeActivity.class);
+                startActivity(intent);
+            }
+        });
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event

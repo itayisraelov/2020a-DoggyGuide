@@ -6,4 +6,19 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="login">LogIn</string>
+    <string name="sign_up">Sign up</string>
+    <string name="or">or</string>
+    <string name="password">Password</string>
+    <string name="email">Email</string>
+    <string name="overflow">overflow</string>
+    <string name="element1" >element1</string>
+    <string name="element2">element2</string>
+    <string name="element3">element3</string>
+    <string name="element4">element4</string>
+    <string name="element5">element5</string>
+    <string name="profile">profile</string>
+    <string name="Profile">Profile</string>
+    <string name="Settings">Settings</string>
+    <string name="Logout">Logout</string>
 </resources>
