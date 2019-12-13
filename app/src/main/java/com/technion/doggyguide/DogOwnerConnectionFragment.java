@@ -71,8 +71,8 @@ public class DogOwnerConnectionFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_dog_owner_connection, container, false);
-        mLoginBtn = view.findViewById(R.id.btnLogin);
-        mSignUpBtn = view.findViewById(R.id.btnLogup);
+        mLoginBtn = view.findViewById(R.id.btnDogownerlogin);
+        mSignUpBtn = view.findViewById(R.id.btnDogownersignup);
 
         mLoginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,9 +81,15 @@ public class DogOwnerConnectionFragment extends Fragment {
                 startActivity(intent);
             }
         });
+        mSignUpBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), DogOwnerSignUp.class);
+                startActivity(intent);
+            }
+        });
         return view;
     }
-
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {

@@ -13,12 +13,20 @@
         android:gravity="center_horizontal"
         android:configChanges="orientation">
 
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="30dp"/>
+
         <EditText
             android:id="@+id/edit_email"
             android:layout_width="240dp"
             android:layout_height="wrap_content"
             android:inputType="textEmailAddress"
             android:hint="Email" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="25dp"/>
 
         <EditText
             android:id="@+id/edit_password"
@@ -29,25 +37,39 @@
             tools:layout_editor_absoluteX="16dp"
             tools:layout_editor_absoluteY="125dp" />
 
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="25dp"/>
+
         <Button
-            android:id="@+id/btnLogin"
+            android:id="@+id/btnOrganizationLogin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="LogIn"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/colorPrimary"
             android:background="@color/colorAccent"
             tools:layout_editor_absoluteX="117dp"
             tools:layout_editor_absoluteY="186dp" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="10dp"/>
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="or"/>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="10dp"/>
+
         <Button
-            android:id="@+id/btnLogup"
+            android:id="@+id/btnOrganizationSignup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Sign up"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/colorPrimary"
             android:background="@color/colorAccent"
             tools:layout_editor_absoluteX="107dp"
             tools:layout_editor_absoluteY="255dp" />

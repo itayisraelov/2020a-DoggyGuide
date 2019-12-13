@@ -1,14 +1,15 @@
 package com.technion.doggyguide;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+
+import androidx.fragment.app.Fragment;
 
 
 /**
@@ -30,6 +31,7 @@ public class OrganizationConnectionFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+    private Button mSignUpbtn;
 
     public OrganizationConnectionFragment() {
         // Required empty public constructor
@@ -66,7 +68,16 @@ public class OrganizationConnectionFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_organization_connection, container, false);
+        View view = inflater.inflate(R.layout.fragment_organization_connection, container, false);
+        mSignUpbtn = view.findViewById(R.id.btnOrganizationSignup);
+        mSignUpbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), OrganizationSignUp.class);
+                startActivity(intent);
+            }
+        });
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event

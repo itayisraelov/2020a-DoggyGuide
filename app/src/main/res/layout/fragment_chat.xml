@@ -20,7 +20,7 @@
         app:fabSize="normal"
         android:id="@+id/fab3"
         app:elevation="6dp"
-        app:backgroundTint="@color/colorPrimary"
+        app:backgroundTint="@color/colorAccent"
         android:layout_gravity="end|bottom"
         android:layout_margin="16dp"/>
 

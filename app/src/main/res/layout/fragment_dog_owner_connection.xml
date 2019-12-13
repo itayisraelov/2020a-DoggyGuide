@@ -13,12 +13,20 @@
         android:gravity="center_horizontal"
         android:configChanges="orientation">
 
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="30dp"/>
+
         <EditText
             android:id="@+id/edit_email"
             android:layout_width="240dp"
             android:layout_height="wrap_content"
             android:inputType="textEmailAddress"
             android:hint="@string/email" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="25dp"/>
 
         <EditText
             android:id="@+id/edit_password"
@@ -29,22 +37,37 @@
             tools:layout_editor_absoluteX="16dp"
             tools:layout_editor_absoluteY="125dp" />
 
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="25dp"/>
+
         <Button
-            android:id="@+id/btnLogin"
+            android:id="@+id/btnDogownerlogin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/login"
             android:textColor="#FFFFFF"
             android:background="@color/colorAccent"
+            android:onClick="loginClick"
             tools:layout_editor_absoluteX="117dp"
             tools:layout_editor_absoluteY="186dp"
             tools:ignore="OnClick" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="10dp"/>
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/or"/>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="10dp"/>
+
         <Button
-            android:id="@+id/btnLogup"
+            android:id="@+id/btnDogownersignup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/sign_up"
