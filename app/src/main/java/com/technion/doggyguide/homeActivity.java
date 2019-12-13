@@ -11,6 +11,10 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.technion.doggyguide.homeScreen.ChatFragment;
+import com.technion.doggyguide.homeScreen.EventsFragment;
+import com.technion.doggyguide.homeScreen.HomeFragment;
+import com.technion.doggyguide.homeScreen.NotificationsFragment;
 
 public class homeActivity extends AppCompatActivity {
 

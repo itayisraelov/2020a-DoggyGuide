@@ -1,9 +1,7 @@
 package com.technion.doggyguide;
 
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.View;
 
 
 import com.google.android.material.tabs.TabLayout;
@@ -12,6 +10,8 @@ import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
 
+import com.technion.doggyguide.loginScreen.DogOwnerConnectionFragment;
+import com.technion.doggyguide.loginScreen.OrganizationConnectionFragment;
 import com.technion.doggyguide.ui.main.SectionsPagerAdapter;
 
 public class MainActivity extends AppCompatActivity implements

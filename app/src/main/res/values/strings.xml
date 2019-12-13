@@ -35,4 +35,5 @@
     <string name="message">Message</string>
     <string name="send_on_channel_1">Send on Channel 1</string>
     <string name="send_on_channel_2">Send on Channel 2</string>
+    <string name="switch_">Switch</string>
 </resources>

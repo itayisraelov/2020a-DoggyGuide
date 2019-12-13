@@ -1,7 +1,8 @@
-package com.technion.doggyguide;
+package com.technion.doggyguide.homeScreen;
 
 import android.app.Notification;
 import android.app.PendingIntent;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -10,20 +11,27 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.technion.doggyguide.notifications.NotificationReceiver;
+import com.technion.doggyguide.R;
+import com.technion.doggyguide.homeActivity;
+import com.technion.doggyguide.notifications.TimePickerFragment;
 
-import static com.technion.doggyguide.App.CHANNEL_1_ID;
-import static com.technion.doggyguide.App.CHANNEL_2_ID;
+import static com.technion.doggyguide.app.App.CHANNEL_1_ID;
+import static com.technion.doggyguide.app.App.CHANNEL_2_ID;
 
-public class NotificationsFragment extends Fragment {
+public class NotificationsFragment extends Fragment implements TimePickerDialog.OnTimeSetListener {
 
     private NotificationManagerCompat notificationManager;
     private EditText editTextTitle;
@@ -61,6 +69,15 @@ public class NotificationsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 sendOnChannel2(v);
+            }
+        });
+
+        Button btn_time_picker = (Button) view.findViewById(R.id.time_picker);
+        btn_time_picker.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogFragment timePicker = new TimePickerFragment();
+                timePicker.show(getFragmentManager(), "time picker");
             }
         });
         return view;
@@ -107,5 +124,11 @@ public class NotificationsFragment extends Fragment {
                 .build();
 
         notificationManager.notify(2, notification);
+    }
+
+    @Override
+    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+        TextView textView =  view.findViewById(R.id.textView1);
+        textView.setText("Hour: " + hourOfDay + " Minute: " + minute);
     }
 }
