@@ -12,7 +12,7 @@
     <string name="password">Password</string>
     <string name="email">Email</string>
     <string name="overflow">overflow</string>
-    <string name="element1" >element1</string>
+    <string name="element1">element1</string>
     <string name="element2">element2</string>
     <string name="element3">element3</string>
     <string name="element4">element4</string>
@@ -31,4 +31,8 @@
     <string name="Chat_Fragment">Chat_Fragment</string>
     <string name="Chat__Fragment">Chat Fragment</string>
     <string name="home_fragment">Home Fragment</string>
+    <string name="title">Title</string>
+    <string name="message">Message</string>
+    <string name="send_on_channel_1">Send on Channel 1</string>
+    <string name="send_on_channel_2">Send on Channel 2</string>
 </resources>
