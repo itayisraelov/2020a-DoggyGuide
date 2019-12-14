@@ -56,6 +56,7 @@ public class DogOwnerSignUp extends AppCompatActivity {
                             //Sign up succeded
                             FirebaseAuth.getInstance().signOut();
                             finish();
+                            //TODO: insert the user id to the organizations' database
                             Intent intent = new Intent(DogOwnerSignUp.this, MainActivity.class);
                             startActivity(intent);
                         } else {
