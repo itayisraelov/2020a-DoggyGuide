@@ -18,6 +18,9 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class OrganizationSignUp extends AppCompatActivity {
     private FirebaseAuth mAuth;
+    private EditText emailtxt;
+    private EditText pwdtxt;
+    private EditText pwdconfirmtxt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,29 +28,25 @@ public class OrganizationSignUp extends AppCompatActivity {
         setContentView(R.layout.activity_organization_sign_up);
         getSupportActionBar().setTitle("Sign Up");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+        //Initialize buttons
+        emailtxt = findViewById(R.id.organizationemail);
+        pwdtxt = findViewById(R.id.organizationpassword);
+        pwdconfirmtxt = findViewById(R.id.organizationpasswordconfirmation);
         //Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
     }
 
     public void signUpbtnHandler(View view) {
-        EditText email = findViewById(R.id.organizationemail);
-        EditText pwd = findViewById(R.id.organizationpassword);
-        EditText pwdconfirm = findViewById(R.id.organizationpasswordconfirmation);
-        if (email.getText().toString().isEmpty()) {
-            Toast.makeText(this, "Please enter an email.", Toast.LENGTH_SHORT).show();
+        String email = emailtxt.getText().toString();
+        String pwd = pwdtxt.getText().toString();
+        String pwdconfirm = pwdconfirmtxt.getText().toString();
+        if (!validateSignup(email, pwd, pwdconfirm))
             return;
-        } else if (pwd.getText().toString().isEmpty()) {
-            Toast.makeText(this, "Please enter a password.", Toast.LENGTH_SHORT).show();
-            return;
-        } else if (pwdconfirm.getText().toString().isEmpty()) {
-            Toast.makeText(this, "Please enter a password confirmation.", Toast.LENGTH_SHORT).show();
-            return;
-        } else if (!pwd.getText().toString().equals(pwdconfirm.getText().toString())) {
-            Toast.makeText(this, "Passwords do not match.", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        mAuth.createUserWithEmailAndPassword(email.getText().toString(), pwd.getText().toString()).
+        signUpWithEmailAndPassword(email, pwd);
+    }
+
+    private void signUpWithEmailAndPassword(String email, String pwd) {
+        mAuth.createUserWithEmailAndPassword(email, pwd).
                 addOnCompleteListener(OrganizationSignUp.this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -55,11 +54,12 @@ public class OrganizationSignUp extends AppCompatActivity {
                             //Sign up succeded
                             FirebaseAuth.getInstance().signOut();
                             finish();
+                            //TODO: insert the user id to the organizations' database
                             Intent intent = new Intent(OrganizationSignUp.this, MainActivity.class);
                             startActivity(intent);
                         } else {
                             Toast.makeText(OrganizationSignUp.this, task.getException().getMessage(),
-                                                                                    Toast.LENGTH_SHORT).show();
+                                    Toast.LENGTH_SHORT).show();
                         }
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -69,6 +69,30 @@ public class OrganizationSignUp extends AppCompatActivity {
             }
         });
     }
+
+    private boolean validateSignup(String email, String pwd, String pwdconfirm) {
+        if (email.isEmpty()) {
+            emailtxt.setError("Please enter an email address.");
+            emailtxt.requestFocus();
+            return false;
+        }
+        if (pwd.isEmpty()) {
+            pwdtxt.setError("Please enter a password.");
+            pwdtxt.requestFocus();
+            return false;
+        }
+        if (pwd.isEmpty()) {
+            pwdconfirmtxt.setError("Please enter a password confirmation.");
+            pwdconfirmtxt.requestFocus();
+            return false;
+        } else if (!pwd.equals(pwdconfirm)) {
+            pwdconfirmtxt.setError("The confirmation password doesn't match.");
+            pwdconfirmtxt.requestFocus();
+            return false;
+        }
+        return true;
+    }
+
 
     @Override
     public void onStart() {

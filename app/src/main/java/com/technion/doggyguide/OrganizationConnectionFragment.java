@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
@@ -32,6 +33,7 @@ public class OrganizationConnectionFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
     private Button mSignUpbtn;
+    private Button mLoginbtn;
 
     public OrganizationConnectionFragment() {
         // Required empty public constructor
@@ -70,6 +72,14 @@ public class OrganizationConnectionFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_organization_connection, container, false);
         mSignUpbtn = view.findViewById(R.id.btnOrganizationSignup);
+        mLoginbtn = view.findViewById(R.id.btnOrganizationLogin);
+
+        mLoginbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getActivity(), "Upcoming update", Toast.LENGTH_SHORT).show();
+            }
+        });
         mSignUpbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

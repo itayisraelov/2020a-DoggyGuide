@@ -18,7 +18,7 @@
             android:layout_height="30dp"/>
 
         <EditText
-            android:id="@+id/edit_email"
+            android:id="@+id/home_dogowneremail"
             android:layout_width="240dp"
             android:layout_height="wrap_content"
             android:inputType="textEmailAddress"
@@ -29,7 +29,7 @@
             android:layout_height="25dp"/>
 
         <EditText
-            android:id="@+id/edit_password"
+            android:id="@+id/home_dogownerpassword"
             android:layout_width="240dp"
             android:layout_height="wrap_content"
             android:hint="@string/password"
