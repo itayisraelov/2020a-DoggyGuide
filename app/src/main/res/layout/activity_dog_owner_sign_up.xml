@@ -109,6 +109,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:background="@color/colorAccent"
+        android:onClick="signUpbtnHandler"
         android:text="Sign Up"
         android:textColor="@color/colorPrimary"
         app:layout_constraintBottom_toBottomOf="parent"

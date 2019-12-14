@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "649226010831",
-    "firebase_url": "https://doggyguide-1687f.firebaseio.com",
-    "project_id": "doggyguide-1687f",
-    "storage_bucket": "doggyguide-1687f.appspot.com"
+    "project_number": "146336242795",
+    "firebase_url": "https://doggyguide-8795d.firebaseio.com",
+    "project_id": "doggyguide-8795d",
+    "storage_bucket": "doggyguide-8795d.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:649226010831:android:d2edd77e64ad60dc38b7ba",
+        "mobilesdk_app_id": "1:146336242795:android:4a5267c8b853f88483652e",
         "android_client_info": {
           "package_name": "com.technion.doggyguide"
         }
       },
       "oauth_client": [
         {
-          "client_id": "649226010831-edcjs8jstmlqimllvi5nhbpfdq32gbv4.apps.googleusercontent.com",
+          "client_id": "146336242795-2790hj5p7eqm4u399gkt7av8gsrpee70.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.technion.doggyguide",
@@ -23,20 +23,20 @@
           }
         },
         {
-          "client_id": "649226010831-tnug19s267eml0bmg27j9fom9qdpcr59.apps.googleusercontent.com",
+          "client_id": "146336242795-gt474assidtgf1oh5stqrqj56cf1dp1h.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCHdW1PhbIE8Kw-Kw42Meifiu1KZSYZpG4"
+          "current_key": "AIzaSyCDt1jYz8lVW2zmCyTtsogRa15Np1YB4MI"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "649226010831-tnug19s267eml0bmg27j9fom9qdpcr59.apps.googleusercontent.com",
+              "client_id": "146336242795-gt474assidtgf1oh5stqrqj56cf1dp1h.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

@@ -58,7 +58,8 @@ public class OrganizationSignUp extends AppCompatActivity {
                             Intent intent = new Intent(OrganizationSignUp.this, MainActivity.class);
                             startActivity(intent);
                         } else {
-                            Toast.makeText(OrganizationSignUp.this, "Sign Up failed", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(OrganizationSignUp.this, task.getException().getMessage(),
+                                                                                    Toast.LENGTH_SHORT).show();
                         }
                     }
                 }).addOnFailureListener(new OnFailureListener() {
