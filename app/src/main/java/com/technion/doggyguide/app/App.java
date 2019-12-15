@@ -1,4 +1,4 @@
-package com.technion.doggyguide;
+package com.technion.doggyguide.app;
 
 import android.app.Application;
 import android.app.NotificationChannel;

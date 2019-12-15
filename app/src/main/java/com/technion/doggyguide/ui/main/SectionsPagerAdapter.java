@@ -8,8 +8,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
-import com.technion.doggyguide.DogOwnerConnectionFragment;
-import com.technion.doggyguide.OrganizationConnectionFragment;
+import com.technion.doggyguide.loginScreen.DogOwnerConnectionFragment;
+import com.technion.doggyguide.loginScreen.OrganizationConnectionFragment;
 import com.technion.doggyguide.R;
 
 /**

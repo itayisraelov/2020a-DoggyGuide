@@ -1,4 +1,4 @@
-package com.technion.doggyguide;
+package com.technion.doggyguide.notifications;
 
 import android.app.Dialog;
 import android.app.TimePickerDialog;

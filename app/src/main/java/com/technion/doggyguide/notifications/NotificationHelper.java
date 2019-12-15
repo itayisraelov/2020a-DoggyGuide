@@ -1,4 +1,4 @@
-package com.technion.doggyguide;
+package com.technion.doggyguide.notifications;
 
 import android.annotation.TargetApi;
 import android.app.NotificationChannel;
@@ -8,6 +8,8 @@ import android.content.ContextWrapper;
 import android.os.Build;
 
 import androidx.core.app.NotificationCompat;
+
+import com.technion.doggyguide.R;
 
 public class NotificationHelper extends ContextWrapper {
     public static final String channelID = "channelID";

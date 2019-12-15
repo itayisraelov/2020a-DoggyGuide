@@ -1,4 +1,4 @@
-package com.technion.doggyguide;
+package com.technion.doggyguide.homeScreen;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.technion.doggyguide.R;
 
 public class HomeFragment extends Fragment {
     @Nullable
