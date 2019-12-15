@@ -23,54 +23,77 @@
     <Space
         android:layout_width="match_parent"
         android:layout_height="25dp"/>
-
-    <EditText
-        android:id="@+id/post_startdate"
+    <TextView
+        android:id="@+id/post_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:ems="12"
-        android:hint="Start Date"
-        android:inputType="date" />
+        android:ems="12" />
+    <Button
+        android:id="@+id/post_datepicker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:background="@color/colorPrimaryDark"
+        android:onClick="datePickerHandler"
+        android:text="Pick a date"
+        android:textColor="@color/colorTabText"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.458"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/post_name"
+        app:layout_constraintVertical_bias="0.046" />
 
     <Space
         android:layout_width="match_parent"
         android:layout_height="25dp"/>
-
-    <EditText
-        android:id="@+id/post_enddate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:ems="12"
-        android:hint="End Date"
-        android:inputType="date" />
-
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="25dp"/>
-
-    <EditText
+    <TextView
         android:id="@+id/post_starttime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:ems="12"
-        android:hint="Start Time"
-        android:inputType="time" />
+        android:ems="12"/>
+    <Button
+        android:id="@+id/post_starttimepicker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:background="@color/colorPrimaryDark"
+        android:onClick="startTimeHandler"
+        android:text="start time"
+        android:textColor="@color/colorTabText"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.458"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/post_datepicker"
+        app:layout_constraintVertical_bias="0.046" />
 
     <Space
         android:layout_width="match_parent"
         android:layout_height="25dp"/>
-
-    <EditText
+    <TextView
         android:id="@+id/post_endtime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:ems="12"
-        android:hint="Organization Email"
-        android:inputType="textEmailAddress" />
+        android:ems="12" />
+    <Button
+        android:id="@+id/post_endtimepicker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:background="@color/colorPrimaryDark"
+        android:onClick="endTimeHandler"
+        android:text="end time"
+        android:textColor="@color/colorTabText"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.458"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/post_starttimepicker"
+        app:layout_constraintVertical_bias="0.046" />
 
     <Space
         android:layout_width="match_parent"
@@ -103,7 +126,7 @@
         android:layout_height="25dp"/>
 
     <Button
-        android:id="@+id/createaccountdogowner"
+        android:id="@+id/post_createpost"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
