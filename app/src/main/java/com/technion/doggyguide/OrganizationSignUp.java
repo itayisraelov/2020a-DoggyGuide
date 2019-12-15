@@ -27,6 +27,7 @@ public class OrganizationSignUp extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_organization_sign_up);
         getSupportActionBar().setTitle("Sign Up");
+        getSupportActionBar().setHomeAsUpIndicator(R.mipmap.ic_up_button);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         //Initialize buttons
         emailtxt = findViewById(R.id.organizationemail);

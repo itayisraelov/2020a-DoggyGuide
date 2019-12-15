@@ -27,7 +27,9 @@ public class DogOwnerSignUp extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dog_owner_sign_up);
         getSupportActionBar().setTitle("Sign Up");
+        getSupportActionBar().setHomeAsUpIndicator(R.mipmap.ic_up_button);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         //Initialize buttons
         emailtxt = findViewById(R.id.dogowneremail);
         pwdtxt = findViewById(R.id.dogownerpassword);

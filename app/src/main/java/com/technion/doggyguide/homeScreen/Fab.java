@@ -33,6 +33,7 @@ public class Fab extends AppCompatActivity implements DatePickerDialog.OnDateSet
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fab);
         getSupportActionBar().setTitle("Post a request");
+        getSupportActionBar().setHomeAsUpIndicator(R.mipmap.ic_up_button);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
