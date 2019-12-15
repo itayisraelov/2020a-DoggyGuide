@@ -10,9 +10,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".homeScreen.Fab"
+            android:parentActivityName=".homeActivity"></activity>
         <activity
             android:name=".OrganizationSignUp"
-            android:parentActivityName=".MainActivity"></activity>
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".DogOwnerSignUp"
             android:parentActivityName=".MainActivity" />
@@ -31,7 +33,6 @@
         </activity>
 
         <receiver android:name=".notifications.NotificationReceiver" />
-
     </application>
 
 </manifest>

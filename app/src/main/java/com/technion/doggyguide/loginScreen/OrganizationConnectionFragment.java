@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
+import com.technion.doggyguide.OrganizationSignUp;
 import com.technion.doggyguide.R;
 
 

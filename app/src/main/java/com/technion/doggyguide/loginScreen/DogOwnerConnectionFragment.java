@@ -20,6 +20,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import com.technion.doggyguide.DogOwnerSignUp;
 import com.technion.doggyguide.R;
 import com.technion.doggyguide.homeActivity;
 
