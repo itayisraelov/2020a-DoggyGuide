@@ -1,5 +1,6 @@
 package com.technion.doggyguide.homeScreen;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,7 +25,8 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 //Start new activity
-                Toast.makeText(getActivity(), "fab clicked", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getActivity(), Fab.class);
+                startActivity(intent);
             }
         });
 
