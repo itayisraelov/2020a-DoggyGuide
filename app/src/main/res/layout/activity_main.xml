@@ -14,7 +14,7 @@
         <ImageView
             android:id="@+id/signin_pups"
             android:layout_width="match_parent"
-            android:layout_height="196dp"
+            android:layout_height="202dp"
             app:srcCompat="@drawable/signin_pups" />
 
         <com.google.android.material.tabs.TabLayout
