@@ -55,11 +55,25 @@ public class DogOwnerSignUp extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             //Sign up succeded
-                            FirebaseAuth.getInstance().signOut();
-                            finish();
-                            //TODO: insert the user id to the organizations' database
-                            Intent intent = new Intent(DogOwnerSignUp.this, MainActivity.class);
-                            startActivity(intent);
+                            mAuth.getCurrentUser().sendEmailVerification().
+                                    addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()) {
+                                                Toast.makeText(DogOwnerSignUp.this, "Please check your email for verification.",
+                                                        Toast.LENGTH_SHORT).show();
+//                                                FirebaseAuth.getInstance().signOut();
+//                                                finish();
+                                                //TODO: insert the user id to the organizations' database
+                                                Intent intent = new Intent(DogOwnerSignUp.this, MainActivity.class);
+                                                startActivity(intent);
+                                            } else {
+                                                Toast.makeText(DogOwnerSignUp.this, task.getException().getMessage(),
+                                                        Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                    });
+
                         } else {
                             Toast.makeText(DogOwnerSignUp.this, task.getException().getMessage(),
                                     Toast.LENGTH_SHORT).show();

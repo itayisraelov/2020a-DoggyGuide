@@ -138,8 +138,15 @@ public class DogOwnerConnectionFragment extends Fragment {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()) {
-                            Intent intent = new Intent(getActivity(), homeActivity.class);
-                            startActivity(intent);
+                            if (mAuth.getCurrentUser().isEmailVerified()) {
+                                Intent intent = new Intent(getActivity(), homeActivity.class);
+                                startActivity(intent);
+                            } else {
+                                Toast.makeText(getActivity(),
+                                        "This email is registered but hasn't been verified yet.\nPlease verify your email",
+                                        Toast.LENGTH_LONG).show();
+                            }
+
                         } else {
                             Toast.makeText(getActivity(), task.getException().getMessage(),
                                     Toast.LENGTH_SHORT).show();
