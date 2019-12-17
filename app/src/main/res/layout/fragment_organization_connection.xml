@@ -46,7 +46,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="LogIn"
-            android:textColor="@color/colorPrimary"
             android:background="@color/colorAccent"
             tools:layout_editor_absoluteX="117dp"
             tools:layout_editor_absoluteY="186dp" />
@@ -69,7 +68,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Sign up"
-            android:textColor="@color/colorPrimary"
             android:background="@color/colorAccent"
             tools:layout_editor_absoluteX="107dp"
             tools:layout_editor_absoluteY="255dp" />

@@ -21,9 +21,7 @@
             android:id="@+id/tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorSigninTabsColor"
-            app:tabIndicatorColor="@color/colorAccent"
-            app:tabTextColor="@color/colorTabText" />
+            app:tabIndicatorColor="@color/colorAccent"/>
 
     </com.google.android.material.appbar.AppBarLayout>
 
