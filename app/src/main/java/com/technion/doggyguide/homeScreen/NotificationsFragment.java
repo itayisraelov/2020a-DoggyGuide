@@ -12,57 +12,120 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.technion.doggyguide.ExampleAdapter;
+import com.technion.doggyguide.ExampleItem;
 import com.technion.doggyguide.R;
+import com.technion.doggyguide.homeScreen.alarm.walkAlarmActivity;
+import com.technion.doggyguide.homeScreen.alarm.showerAlarmActivity;
+import com.technion.doggyguide.homeScreen.alarm.eatAlarmActivity;
 import com.technion.doggyguide.notifications.AlertReceiver;
-import com.technion.doggyguide.notifications.TimePickerFragment;
 
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 public class NotificationsFragment extends Fragment implements TimePickerDialog.OnTimeSetListener {
     private TextView mTextView;
+    private ArrayList<ExampleItem> mExampleList;
+    private RecyclerView mRecyclerView;
+    private ExampleAdapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
+    private View mView;
+
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.fragment_notifications, container, false);
-        FloatingActionButton fab = view.findViewById(R.id.fab4);
+        mView = view;
         mTextView = view.findViewById(R.id.textView);
-        Button buttonTimePicker = view.findViewById(R.id.button_time_picker);
-        Button buttonCancelAlarm = view.findViewById(R.id.button_cancel);
+//        Button buttonTimePicker = view.findViewById(R.id.button_time_picker);
+//        Button buttonCancelAlarm = view.findViewById(R.id.button_cancel);
 
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getActivity(), "fab clicked", Toast.LENGTH_SHORT).show();
-            }
-        });
-        buttonTimePicker.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DialogFragment timePicker = new TimePickerFragment();
-                timePicker.show(getActivity().getSupportFragmentManager(), "time picker");
-            }
-        });
-        buttonCancelAlarm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                cancelAlarm();
-            }
-        });
-
+        createExampleList();
+        buildRecyclerView();
+//        buttonTimePicker.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                DialogFragment timePicker = new TimePickerFragment();
+//                timePicker.show(getActivity().getSupportFragmentManager(), "time picker");
+//            }
+//        });
+//        buttonCancelAlarm.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                cancelAlarm();
+//            }
+//        });
         return view;
+    }
+
+    public void changeItem(int position, String text) {
+        mExampleList.get(position).changeText1(text);
+        mAdapter.notifyItemChanged(position);
+    }
+
+    public void createExampleList() {
+        mExampleList = new ArrayList<>();
+        mExampleList.add(new ExampleItem(R.mipmap.dog_walk, "Take your dog for a walk"));
+        mExampleList.add(new ExampleItem(R.mipmap.dog_shower, "Give your dog shower"));
+        mExampleList.add(new ExampleItem(R.mipmap.dog_eating, "Feed your dog"));
+    }
+
+    public void buildRecyclerView() {
+        mRecyclerView = mView.findViewById(R.id.recyclerView);
+        mRecyclerView.setHasFixedSize(true);
+        mLayoutManager = new LinearLayoutManager(getContext());
+        mAdapter = new ExampleAdapter(mExampleList);
+
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setAdapter(mAdapter);
+
+        mAdapter.setOnItemClickListener(new ExampleAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                changeItem(position, "Clicked");
+            }
+
+            @Override
+            public void onWalkAlarmClick(int position) {
+
+                beginWalkAlarmActivity();
+            }
+
+            @Override
+            public void onShowerAlarmClick(int position) {
+                beginShowerAlarmActivity();
+            }
+
+            @Override
+            public void onFeedAlarmClick(int position) {
+                beginFeedAlarmActivity();
+            }
+        });
+    }
+    public void beginWalkAlarmActivity(){
+        Intent intent = new Intent(getActivity(), walkAlarmActivity.class);
+        startActivity(intent);
+    }
+    public void beginShowerAlarmActivity(){
+        Intent intent = new Intent(getActivity(), showerAlarmActivity.class);
+        startActivity(intent);
+    }
+    public void beginFeedAlarmActivity(){
+        Intent intent = new Intent(getActivity(), eatAlarmActivity.class);
+        startActivity(intent);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
