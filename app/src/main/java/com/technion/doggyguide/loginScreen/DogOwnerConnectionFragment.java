@@ -140,6 +140,7 @@ public class DogOwnerConnectionFragment extends Fragment {
                         if(task.isSuccessful()) {
                             if (mAuth.getCurrentUser().isEmailVerified()) {
                                 Intent intent = new Intent(getActivity(), homeActivity.class);
+                                getActivity().finish();
                                 startActivity(intent);
                             } else {
                                 Toast.makeText(getActivity(),

@@ -15,7 +15,6 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 public class DogOwnerSignUp extends AppCompatActivity {
     private FirebaseAuth mAuth;
@@ -63,10 +62,10 @@ public class DogOwnerSignUp extends AppCompatActivity {
                                             if (task.isSuccessful()) {
                                                 Toast.makeText(DogOwnerSignUp.this, "Please check your email for verification.",
                                                         Toast.LENGTH_LONG).show();
-//                                                FirebaseAuth.getInstance().signOut();
-//                                                finish();
                                                 //TODO: insert the user id to the organizations' database
+                                                mAuth.signOut();
                                                 Intent intent = new Intent(DogOwnerSignUp.this, MainActivity.class);
+                                                finish();
                                                 startActivity(intent);
                                             } else {
                                                 Toast.makeText(DogOwnerSignUp.this, task.getException().getMessage(),
@@ -111,9 +110,4 @@ public class DogOwnerSignUp extends AppCompatActivity {
         return true;
     }
 
-    @Override
-    public void onStart()
-    {
-        super.onStart();
-    }
 }

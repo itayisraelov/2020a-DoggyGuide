@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity implements
         OrganizationConnectionFragment.OnFragmentInteractionListener {
 
     private FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener mAuthStateListener;
+    //private FirebaseAuth.AuthStateListener mAuthStateListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,32 +43,22 @@ public class MainActivity extends AppCompatActivity implements
 
         // Initialize Firebase Authentication
         mAuth = FirebaseAuth.getInstance();
-
-        mAuthStateListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = mAuth.getCurrentUser();
-                if (user != null) {
-                    //Toast.makeText(MainActivity.this,"You are logged in",Toast.LENGTH_SHORT).show();
-                    //Intent intent = new Intent(MainActivity.this, homeActivity.class);
-                    //startActivity(intent);
-                } else {
-                    Toast.makeText(MainActivity.this,"Please login",Toast.LENGTH_SHORT).show();
-                }
-            }
-        };
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if (currentUser != null) {
-            Intent intent = new Intent(this, homeActivity.class);
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user != null) {
+            Toast.makeText(MainActivity.this,"You are logged in",Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(MainActivity.this, homeActivity.class);
+            finish();
             startActivity(intent);
+        } else {
+            Toast.makeText(MainActivity.this,"Please login",Toast.LENGTH_SHORT).show();
         }
-        mAuth.addAuthStateListener(mAuthStateListener);
     }
+
 
     @Override
     public void onFragmentInteraction(Uri uri) {
