@@ -39,4 +39,6 @@
     <string name="no_alarm_set">No Alarm set</string>
     <string name="cancel_alarm">cancel alarm</string>
     <string name="open_time_picker">open time picker</string>
+    <string name="alarm_activity">alarm activity</string>
+    <string name="walking_alarm_activity">walking alarm activity</string>
 </resources>
