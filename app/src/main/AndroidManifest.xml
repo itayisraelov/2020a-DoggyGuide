@@ -32,7 +32,7 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".notifications.NotificationReceiver" />
+        <receiver android:name=".notifications.AlertReceiver" />
     </application>
 
 </manifest>

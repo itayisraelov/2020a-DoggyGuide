@@ -58,23 +58,24 @@ public class homeActivity extends AppCompatActivity {
             new BottomNavigationView.OnNavigationItemSelectedListener() {
                 @Override
                 public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                    Fragment selectedFragement = null;
                     switch (menuItem.getItemId()){
                         case R.id.nav_home:
-                            selectedFragement = new HomeFragment();
+                            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                                    new HomeFragment(), "Home_Fragment").commit();
                             break;
                         case R.id.nav_events:
-                            selectedFragement = new EventsFragment();
+                            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                                    new EventsFragment(), "Events_Fragment").commit();
                             break;
                         case R.id.nav_chat:
-                            selectedFragement = new ChatFragment();
+                            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                                    new ChatFragment(), "Chat_Fragment").commit();
                             break;
                         case R.id.nav_notifications:
-                            selectedFragement = new NotificationsFragment();
+                            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                                    new NotificationsFragment(), "Notifications_Fragment").commit();
                             break;
                     }
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                            selectedFragement).commit();
                     return true;
                 }
             };

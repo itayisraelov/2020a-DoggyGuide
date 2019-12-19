@@ -36,4 +36,7 @@
     <string name="send_on_channel_1">Send on Channel 1</string>
     <string name="send_on_channel_2">Send on Channel 2</string>
     <string name="switch_">Switch</string>
+    <string name="no_alarm_set">No Alarm set</string>
+    <string name="cancel_alarm">cancel alarm</string>
+    <string name="open_time_picker">open time picker</string>
 </resources>

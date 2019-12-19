@@ -13,9 +13,6 @@
         android:layout_gravity="center"
         android:textSize="30sp"
         android:layout_centerInParent="true"/>
-    <TextClock
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:layout_width="wrap_content"
@@ -43,6 +40,7 @@
             android:text="@string/no_alarm_set"
             android:textSize="30sp" />
 
+
         <Button
             android:id="@+id/button_time_picker"
             android:layout_width="wrap_content"
@@ -55,6 +53,11 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="27dp"
             android:text="@string/cancel_alarm" />
+
+        <TextClock
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:textStyle="bold"/>
     </LinearLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

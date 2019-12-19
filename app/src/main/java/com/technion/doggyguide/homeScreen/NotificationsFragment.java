@@ -1,41 +1,36 @@
 package com.technion.doggyguide.homeScreen;
 
-import android.app.Notification;
+
+import android.annotation.SuppressLint;
+import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
-
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.technion.doggyguide.notifications.NotificationReceiver;
 import com.technion.doggyguide.R;
-import com.technion.doggyguide.homeActivity;
+import com.technion.doggyguide.notifications.AlertReceiver;
 import com.technion.doggyguide.notifications.TimePickerFragment;
 
-import static com.technion.doggyguide.app.App.CHANNEL_1_ID;
-import static com.technion.doggyguide.app.App.CHANNEL_2_ID;
+import java.text.DateFormat;
+import java.util.Calendar;
 
 public class NotificationsFragment extends Fragment implements TimePickerDialog.OnTimeSetListener {
-
-    private NotificationManagerCompat notificationManager;
-    private EditText editTextTitle;
-    private EditText editTextMessage;
+    private TextView mTextView;
 
     @Nullable
     @Override
@@ -43,92 +38,72 @@ public class NotificationsFragment extends Fragment implements TimePickerDialog.
                              @Nullable Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.fragment_notifications, container, false);
         FloatingActionButton fab = view.findViewById(R.id.fab4);
+        mTextView = view.findViewById(R.id.textView);
+        Button buttonTimePicker = view.findViewById(R.id.button_time_picker);
+        Button buttonCancelAlarm = view.findViewById(R.id.button_cancel);
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(getActivity(), "fab clicked", Toast.LENGTH_SHORT).show();
             }
         });
-
-        Button btn_send_ch_1 = view.findViewById(R.id.send_channel1);
-        Button btn_send_ch_2 = view.findViewById(R.id.send_channel2);
-
-        notificationManager = NotificationManagerCompat.from(getActivity());
-
-        editTextTitle = view.findViewById(R.id.edit_text_title);
-        editTextMessage = view.findViewById(R.id.edit_text_message);
-
-        btn_send_ch_1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sendOnChannel1(v);
-            }
-        });
-
-        btn_send_ch_2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sendOnChannel2(v);
-            }
-        });
-
-        Button btn_time_picker = (Button) view.findViewById(R.id.time_picker);
-        btn_time_picker.setOnClickListener(new View.OnClickListener() {
+        buttonTimePicker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DialogFragment timePicker = new TimePickerFragment();
-                timePicker.show(getFragmentManager(), "time picker");
+                timePicker.show(getActivity().getSupportFragmentManager(), "time picker");
             }
         });
+        buttonCancelAlarm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cancelAlarm();
+            }
+        });
+
         return view;
     }
 
-    private void sendOnChannel1(View v) {
-        String title = editTextTitle.getText().toString();
-        String message = editTextMessage.getText().toString();
-
-        Intent activityIntent = new Intent(getActivity(), homeActivity.class);
-        PendingIntent contentIntent = PendingIntent.getActivity(getActivity(),
-                0, activityIntent, 0);
-
-        Intent broadcastIntent = new Intent(getActivity(), NotificationReceiver.class);
-        broadcastIntent.putExtra("toastMessage", message);
-        PendingIntent actionIntent = PendingIntent.getBroadcast(getActivity(),
-                0, broadcastIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        Notification notification = new NotificationCompat.Builder(getActivity(), CHANNEL_1_ID)
-                .setSmallIcon(R.drawable.ic_one)
-                .setContentTitle(title)
-                .setContentText(message)
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
-                .setColor(Color.BLUE)
-                .setContentIntent(contentIntent)
-                .setAutoCancel(true)
-                .setOnlyAlertOnce(true)
-                .addAction(R.mipmap.ic_launcher, "Toast", actionIntent)
-                .build();
-
-        notificationManager.notify(1, notification);
-    }
-
-    private void sendOnChannel2(View v) {
-        String title = editTextTitle.getText().toString();
-        String message = editTextMessage.getText().toString();
-
-        Notification notification = new NotificationCompat.Builder(getActivity(), CHANNEL_2_ID)
-                .setSmallIcon(R.drawable.ic_two)
-                .setContentTitle(title)
-                .setContentText(message)
-                .setPriority(NotificationCompat.PRIORITY_LOW)
-                .build();
-
-        notificationManager.notify(2, notification);
-    }
-
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-        TextView textView =  view.findViewById(R.id.textView1);
-        textView.setText("Hour: " + hourOfDay + " Minute: " + minute);
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.HOUR_OF_DAY, hourOfDay);
+        c.set(Calendar.MINUTE, minute);
+        c.set(Calendar.SECOND, 0);
+
+        updateTimeText(c);
+        startAlarm(c);
+    }
+
+    private void updateTimeText(Calendar c) {
+        String timeText = "Alarm set for: ";
+        timeText += DateFormat.getTimeInstance(DateFormat.SHORT).format(c.getTime());
+
+        mTextView.setText(timeText);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    private void startAlarm(Calendar c) {
+        AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(getActivity(), AlertReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), 1, intent, 0);
+
+        if (c.before(Calendar.getInstance())) {
+            c.add(Calendar.DATE, 1);
+        }
+
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void cancelAlarm() {
+        AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(getActivity(), AlertReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), 1, intent, 0);
+
+        alarmManager.cancel(pendingIntent);
+        mTextView.setText("Alarm canceled");
     }
 }
