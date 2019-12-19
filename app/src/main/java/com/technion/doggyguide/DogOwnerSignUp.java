@@ -15,6 +15,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class DogOwnerSignUp extends AppCompatActivity {
     private FirebaseAuth mAuth;
@@ -61,7 +62,7 @@ public class DogOwnerSignUp extends AppCompatActivity {
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if (task.isSuccessful()) {
                                                 Toast.makeText(DogOwnerSignUp.this, "Please check your email for verification.",
-                                                        Toast.LENGTH_SHORT).show();
+                                                        Toast.LENGTH_LONG).show();
 //                                                FirebaseAuth.getInstance().signOut();
 //                                                finish();
                                                 //TODO: insert the user id to the organizations' database
@@ -69,14 +70,14 @@ public class DogOwnerSignUp extends AppCompatActivity {
                                                 startActivity(intent);
                                             } else {
                                                 Toast.makeText(DogOwnerSignUp.this, task.getException().getMessage(),
-                                                        Toast.LENGTH_SHORT).show();
+                                                        Toast.LENGTH_LONG).show();
                                             }
                                         }
                                     });
 
                         } else {
                             Toast.makeText(DogOwnerSignUp.this, task.getException().getMessage(),
-                                    Toast.LENGTH_SHORT).show();
+                                    Toast.LENGTH_LONG).show();
                         }
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -111,7 +112,8 @@ public class DogOwnerSignUp extends AppCompatActivity {
     }
 
     @Override
-    public void onStart() {
+    public void onStart()
+    {
         super.onStart();
     }
 }

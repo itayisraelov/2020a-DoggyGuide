@@ -1,10 +1,9 @@
 package com.technion.doggyguide;
 
+
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-
-import android.view.View;
 import android.widget.Toast;
 
 
@@ -63,6 +62,11 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onStart() {
         super.onStart();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser != null) {
+            Intent intent = new Intent(this, homeActivity.class);
+            startActivity(intent);
+        }
         mAuth.addAuthStateListener(mAuthStateListener);
     }
 
