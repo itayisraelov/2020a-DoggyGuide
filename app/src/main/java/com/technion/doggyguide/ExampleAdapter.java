@@ -18,8 +18,12 @@ public class ExampleAdapter extends RecyclerView.Adapter<ExampleAdapter.ExampleV
 
     public interface OnItemClickListener {
         void onItemClick(int position);
-        void onAlarmClick(int position);
+        void onWalkAlarmClick(int position);
+        void onShowerAlarmClick(int position);
+        void onFeedAlarmClick(int position);
     }
+
+
 
     public void setOnItemClickListener(OnItemClickListener listener) {
         mListener = listener;
@@ -28,21 +32,31 @@ public class ExampleAdapter extends RecyclerView.Adapter<ExampleAdapter.ExampleV
     public static class ExampleViewHolder extends RecyclerView.ViewHolder {
         public ImageView mImageView;
         public TextView mTextView1;
-        public ImageView mDeleteImage;
+        public ImageView mAlarmImage;
 
         public ExampleViewHolder(View itemView, final OnItemClickListener listener) {
             super(itemView);
             mImageView = itemView.findViewById(R.id.imageView);
             mTextView1 = itemView.findViewById(R.id.textView);
-            mDeleteImage = itemView.findViewById(R.id.get_alarm);
+            mAlarmImage = itemView.findViewById(R.id.get_alarm);
 
-            mDeleteImage.setOnClickListener(new View.OnClickListener() {
+            mAlarmImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (listener != null) {
                         int position = getAdapterPosition();
                         if (position != RecyclerView.NO_POSITION) {
-                            listener.onAlarmClick(position);
+                            String walk_str = "Take your dog for a walk";
+                            String shower_str = "Give your dog shower";
+                            String feed_str = "Feed your dog";
+                            String res = mTextView1.getText().toString();
+                            if(walk_str.equals(res)) {
+                                listener.onWalkAlarmClick(position);
+                            }else if(shower_str.equals(res)){
+                                listener.onShowerAlarmClick(position);
+                            }else if(feed_str.equals(res)){
+                                listener.onFeedAlarmClick(position);
+                            }
                         }
                     }
                 }

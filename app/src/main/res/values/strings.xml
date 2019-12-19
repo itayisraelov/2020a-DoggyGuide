@@ -41,4 +41,6 @@
     <string name="open_time_picker">open time picker</string>
     <string name="alarm_activity">alarm activity</string>
     <string name="walking_alarm_activity">walking alarm activity</string>
+    <string name="shower_alarm_activity">shower alarm activity</string>
+    <string name="feed_alarm_activity">feed alarm activity</string>
 </resources>

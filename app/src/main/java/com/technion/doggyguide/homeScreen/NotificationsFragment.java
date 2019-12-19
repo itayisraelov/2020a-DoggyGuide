@@ -26,6 +26,8 @@ import com.technion.doggyguide.ExampleAdapter;
 import com.technion.doggyguide.ExampleItem;
 import com.technion.doggyguide.R;
 import com.technion.doggyguide.homeScreen.alarm.walkAlarmActivity;
+import com.technion.doggyguide.homeScreen.alarm.showerAlarmActivity;
+import com.technion.doggyguide.homeScreen.alarm.eatAlarmActivity;
 import com.technion.doggyguide.notifications.AlertReceiver;
 
 import java.text.DateFormat;
@@ -97,13 +99,32 @@ public class NotificationsFragment extends Fragment implements TimePickerDialog.
             }
 
             @Override
-            public void onAlarmClick(int position) {
-                beginAlarmActivity();
+            public void onWalkAlarmClick(int position) {
+
+                beginWalkAlarmActivity();
+            }
+
+            @Override
+            public void onShowerAlarmClick(int position) {
+                beginShowerAlarmActivity();
+            }
+
+            @Override
+            public void onFeedAlarmClick(int position) {
+                beginFeedAlarmActivity();
             }
         });
     }
-    public void beginAlarmActivity(){
+    public void beginWalkAlarmActivity(){
         Intent intent = new Intent(getActivity(), walkAlarmActivity.class);
+        startActivity(intent);
+    }
+    public void beginShowerAlarmActivity(){
+        Intent intent = new Intent(getActivity(), showerAlarmActivity.class);
+        startActivity(intent);
+    }
+    public void beginFeedAlarmActivity(){
+        Intent intent = new Intent(getActivity(), eatAlarmActivity.class);
         startActivity(intent);
     }
 
