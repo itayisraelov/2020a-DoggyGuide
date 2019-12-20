@@ -26,7 +26,8 @@ public class NotificationHelper extends ContextWrapper {
 
     @TargetApi(Build.VERSION_CODES.O)
     private void createChannel() {
-        NotificationChannel channel = new NotificationChannel(channelID, channelName, NotificationManager.IMPORTANCE_HIGH);
+        NotificationChannel channel = new NotificationChannel(channelID, channelName,
+                NotificationManager.IMPORTANCE_HIGH);
 
         getManager().createNotificationChannel(channel);
     }
@@ -41,8 +42,9 @@ public class NotificationHelper extends ContextWrapper {
 
     public NotificationCompat.Builder getChannelNotification() {
         return new NotificationCompat.Builder(getApplicationContext(), channelID)
-                .setContentTitle("Alarm!")
-                .setContentText("Your AlarmManager is working.")
-                .setSmallIcon(R.drawable.ic_alarm_on);
+                .setContentTitle("Walk Alarm!")
+                .setContentText("Take your dog for a walk")
+                .setSmallIcon(R.drawable.ic_alarm_on)
+                .setAutoCancel(true);
     }
 }
