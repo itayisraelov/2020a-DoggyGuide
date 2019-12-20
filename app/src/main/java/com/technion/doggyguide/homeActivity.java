@@ -10,6 +10,11 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.technion.doggyguide.homeScreen.ChatFragment;
@@ -19,6 +24,8 @@ import com.technion.doggyguide.homeScreen.NotificationsFragment;
 
 public class homeActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
+    private GoogleSignInClient mGSC;
+    private GoogleSignInOptions mGSO;
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =
             new BottomNavigationView.OnNavigationItemSelectedListener() {
                 @Override
@@ -66,9 +73,14 @@ public class homeActivity extends AppCompatActivity {
                 return true;
             case R.id.logout:
                 mAuth.signOut();
-                Intent intent = new Intent(homeActivity.this, MainActivity.class);
-                finish();
-                startActivity(intent);
+                mGSC.signOut().addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Intent intent = new Intent(homeActivity.this, MainActivity.class);
+                        finish();
+                        startActivity(intent);
+                    }
+                });
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -87,5 +99,13 @@ public class homeActivity extends AppCompatActivity {
 
         // Initialize Firebase Authentication
         mAuth = FirebaseAuth.getInstance();
+
+        mGSO = new GoogleSignInOptions
+                .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.Web_Client_ID))
+                .requestEmail()
+                .build();
+
+        mGSC = GoogleSignIn.getClient(this, mGSO);
     }
 }

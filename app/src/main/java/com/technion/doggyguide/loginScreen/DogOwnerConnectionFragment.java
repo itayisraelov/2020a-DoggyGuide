@@ -93,11 +93,16 @@ public class DogOwnerConnectionFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
         // Initialize Firebase Authentication
         mAuth = FirebaseAuth.getInstance();
+
         // Initialize Google Sign In Options
-        mGSO = new GoogleSignInOptions.
-                Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
+        mGSO = new GoogleSignInOptions
+                .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.Web_Client_ID))
+                .requestEmail()
+                .build();
 
         // Build a GoogleSignInClient with the options specified by mGSO.
         mGSC = GoogleSignIn.getClient(getActivity(), mGSO);
@@ -216,7 +221,7 @@ public class DogOwnerConnectionFragment extends Fragment {
                 if (account != null)
                     signIWithGoogle(account);
             } catch (ApiException e) {
-                Log.w("TAG", "Google sign in failed", e);
+                Log.w("TAG", "signInResult:failed code=" + e.getStatusCode());
             }
 
         }

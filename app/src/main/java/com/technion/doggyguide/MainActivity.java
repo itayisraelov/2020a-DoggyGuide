@@ -56,13 +56,7 @@ public class MainActivity extends AppCompatActivity implements
     public void onStart() {
         super.onStart();
         FirebaseUser user = mAuth.getCurrentUser();
-        GoogleSignInAccount google_user = GoogleSignIn.getLastSignedInAccount(this);
         if (user != null) {
-            Toast.makeText(MainActivity.this,"You are logged in",Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(MainActivity.this, homeActivity.class);
-            finish();
-            startActivity(intent);
-        } else if (google_user != null) {
             Toast.makeText(MainActivity.this,"You are logged in",Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(MainActivity.this, homeActivity.class);
             finish();
@@ -71,6 +65,7 @@ public class MainActivity extends AppCompatActivity implements
             Toast.makeText(MainActivity.this,"Please login",Toast.LENGTH_SHORT).show();
         }
     }
+
 
 
     @Override

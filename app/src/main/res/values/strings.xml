@@ -8,6 +8,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="login">LogIn</string>
     <string name="google_login">Login With Google</string>
+    <string name="Web_Client_ID">1054789748992-0ev3n1am30knlevg1t7404r01ombpmir.apps.googleusercontent.com</string>
     <string name="sign_up">Sign up</string>
     <string name="or">or</string>
     <string name="password">Password</string>
