@@ -20,7 +20,6 @@ public class TimePickerFragment extends DialogFragment {
         int minute = c.get(Calendar.MINUTE);
 
         return new TimePickerDialog(getActivity(), 3, (TimePickerDialog.OnTimeSetListener)
-                getActivity().getSupportFragmentManager().findFragmentByTag("Notifications_Fragment"),
-                hour, minute, DateFormat.is24HourFormat(getActivity()));
+                getActivity(), hour, minute, DateFormat.is24HourFormat(getActivity()));
     }
 }

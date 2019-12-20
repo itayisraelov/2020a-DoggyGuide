@@ -1,16 +1,167 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/holo_purple">
+    android:orientation="vertical"
+    tools:context="com.technion.doggyguide.homeScreen.alarm.showerAlarmActivity">
 
+    <Space
+        android:layout_width="40dp"
+        android:layout_height="20dp">
+    </Space>
     <TextView
+        android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="@string/shower_alarm_activity"
         android:layout_gravity="center"
-        android:textSize="30sp" />
+        android:text="@string/no_alarm_set"
+        android:textSize="20sp" />
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+    <Space
+        android:layout_width="40dp"
+        android:layout_height="20dp">
+    </Space>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Space
+            android:layout_width="40dp"
+            android:layout_height="20dp">
+        </Space>
+
+        <Button
+            android:id="@+id/button_time_picker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/open_time_picker" />
+
+        <Space
+            android:layout_width="50dp"
+            android:layout_height="20dp">
+        </Space>
+
+        <Button
+            android:id="@+id/button_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cancel_alarm" />
+    </LinearLayout>
+
+
+    <Space
+        android:layout_width="40dp"
+        android:layout_height="20dp">
+    </Space>
+
+    <TextView
+        android:id="@+id/textView_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/no_alarm_set"
+        android:textSize="20sp" />
+
+    <Space
+        android:layout_width="40dp"
+        android:layout_height="20dp">
+    </Space>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Space
+            android:layout_width="40dp"
+            android:layout_height="20dp">
+        </Space>
+
+        <Button
+            android:id="@+id/button_time_picker_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/open_time_picker" />
+
+        <Space
+            android:layout_width="50dp"
+            android:layout_height="20dp">
+        </Space>
+
+        <Button
+            android:id="@+id/button_cancel_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cancel_alarm" />
+    </LinearLayout>
+
+    <Space
+        android:layout_width="40dp"
+        android:layout_height="20dp">
+    </Space>
+    <TextView
+        android:id="@+id/textView_3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/no_alarm_set"
+        android:textSize="20sp" />
+
+    <Space
+        android:layout_width="40dp"
+        android:layout_height="20dp">
+    </Space>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Space
+            android:layout_width="40dp"
+            android:layout_height="20dp">
+        </Space>
+
+        <Button
+            android:id="@+id/button_time_picker_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/open_time_picker" />
+
+        <Space
+            android:layout_width="50dp"
+            android:layout_height="20dp">
+        </Space>
+
+        <Button
+            android:id="@+id/button_cancel_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cancel_alarm" />
+    </LinearLayout>
+
+    <Space
+        android:layout_width="50dp"
+        android:layout_height="20dp">
+    </Space>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_gravity="center"
+        android:layout_height="150dp"
+        android:src="@mipmap/dog_shower" />
+
+    <Space
+        android:layout_width="50dp"
+        android:layout_height="20dp">
+    </Space>
+
+    <Button
+        android:id="@+id/setButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/set" />
+
+</LinearLayout>
