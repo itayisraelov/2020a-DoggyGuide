@@ -213,8 +213,8 @@ public class DogOwnerConnectionFragment extends Fragment {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
                 GoogleSignInAccount account = task.getResult(ApiException.class);
-                if (account != null)
-                    signIWithGoogle(account);
+                /*if (account != null)
+                    signIWithGoogle(account);*/
             } catch (ApiException e) {
                 Log.w("TAG", "Google sign in failed", e);
             }
