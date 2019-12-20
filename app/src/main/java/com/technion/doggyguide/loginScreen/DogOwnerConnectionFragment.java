@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,12 +15,18 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
+import com.google.firebase.auth.GoogleAuthProvider;
 import com.technion.doggyguide.DogOwnerSignUp;
 import com.technion.doggyguide.R;
 import com.technion.doggyguide.homeActivity;
@@ -38,6 +45,7 @@ public class DogOwnerConnectionFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    static final int GOOGLE_SIGN_IN = 123;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -46,12 +54,14 @@ public class DogOwnerConnectionFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
 
     private FirebaseAuth mAuth;
+    private GoogleSignInClient mGSC;
+    private GoogleSignInOptions mGSO;
 
     private Button mLoginBtn;
     private Button mSignUpBtn;
+    private Button mGoogleLoginBtn;
     private EditText emailtxt;
     private EditText pwdtxt;
-
 
 
     public DogOwnerConnectionFragment() {
@@ -85,6 +95,12 @@ public class DogOwnerConnectionFragment extends Fragment {
         }
         // Initialize Firebase Authentication
         mAuth = FirebaseAuth.getInstance();
+        // Initialize Google Sign In Options
+        mGSO = new GoogleSignInOptions.
+                Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
+
+        // Build a GoogleSignInClient with the options specified by mGSO.
+        mGSC = GoogleSignIn.getClient(getActivity(), mGSO);
 
     }
 
@@ -95,6 +111,7 @@ public class DogOwnerConnectionFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_dog_owner_connection, container, false);
         mLoginBtn = view.findViewById(R.id.btnDogownerlogin);
         mSignUpBtn = view.findViewById(R.id.btnDogownersignup);
+        mGoogleLoginBtn = view.findViewById(R.id.btnGoogleLogin);
         emailtxt = view.findViewById(R.id.home_dogowneremail);
         pwdtxt = view.findViewById(R.id.home_dogownerpassword);
 
@@ -106,6 +123,14 @@ public class DogOwnerConnectionFragment extends Fragment {
                 if (!validateEmailAndPwd(email, pwd))
                     return;
                 signInWithEmailAndPassword(email, pwd);
+            }
+        });
+
+        mGoogleLoginBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = mGSC.getSignInIntent();
+                startActivityForResult(intent, GOOGLE_SIGN_IN);
             }
         });
 
@@ -137,7 +162,7 @@ public class DogOwnerConnectionFragment extends Fragment {
                 new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        if(task.isSuccessful()) {
+                        if (task.isSuccessful()) {
                             if (mAuth.getCurrentUser().isEmailVerified()) {
                                 Intent intent = new Intent(getActivity(), homeActivity.class);
                                 getActivity().finish();
@@ -155,6 +180,48 @@ public class DogOwnerConnectionFragment extends Fragment {
                     }
                 });
     }
+
+
+
+    private void signIWithGoogle(GoogleSignInAccount account) {
+        Log.d("TAG", "firebaseAuthWithGoogle:" + account.getId());
+        AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            Log.d("TAG", "signInWithCredential:success");
+                            Intent intent = new Intent(getActivity(), homeActivity.class);
+                            getActivity().finish();
+                            startActivity(intent);
+                        } else {
+                            Log.w("TAG", "signInWithCredential:failure", task.getException());
+                            Toast.makeText(getActivity(), "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == GOOGLE_SIGN_IN) {
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            try {
+                GoogleSignInAccount account = task.getResult(ApiException.class);
+                if (account != null)
+                    signIWithGoogle(account);
+            } catch (ApiException e) {
+                Log.w("TAG", "Google sign in failed", e);
+            }
+
+        }
+    }
+
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {

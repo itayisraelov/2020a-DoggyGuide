@@ -21,15 +21,20 @@ import com.google.firebase.auth.FirebaseUser;
 
 import com.technion.doggyguide.loginScreen.DogOwnerConnectionFragment;
 import com.technion.doggyguide.loginScreen.OrganizationConnectionFragment;
-
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
 import com.technion.doggyguide.ui.main.SectionsPagerAdapter;
+
 
 public class MainActivity extends AppCompatActivity implements
         DogOwnerConnectionFragment.OnFragmentInteractionListener,
         OrganizationConnectionFragment.OnFragmentInteractionListener {
 
     private FirebaseAuth mAuth;
-    //private FirebaseAuth.AuthStateListener mAuthStateListener;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,13 +48,21 @@ public class MainActivity extends AppCompatActivity implements
 
         // Initialize Firebase Authentication
         mAuth = FirebaseAuth.getInstance();
+
+
     }
 
     @Override
     public void onStart() {
         super.onStart();
         FirebaseUser user = mAuth.getCurrentUser();
+        GoogleSignInAccount google_user = GoogleSignIn.getLastSignedInAccount(this);
         if (user != null) {
+            Toast.makeText(MainActivity.this,"You are logged in",Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(MainActivity.this, homeActivity.class);
+            finish();
+            startActivity(intent);
+        } else if (google_user != null) {
             Toast.makeText(MainActivity.this,"You are logged in",Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(MainActivity.this, homeActivity.class);
             finish();
