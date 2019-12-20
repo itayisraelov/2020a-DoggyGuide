@@ -45,7 +45,7 @@ dependencies {
     implementation "androidx.recyclerview:recyclerview-selection:1.1.0-beta01"
 
 
-   //For google sign in feature
+    //For google sign in feature
     implementation "com.squareup.picasso:picasso:2.71828"
     implementation 'com.google.android.gms:play-services-auth:17.0.0'
 

@@ -1,6 +1,7 @@
 package com.technion.doggyguide;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -9,24 +10,30 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.technion.doggyguide.homeScreen.ChatFragment;
 import com.technion.doggyguide.homeScreen.EventsFragment;
 import com.technion.doggyguide.homeScreen.HomeFragment;
 import com.technion.doggyguide.homeScreen.NotificationsFragment;
+import com.technion.doggyguide.ui.main.HomeSectionsPagerAdapter;
 
-public class homeActivity extends AppCompatActivity {
+public class homeActivity extends AppCompatActivity implements
+           HomeFragment.OnFragmentInteractionListener,
+           EventsFragment.OnFragmentInteractionListener,
+           ChatFragment.OnFragmentInteractionListener, NotificationsFragment.OnFragmentInteractionListener {
+
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGSC;
     private GoogleSignInOptions mGSO;
-    private BottomNavigationView.OnNavigationItemSelectedListener navListener =
+    /*private BottomNavigationView.OnNavigationItemSelectedListener navListener =
             new BottomNavigationView.OnNavigationItemSelectedListener() {
                 @Override
                 public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
@@ -50,7 +57,7 @@ public class homeActivity extends AppCompatActivity {
                     }
                     return true;
                 }
-            };
+            };*/
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -91,10 +98,13 @@ public class homeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
-        bottomNavigationView.setOnNavigationItemSelectedListener(navListener);
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                new HomeFragment()).commit();
+        HomeSectionsPagerAdapter homesectionsPagerAdapter = new HomeSectionsPagerAdapter(this,
+                                                                                    getSupportFragmentManager());
+        ViewPager viewPager = findViewById(R.id.home_view_pager);
+        viewPager.setAdapter(homesectionsPagerAdapter);
+        TabLayout tabs = findViewById(R.id.home_tabs);
+        tabs.setupWithViewPager(viewPager);
+
 
 
         // Initialize Firebase Authentication
@@ -108,4 +118,11 @@ public class homeActivity extends AppCompatActivity {
 
         mGSC = GoogleSignIn.getClient(this, mGSO);
     }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+        //do nothing
+    }
 }
+
+

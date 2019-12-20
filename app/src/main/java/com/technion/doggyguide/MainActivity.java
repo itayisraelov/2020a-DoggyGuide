@@ -10,7 +10,7 @@ import android.widget.Toast;
 
 import com.google.android.material.tabs.TabLayout;
 
-import androidx.annotation.NonNull;
+
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -21,11 +21,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 import com.technion.doggyguide.loginScreen.DogOwnerConnectionFragment;
 import com.technion.doggyguide.loginScreen.OrganizationConnectionFragment;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.api.ApiException;
+
 import com.technion.doggyguide.ui.main.SectionsPagerAdapter;
 
 
