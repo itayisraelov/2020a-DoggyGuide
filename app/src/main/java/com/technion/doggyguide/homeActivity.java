@@ -33,31 +33,11 @@ public class homeActivity extends AppCompatActivity implements
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGSC;
     private GoogleSignInOptions mGSO;
-    /*private BottomNavigationView.OnNavigationItemSelectedListener navListener =
-            new BottomNavigationView.OnNavigationItemSelectedListener() {
-                @Override
-                public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                    switch (menuItem.getItemId()) {
-                        case R.id.nav_home:
-                            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                                    new HomeFragment(), "Home_Fragment").commit();
-                            break;
-                        case R.id.nav_events:
-                            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                                    new EventsFragment(), "Events_Fragment").commit();
-                            break;
-                        case R.id.nav_chat:
-                            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                                    new ChatFragment(), "Chat_Fragment").commit();
-                            break;
-                        case R.id.nav_notifications:
-                            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                                    new NotificationsFragment(), "Notifications_Fragment").commit();
-                            break;
-                    }
-                    return true;
-                }
-            };*/
+
+    private static final int[] TAB_ICONS = new int[] {R.drawable.ic_home,
+            R.drawable.ic_event,
+            R.drawable.ic_chat_24px,
+            R.drawable.ic_alarm_add};
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -105,6 +85,10 @@ public class homeActivity extends AppCompatActivity implements
         TabLayout tabs = findViewById(R.id.home_tabs);
         tabs.setupWithViewPager(viewPager);
 
+        tabs.getTabAt(0).setIcon(TAB_ICONS[0]);
+        tabs.getTabAt(1).setIcon(TAB_ICONS[1]);
+        tabs.getTabAt(2).setIcon(TAB_ICONS[2]);
+        tabs.getTabAt(3).setIcon(TAB_ICONS[3]);
 
 
         // Initialize Firebase Authentication
