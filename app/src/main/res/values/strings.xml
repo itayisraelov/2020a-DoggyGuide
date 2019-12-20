@@ -43,4 +43,6 @@
     <string name="walking_alarm_activity">walking alarm activity</string>
     <string name="shower_alarm_activity">shower alarm activity</string>
     <string name="feed_alarm_activity">feed alarm activity</string>
+    <string name="post">Post</string>
+    <string name="set">Set</string>
 </resources>
