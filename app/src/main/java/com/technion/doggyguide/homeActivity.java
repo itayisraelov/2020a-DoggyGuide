@@ -83,8 +83,7 @@ public class homeActivity extends AppCompatActivity implements
         ViewPager viewPager = findViewById(R.id.home_view_pager);
         viewPager.setAdapter(homesectionsPagerAdapter);
         TabLayout tabs = findViewById(R.id.home_tabs);
-        tabs.setupWithViewPager(viewPager);
-
+        tabs.setupWithViewPager(viewPager, true);
         tabs.getTabAt(0).setIcon(TAB_ICONS[0]);
         tabs.getTabAt(1).setIcon(TAB_ICONS[1]);
         tabs.getTabAt(2).setIcon(TAB_ICONS[2]);

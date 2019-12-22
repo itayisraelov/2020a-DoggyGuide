@@ -12,15 +12,25 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.technion.doggyguide.dataElements.DogOwnerElement;
 
 public class DogOwnerSignUp extends AppCompatActivity {
     private FirebaseAuth mAuth;
+
+
+    private EditText nametxt;
     private EditText emailtxt;
+    private EditText org_emailtxt;
     private EditText pwdtxt;
     private EditText pwdconfirmtxt;
+    private EditText dog_nametxt;
+    private EditText dog_breedtxt;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,12 +40,18 @@ public class DogOwnerSignUp extends AppCompatActivity {
         getSupportActionBar().setHomeAsUpIndicator(R.mipmap.ic_up_button);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        //Initialize buttons
+        //Initialize texts
+        nametxt = findViewById(R.id.dogownername);
         emailtxt = findViewById(R.id.dogowneremail);
+        org_emailtxt = findViewById(R.id.organization);
         pwdtxt = findViewById(R.id.dogownerpassword);
         pwdconfirmtxt = findViewById(R.id.dogownerpasswordconfirmation);
+        dog_nametxt = findViewById(R.id.dogname);
+        dog_breedtxt = findViewById(R.id.dogbreed);
         //Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
+
+
     }
 
     public void signUpbtnHandler(View view) {
@@ -60,7 +76,8 @@ public class DogOwnerSignUp extends AppCompatActivity {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if (task.isSuccessful()) {
-                                                Toast.makeText(DogOwnerSignUp.this, "Please check your email for verification.",
+                                                Toast.makeText(DogOwnerSignUp.this,
+                                                        "Please check your email for verification.",
                                                         Toast.LENGTH_LONG).show();
                                                 //TODO: insert the user id to the organizations' database
                                                 mAuth.signOut();
