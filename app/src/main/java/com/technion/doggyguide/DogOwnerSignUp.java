@@ -19,9 +19,14 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.technion.doggyguide.dataElements.DogOwnerElement;
 
-public class DogOwnerSignUp extends AppCompatActivity {
-    private FirebaseAuth mAuth;
+import java.util.HashMap;
+import java.util.Map;
 
+public class DogOwnerSignUp extends AppCompatActivity {
+
+    public final String TAG = "User SignUp Activity";
+
+    private FirebaseAuth mAuth;
 
     private EditText nametxt;
     private EditText emailtxt;
@@ -30,6 +35,8 @@ public class DogOwnerSignUp extends AppCompatActivity {
     private EditText pwdconfirmtxt;
     private EditText dog_nametxt;
     private EditText dog_breedtxt;
+
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
 
 
     @Override
@@ -80,6 +87,7 @@ public class DogOwnerSignUp extends AppCompatActivity {
                                                         "Please check your email for verification.",
                                                         Toast.LENGTH_LONG).show();
                                                 //TODO: insert the user id to the organizations' database
+                                                addUserToDatabase();
                                                 mAuth.signOut();
                                                 Intent intent = new Intent(DogOwnerSignUp.this, MainActivity.class);
                                                 finish();
@@ -103,6 +111,40 @@ public class DogOwnerSignUp extends AppCompatActivity {
             }
         });
     }
+
+    public void addUserToDatabase() {
+        DogOwnerElement ele = new DogOwnerElement(nametxt.getText().toString(),
+                emailtxt.getText().toString(), org_emailtxt.getText().toString(),
+                dog_nametxt.getText().toString(), dog_breedtxt.getText().toString());
+
+        Log.d(TAG, "We are adding data to the database");
+
+        Map<String, Object> dogowner = new HashMap<>();
+
+        dogowner.put("name", ele.getName());
+        dogowner.put("email", ele.getEmail());
+        dogowner.put("OrgID", ele.getOrg_ID());
+        dogowner.put("dog's name", ele.getDog_name());
+        dogowner.put("dog's breed", ele.getDog_breed());
+
+        String userID = mAuth.getCurrentUser().getUid();
+
+        db.collection("dog owners").document(userID)
+                .set(dogowner)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot successfully written!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error writing document", e);
+                    }
+                });
+    }
+
 
     private boolean validateSignup(String email, String pwd, String pwdconfirm) {
         if (email.isEmpty()) {
