@@ -53,4 +53,5 @@
     <string name="feed_alarm_activity">feed alarm activity</string>
     <string name="post">Post</string>
     <string name="set">Set</string>
+    <string name="line_1">Line 1</string>
 </resources>
