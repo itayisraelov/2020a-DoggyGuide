@@ -23,7 +23,7 @@ import java.util.Calendar;
 
 public class walkAlarmActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener{
     private TextView mTextView, mTextView2, mTextView3;
-    private Integer mWhichButtonIsClicked;
+    private Integer mWhichButtonIsClicked = 0;
     Button mButtonTimePicker, mButtonTimePicker2, mButtonTimePicker3;
     Button mButtonCancelAlarm, mButtonCancelAlarm2, mButtonCancelAlarm3;
     Button mButtonSet;
@@ -162,5 +162,6 @@ public class walkAlarmActivity extends AppCompatActivity implements TimePickerDi
         else if(mWhichButtonIsClicked == 3){
             mTextView3.setText("Alarm canceled");
         }
+        mWhichButtonIsClicked =0;
     }
 }
