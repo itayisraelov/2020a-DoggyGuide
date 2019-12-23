@@ -17,16 +17,17 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.technion.doggyguide.dataElements.DogOwnerElement;
 
-import java.util.HashMap;
-import java.util.Map;
+
 
 public class DogOwnerSignUp extends AppCompatActivity {
 
-    public final String TAG = "User SignUp Activity";
+    public final String TAG = "user SignUp Activity";
 
-    private FirebaseAuth mAuth;
+
 
     private EditText nametxt;
     private EditText emailtxt;
@@ -36,7 +37,8 @@ public class DogOwnerSignUp extends AppCompatActivity {
     private EditText dog_nametxt;
     private EditText dog_breedtxt;
 
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
 
 
     @Override
@@ -55,8 +57,13 @@ public class DogOwnerSignUp extends AppCompatActivity {
         pwdconfirmtxt = findViewById(R.id.dogownerpasswordconfirmation);
         dog_nametxt = findViewById(R.id.dogname);
         dog_breedtxt = findViewById(R.id.dogbreed);
+
+
         //Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
+
+        //Initialize FirebaseFirestore instance
+        db = FirebaseFirestore.getInstance();
 
 
     }
@@ -67,7 +74,13 @@ public class DogOwnerSignUp extends AppCompatActivity {
         String pwdconfirm = pwdconfirmtxt.getText().toString();
         if (!validateSignup(email, pwd, pwdconfirm))
             return;
-        signUpWithEmailAndPassword(email, pwd);
+        if(organizationExists(org_emailtxt.getText().toString())) {
+            signUpWithEmailAndPassword(email, pwd);
+        } else {
+            Toast.makeText(DogOwnerSignUp.this,
+                    "Such Organization does not exist.",
+                    Toast.LENGTH_LONG).show();
+        }
 
     }
 
@@ -77,7 +90,6 @@ public class DogOwnerSignUp extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            //Sign up succeded
                             mAuth.getCurrentUser().sendEmailVerification().
                                     addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
@@ -112,22 +124,18 @@ public class DogOwnerSignUp extends AppCompatActivity {
         });
     }
 
-    public void addUserToDatabase() {
-        DogOwnerElement ele = new DogOwnerElement(nametxt.getText().toString(),
+    private void addUserToDatabase() {
+        DogOwnerElement dogowner = new DogOwnerElement(nametxt.getText().toString(),
                 emailtxt.getText().toString(), org_emailtxt.getText().toString(),
                 dog_nametxt.getText().toString(), dog_breedtxt.getText().toString());
 
         Log.d(TAG, "We are adding data to the database");
 
-        Map<String, Object> dogowner = new HashMap<>();
-
-        dogowner.put("name", ele.getName());
-        dogowner.put("email", ele.getEmail());
-        dogowner.put("OrgID", ele.getOrg_ID());
-        dogowner.put("dog's name", ele.getDog_name());
-        dogowner.put("dog's breed", ele.getDog_breed());
-
         String userID = mAuth.getCurrentUser().getUid();
+
+        Log.d(TAG, userID + "--" + nametxt.getText().toString() + "--" + emailtxt.getText().toString() +
+                "--" + org_emailtxt.getText().toString() + "--" + dog_nametxt.getText().toString() + "--" +
+                dog_breedtxt.getText().toString());
 
         db.collection("dog owners").document(userID)
                 .set(dogowner)
@@ -169,4 +177,16 @@ public class DogOwnerSignUp extends AppCompatActivity {
         return true;
     }
 
+    private boolean organizationExists(String org_ID) {
+        if (db.collection("organizations")
+                .whereEqualTo("org_ID", org_ID)
+                .get().isSuccessful())
+            return true;
+        return false;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
 }

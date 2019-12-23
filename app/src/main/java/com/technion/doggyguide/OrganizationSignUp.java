@@ -12,15 +12,26 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.technion.doggyguide.dataElements.DogOwnerElement;
+import com.technion.doggyguide.dataElements.OrganizationElement;
 
 public class OrganizationSignUp extends AppCompatActivity {
+
     private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
+
+    private EditText nametxt;
     private EditText emailtxt;
     private EditText pwdtxt;
     private EditText pwdconfirmtxt;
+    private EditText locationtxt;
+
+    private final String TAG = "Org Signup Activity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,12 +40,20 @@ public class OrganizationSignUp extends AppCompatActivity {
         getSupportActionBar().setTitle("Sign Up");
         getSupportActionBar().setHomeAsUpIndicator(R.mipmap.ic_up_button);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
         //Initialize buttons
+        nametxt = findViewById(R.id.organizationname);
         emailtxt = findViewById(R.id.organizationemail);
         pwdtxt = findViewById(R.id.organizationpassword);
         pwdconfirmtxt = findViewById(R.id.organizationpasswordconfirmation);
+        locationtxt = findViewById(R.id.organizationlocation);
+
         //Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
+
+        //Initialize FirebaseFirestore instance
+        db = FirebaseFirestore.getInstance();
     }
 
     public void signUpbtnHandler(View view) {
@@ -60,9 +79,9 @@ public class OrganizationSignUp extends AppCompatActivity {
                                             if (task.isSuccessful()) {
                                                 Toast.makeText(OrganizationSignUp.this, "Please check your email for verification.",
                                                         Toast.LENGTH_SHORT).show();
-//                                                FirebaseAuth.getInstance().signOut();
-//                                                finish();
                                                 //TODO: insert the user id to the organizations' database
+                                                addOrganizationToDatabase();
+                                                mAuth.signOut();
                                                 Intent intent = new Intent(OrganizationSignUp.this, MainActivity.class);
                                                 startActivity(intent);
                                             } else {
@@ -82,6 +101,32 @@ public class OrganizationSignUp extends AppCompatActivity {
                 Log.e("exception", e.getMessage());
             }
         });
+    }
+
+
+    private void addOrganizationToDatabase() {
+        OrganizationElement org = new OrganizationElement(nametxt.getText().toString(),
+                emailtxt.getText().toString(), locationtxt.getText().toString());
+
+        Log.d(TAG, "We are adding data to the database");
+
+        String userID = mAuth.getCurrentUser().getUid();
+
+
+        db.collection("dog owners").document(userID)
+                .set(org)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot successfully written!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error writing document", e);
+                    }
+                });
     }
 
     private boolean validateSignup(String email, String pwd, String pwdconfirm) {
