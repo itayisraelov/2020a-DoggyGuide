@@ -99,9 +99,9 @@ public class NotificationsFragment extends Fragment {
 
     private void createExampleList() {
         mExampleList = new ArrayList<>();
-        mExampleList.add(new ExampleItem(R.mipmap.dog_walk, "Take your dog for a walk"));
-        mExampleList.add(new ExampleItem(R.mipmap.dog_shower, "Give your dog a shower"));
-        mExampleList.add(new ExampleItem(R.mipmap.dog_eating, "Feed your dog"));
+        mExampleList.add(new ExampleItem(R.mipmap.dog_walking_, "Take your dog for a walk"));
+        mExampleList.add(new ExampleItem(R.mipmap.dog_shower_, "Give your dog a shower"));
+        mExampleList.add(new ExampleItem(R.mipmap.dog_eatting_, "Feed your dog"));
     }
 
     private void buildRecyclerView() {

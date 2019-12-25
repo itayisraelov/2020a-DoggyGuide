@@ -15,7 +15,8 @@
             android:id="@+id/signin_pups"
             android:layout_width="match_parent"
             android:layout_height="202dp"
-            app:srcCompat="@drawable/signin_pups" />
+            app:srcCompat="@mipmap/dog_home_screen" />
+
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabs"

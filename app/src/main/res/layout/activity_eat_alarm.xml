@@ -150,7 +150,7 @@
         android:layout_width="match_parent"
         android:layout_gravity="center"
         android:layout_height="150dp"
-        android:src="@mipmap/dog_eating" />
+        android:src="@mipmap/dog_eatting_" />
 
     <Space
         android:layout_width="50dp"

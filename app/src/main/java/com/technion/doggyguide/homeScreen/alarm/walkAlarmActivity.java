@@ -1,5 +1,11 @@
 package com.technion.doggyguide.homeScreen.alarm;
 
+
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
@@ -15,19 +21,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.TimePicker;
-
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.technion.doggyguide.R;
-import com.technion.doggyguide.notifications.AlertReceiverWalk;
-import com.technion.doggyguide.notifications.TimePickerFragment;
 import java.text.DateFormat;
 import java.util.Calendar;
 import com.google.firebase.auth.FirebaseAuth;
 
+
+import com.technion.doggyguide.R;
+import com.technion.doggyguide.notifications.AlertReceiverWalk;
+import com.technion.doggyguide.notifications.TimePickerFragment;
 
 
 
@@ -42,8 +43,6 @@ public class walkAlarmActivity extends AppCompatActivity implements TimePickerDi
     private CollectionReference usersRef = db.collection("dog owners");
     String userUid = users.getCurrentUser().getUid();
     private CollectionReference alarmsByUserUidRef = usersRef.document(userUid).collection("Alarms");
-
-
 
 
     @Override
