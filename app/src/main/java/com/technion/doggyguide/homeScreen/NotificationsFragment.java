@@ -100,7 +100,7 @@ public class NotificationsFragment extends Fragment {
     private void createExampleList() {
         mExampleList = new ArrayList<>();
         mExampleList.add(new ExampleItem(R.mipmap.dog_walk, "Take your dog for a walk"));
-        mExampleList.add(new ExampleItem(R.mipmap.dog_shower, "Give your dog shower"));
+        mExampleList.add(new ExampleItem(R.mipmap.dog_shower, "Give your dog a shower"));
         mExampleList.add(new ExampleItem(R.mipmap.dog_eating, "Feed your dog"));
     }
 

@@ -54,4 +54,6 @@
     <string name="post">Post</string>
     <string name="set">Set</string>
     <string name="line_1">Line 1</string>
+    <string name="set_daily_alarm">Set daily alarm</string>
+    <string name="set_alarm">Set alarm</string>
 </resources>

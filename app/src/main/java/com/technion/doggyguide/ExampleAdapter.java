@@ -47,7 +47,7 @@ public class ExampleAdapter extends RecyclerView.Adapter<ExampleAdapter.ExampleV
                         int position = getAdapterPosition();
                         if (position != RecyclerView.NO_POSITION) {
                             String walk_str = "Take your dog for a walk";
-                            String shower_str = "Give your dog shower";
+                            String shower_str = "Give your dog a shower";
                             String feed_str = "Feed your dog";
                             String res = mTextView1.getText().toString();
                             if(walk_str.equals(res)) {

@@ -11,13 +11,13 @@ import androidx.core.app.NotificationCompat;
 
 import com.technion.doggyguide.R;
 
-public class NotificationHelper extends ContextWrapper {
+public class NotificationHelperShower extends ContextWrapper {
     public static final String channelID = "channelID";
     public static final String channelName = "Channel Name";
 
     private NotificationManager mManager;
 
-    public NotificationHelper(Context base) {
+    public NotificationHelperShower(Context base) {
         super(base);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             createChannel();
@@ -42,8 +42,8 @@ public class NotificationHelper extends ContextWrapper {
 
     public NotificationCompat.Builder getChannelNotification() {
         return new NotificationCompat.Builder(getApplicationContext(), channelID)
-                .setContentTitle("Walk Alarm!")
-                .setContentText("Take your dog for a walk")
+                .setContentTitle("Shower Alarm!")
+                .setContentText("Give your dog a shower")
                 .setSmallIcon(R.drawable.ic_alarm_on)
                 .setAutoCancel(true);
     }
