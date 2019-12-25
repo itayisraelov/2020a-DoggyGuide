@@ -9,6 +9,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -39,22 +40,22 @@ public class Fab extends AppCompatActivity implements DatePickerDialog.OnDateSet
 
     private int clicked_btn_id;
 
-    private EditText postname = findViewById(R.id.post_name);
+    private EditText postname;
     private TextView postdate;
     private TextView poststarttime;
     private TextView postendtime;
-    private EditText postdescription = findViewById(R.id.post_description);
+    private EditText postdescription;
 
 
-    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
 
-    private String userID = mAuth.getCurrentUser().getUid();
+    private String userID;
 
-    private CollectionReference postsRef = db.collection("posts");
-    private CollectionReference dogownersRef = db.collection("dog owners");
-    private CollectionReference friendsRef = db.collection("dog owners/" + userID + "/friends");
-    private CollectionReference userpostsRef = db.collection("dog owners/" + userID + "/posts");
+    private CollectionReference postsRef;
+    private CollectionReference dogownersRef;
+    private CollectionReference friendsRef;
+    private CollectionReference userpostsRef;
 
     //start and end time for the post event
     private String start_time;
@@ -71,6 +72,19 @@ public class Fab extends AppCompatActivity implements DatePickerDialog.OnDateSet
         getSupportActionBar().setTitle("Post a request");
         getSupportActionBar().setHomeAsUpIndicator(R.mipmap.ic_up_button);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        postname = findViewById(R.id.post_name);
+        postdescription = findViewById(R.id.post_description);
+
+        mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
+        userID = mAuth.getCurrentUser().getUid();
+
+        postsRef = db.collection("posts");
+        dogownersRef = db.collection("dog owners");
+        friendsRef = db.collection("dog owners/" + userID + "/friends");
+        userpostsRef = db.collection("dog owners/" + userID + "/posts");
+
     }
 
     public void datePickerHandler(View view) {
@@ -98,10 +112,8 @@ public class Fab extends AppCompatActivity implements DatePickerDialog.OnDateSet
         addPostToDatabase(postID);
         addPostRefToUser(postID);
         addPostRefToFriends(postID);
-
-
-        //add reference to the post to my friends post
-
+        Toast.makeText(this, "You have successfully posted a request!", Toast.LENGTH_LONG);
+        finish();
     }
 
 
