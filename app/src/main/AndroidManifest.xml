@@ -10,8 +10,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".homeScreen.Fab"
-            android:parentActivityName=".homeActivity"></activity>
+        <activity
+            android:name=".SettingsActivity"
+            android:label="@string/title_activity_settings"
+            android:parentActivityName=".homeActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.technion.doggyguide.homeActivity" />
+        </activity>
+        <activity
+            android:name=".homeScreen.Fab"
+            android:parentActivityName=".homeActivity" />
         <activity
             android:name=".OrganizationSignUp"
             android:parentActivityName=".MainActivity" />

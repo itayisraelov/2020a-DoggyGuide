@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -32,7 +33,12 @@ public class homeActivity extends AppCompatActivity {
                 Toast.makeText(this, "search", Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.Settings:
-                Toast.makeText(this, "Settings", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this, "Settings", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(homeActivity.this, SettingsActivity.class);
+                startActivity(intent);
+
+
+
                 return true;
             case R.id.profile:
                 Toast.makeText(this, "profile", Toast.LENGTH_SHORT).show();

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+    <PreferenceCategory
+        android:key="user_category"
+        android:title="USER"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent">
+    <EditTextPreference
+        android:dialogTitle="your name"
+        android:dialogMessage="Enter Your Full Name"
+        android:inputType="textCapWords"
+        android:key="key_full_name"
+        android:title="Name"
+        android:summary="Aya Albehery"
+        android:layout_height="match_parent">
+
+    </EditTextPreference>
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="company_category"
+        android:title="COMPANY"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent">
+        <EditTextPreference
+            android:dialogTitle="your company"
+            android:dialogMessage="Enter Your Company's name"
+            android:inputType="textCapWords"
+            android:key="key_full_name"
+            android:title="Company name"
+            android:summary="Eyes To Blind"
+            android:layout_height="match_parent">
+
+        </EditTextPreference>
+    </PreferenceCategory>
+
+</PreferenceScreen>

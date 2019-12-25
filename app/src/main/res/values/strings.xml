@@ -36,4 +36,19 @@
     <string name="send_on_channel_1">Send on Channel 1</string>
     <string name="send_on_channel_2">Send on Channel 2</string>
     <string name="switch_">Switch</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Preference Titles -->
+    <string name="details_header">Personal Details</string>
+    <string name="notification_header">Notifications</string>
+
+    <!-- Messages Preferences -->
+    <string name="name_title">Your Name</string>
+
+
+    <!-- Sync Preferences -->
+    <string name="notification_title">Set your notification recieving ability </string>
+    <string name="notifications_summary_on">Receiving Notifications : you will get notifications when your friends post requests
+    </string>
+    <string name="notifications_summary_off">Not Receiving Notifications : you will not recieve notifcations from your friends</string>
 </resources>
