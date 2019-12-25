@@ -14,3 +14,9 @@ such as announcing vaccines, training or treatments that should occur soon.
 
 https://github.com/codepath/android_guides/blob/master/LICENSE.md - for picasso
 https://github.com/firebase/FirebaseUI-Android/blob/master/LICENSE - for firebaseUI
+
+Made With:
+  picasso
+  firebaseui
+  firestore
+  authentication
