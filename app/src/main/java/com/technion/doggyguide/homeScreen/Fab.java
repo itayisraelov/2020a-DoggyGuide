@@ -9,7 +9,6 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,9 +22,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.technion.doggyguide.DatePickerFragment;
+import com.technion.doggyguide.DatePickerFabFragment;
 import com.technion.doggyguide.R;
-import com.technion.doggyguide.TimePickerFragment;
+import com.technion.doggyguide.TimePickerFabFragment;
 import com.technion.doggyguide.dataElements.PostElement;
 
 import java.text.DateFormat;
@@ -76,19 +75,19 @@ public class Fab extends AppCompatActivity implements DatePickerDialog.OnDateSet
 
     public void datePickerHandler(View view) {
         clicked_btn_id = R.id.post_datepicker;
-        DialogFragment datepicker = new DatePickerFragment();
+        DialogFragment datepicker = new DatePickerFabFragment();
         datepicker.show(getSupportFragmentManager(), "Date Picker");
     }
 
     public void startTimeHandler(View view) {
         clicked_btn_id = R.id.post_starttimepicker;
-        DialogFragment starttimepicker = new TimePickerFragment();
+        DialogFragment starttimepicker = new TimePickerFabFragment();
         starttimepicker.show(getSupportFragmentManager(), "start time picker");
     }
 
     public void endTimeHandler(View view) {
         clicked_btn_id = R.id.post_endtimepicker;
-        DialogFragment endtimepicker = new TimePickerFragment();
+        DialogFragment endtimepicker = new TimePickerFabFragment();
         endtimepicker.show(getSupportFragmentManager(), "end time picker");
     }
 
