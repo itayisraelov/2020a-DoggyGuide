@@ -19,4 +19,4 @@ Made With:
   picasso,
   firebaseui,
   firestore,
-  authentication
+  authentication.
