@@ -111,18 +111,7 @@
         android:layout_width="match_parent"
         android:layout_height="25dp"/>
 
-    <EditText
-        android:id="@+id/post_options"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:ems="12"
-        android:hint="Dog's Breed"
-        android:inputType="textPersonName"/>
 
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="25dp"/>
 
     <Button
         android:id="@+id/post_createpost"

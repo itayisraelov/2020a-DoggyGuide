@@ -65,19 +65,6 @@
         android:layout_height="25dp"/>
 
     <EditText
-        android:id="@+id/organization"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:ems="12"
-        android:hint="Organization Email"
-        android:inputType="textEmailAddress" />
-
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="25dp"/>
-
-    <EditText
         android:id="@+id/dogname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
