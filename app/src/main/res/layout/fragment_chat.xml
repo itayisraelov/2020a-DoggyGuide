@@ -8,9 +8,9 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/Chat__Fragment"
+        android:text="chat in the upcoming update"
         android:layout_gravity="center"
-        android:textSize="30sp"
+        android:textSize="25sp"
         android:layout_centerInParent="true"/>
 
 
