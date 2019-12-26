@@ -16,8 +16,7 @@ import com.technion.doggyguide.homeScreen.NotificationsFragment;
 
 public class HomeSectionsPagerAdapter extends FragmentPagerAdapter {
     @StringRes
-    private static final int[] TAB_TITLES = new int[]{R.string.home_tab_text_1,
-            R.string.home_tab_text_2, R.string.home_tab_text_3, R.string.home_tab_text_4};
+    private static final int[] TAB_TITLES = new int[]{R.string.home_tab_text_1, R.string.home_tab_text_2, R.string.home_tab_text_3, R.string.home_tab_text_4};
 
 
     private final Context mContext;
