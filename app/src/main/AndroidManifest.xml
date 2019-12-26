@@ -10,7 +10,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".homeScreen.alarm.eatAlarmActivity"></activity>
+        <activity android:name=".About"></activity>
+        <activity android:name=".Credits" />
+        <activity android:name=".homeScreen.alarm.eatAlarmActivity" />
         <activity android:name=".homeScreen.alarm.showerAlarmActivity" />
         <activity android:name=".homeScreen.alarm.walkAlarmActivity" />
         <activity

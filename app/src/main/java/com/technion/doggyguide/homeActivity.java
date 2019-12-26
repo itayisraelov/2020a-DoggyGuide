@@ -55,6 +55,14 @@ public class homeActivity extends AppCompatActivity implements
             case R.id.Settings:
                 Toast.makeText(this, "Settings", Toast.LENGTH_SHORT).show();
                 return true;
+            case R.id.Credits:
+                Intent intent__ = new Intent(homeActivity.this, Credits.class);
+                startActivity(intent__);
+                return true;
+            case R.id.About:
+                Intent intent_ = new Intent(homeActivity.this, About.class);
+                startActivity(intent_);
+                return true;
             case R.id.profile:
                 Toast.makeText(this, "profile", Toast.LENGTH_SHORT).show();
                 return true;
