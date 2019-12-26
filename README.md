@@ -1,7 +1,10 @@
 # 2020a-DoggyGuide
 
 
+# Short description
+The app helps students at the Technion in handling a guide dog.
 
+# Full description
 The purpose of our app is first to help the dog owner with daily care,
 such as alerting him to feed the dog or take him out for walk.
 Secondly, the goal is to help the dog owner to communicate with other dog owners
