@@ -105,34 +105,34 @@ public class NotificationsFragment extends Fragment {
     }
 
     private void buildRecyclerView() {
-//
-//        mRecyclerView = mView.findViewById(R.id.recyclerView);
-//        mRecyclerView.setHasFixedSize(true);
-//        mLayoutManager = new LinearLayoutManager(getContext());
-//        mAdapter = new ExampleAdapter(mExampleList);
-//
-//        mRecyclerView.setLayoutManager(mLayoutManager);
-//        mRecyclerView.setAdapter(mAdapter);
-//
-//        mAdapter.setOnItemClickListener(new ExampleAdapter.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(int position) {
-//                changeItem(position, "Clicked");
-//            }
-//
-//            @Override
-//            public void onWalkAlarmClick(int position) { beginWalkAlarmActivity(); }
-//
-//            @Override
-//            public void onShowerAlarmClick(int position) {
-//                beginShowerAlarmActivity();
-//            }
-//
-//            @Override
-//            public void onFeedAlarmClick(int position) {
-//                beginFeedAlarmActivity();
-//            }
-//        });
+
+        mRecyclerView = mView.findViewById(R.id.recyclerView);
+        mRecyclerView.setHasFixedSize(true);
+        mLayoutManager = new LinearLayoutManager(getContext());
+        mAdapter = new ExampleAdapter(mExampleList);
+
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setAdapter(mAdapter);
+
+        mAdapter.setOnItemClickListener(new ExampleAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                changeItem(position, "Clicked");
+            }
+
+            @Override
+            public void onWalkAlarmClick(int position) { beginWalkAlarmActivity(); }
+
+            @Override
+            public void onShowerAlarmClick(int position) {
+                beginShowerAlarmActivity();
+            }
+
+            @Override
+            public void onFeedAlarmClick(int position) {
+                beginFeedAlarmActivity();
+            }
+        });
     }
     private void beginWalkAlarmActivity(){
         Intent intent = new Intent(getActivity(), walkAlarmActivity.class);
