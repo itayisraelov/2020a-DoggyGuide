@@ -153,7 +153,8 @@ public class EventsFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
-        adapter.stopListening();
+        if (adapter != null)
+            adapter.stopListening();
     }
 
     /**
