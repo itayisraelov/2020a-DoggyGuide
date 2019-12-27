@@ -60,6 +60,7 @@ public class EventElementAdapter extends
         private TextView textViewDescription;
         private ImageButton imageButtonAlarm;
         private int numOfAlarmClicks = 0;
+
         public EventHolder(final View itemView) {
             super(itemView);
             textViewTitle = itemView.findViewById(R.id.event_title);

@@ -1,4 +1,4 @@
-package com.technion.doggyguide;
+package com.technion.doggyguide.Adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +9,9 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+
+import com.technion.doggyguide.R;
+import com.technion.doggyguide.dataElements.ExampleItem;
 
 import java.util.ArrayList;
 

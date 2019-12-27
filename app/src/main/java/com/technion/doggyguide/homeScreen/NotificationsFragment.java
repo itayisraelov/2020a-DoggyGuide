@@ -12,10 +12,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
-import com.technion.doggyguide.ExampleAdapter;
-import com.technion.doggyguide.ExampleItem;
+import com.technion.doggyguide.Adapters.ExampleAdapter;
+import com.technion.doggyguide.dataElements.ExampleItem;
 import com.technion.doggyguide.R;
 import com.technion.doggyguide.homeScreen.alarm.eatAlarmActivity;
 import com.technion.doggyguide.homeScreen.alarm.showerAlarmActivity;

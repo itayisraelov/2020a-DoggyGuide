@@ -1,4 +1,4 @@
-package com.technion.doggyguide;
+package com.technion.doggyguide.dataElements;
 
 public class ExampleItem {
     private int mImageResource;
