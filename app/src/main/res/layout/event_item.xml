@@ -3,10 +3,13 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_marginTop="8dp"
     android:layout_marginStart="8dp"
     android:layout_marginEnd="8dp"
-    app:cardBackgroundColor="#FFFFEF">
+    app:cardBackgroundColor="#FFFFEF"
+    app:cardCornerRadius="10dp"
+    tools:context=".homeActivity">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -26,13 +29,23 @@
             android:layout_toLeftOf="@id/event_time" />
 
         <TextView
+            android:id="@+id/event_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:text="dd/mm/yyyy"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true" />
+
+        <TextView
             android:id="@+id/event_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:maxLines="1"
             android:text="StartTime-EndTIme"
+            android:layout_below="@id/event_date"
             android:layout_alignParentEnd="true"
-            android:layout_alignParentTop="true"
             android:layout_alignParentRight="true" />
 
         <TextView

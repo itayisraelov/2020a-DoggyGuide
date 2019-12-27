@@ -1,6 +1,7 @@
 package com.technion.doggyguide.notifications;
 
 import android.annotation.TargetApi;
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
@@ -28,7 +29,10 @@ public class NotificationHelperWalk extends ContextWrapper {
     private void createChannel() {
         NotificationChannel channel = new NotificationChannel(channelID, channelName,
                 NotificationManager.IMPORTANCE_HIGH);
-
+        channel.enableLights(true);
+        channel.enableVibration(true);
+        channel.setLightColor(R.color.colorAccent);
+        channel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
         getManager().createNotificationChannel(channel);
     }
 

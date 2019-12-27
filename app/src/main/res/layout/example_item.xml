@@ -5,7 +5,11 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
-    app:cardCornerRadius="4dp"
+    android:layout_marginTop="8dp"
+    android:layout_marginStart="8dp"
+    android:layout_marginEnd="8dp"
+    app:cardCornerRadius="10dp"
+    app:cardBackgroundColor="#FFFFEF"
     tools:context=".homeActivity">
 
     <LinearLayout
@@ -30,14 +34,14 @@
                 android:layout_height="wrap_content"
                 android:text="@string/line_1"
                 android:textColor="@android:color/black"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                android:textSize="20sp" />
 
-            <ImageView
+            <ImageButton
                 android:id="@+id/get_alarm"
                 android:layout_width="50dp"
                 android:layout_height="40dp"
                 android:layout_gravity="end"
+                android:backgroundTint="#FFFFEF"
                 android:src="@drawable/ic_alarm" />
 
         </LinearLayout>

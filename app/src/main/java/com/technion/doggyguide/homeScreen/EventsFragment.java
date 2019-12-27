@@ -59,6 +59,7 @@ public class EventsFragment extends Fragment {
     private CollectionReference eventsondateRef;
 
     private CalendarView calendar;
+    private ImageButton alarmbtn;
 
     private EventElementAdapter adapter;
 
@@ -101,6 +102,8 @@ public class EventsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_events, container, false);
+        View cardview = inflater.inflate(R.layout.event_item, container, false);
+        alarmbtn = cardview.findViewById(R.id.event_alarm);
         calendar = view.findViewById(R.id.calendar);
         calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
@@ -109,7 +112,6 @@ public class EventsFragment extends Fragment {
                         String.valueOf(month + 1) + "-" + String.valueOf(year);
                 eventsondateRef = eventsbydateRef.document(eventDocId).collection("events");
                 setUpRecyclerView();
-
             }
         });
         return view;

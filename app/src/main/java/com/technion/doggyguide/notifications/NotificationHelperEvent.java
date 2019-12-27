@@ -12,19 +12,18 @@ import androidx.core.app.NotificationCompat;
 
 import com.technion.doggyguide.R;
 
-public class NotificationHelperFeed extends ContextWrapper {
+class NotificationHelperEvent extends ContextWrapper {
     public static final String channelID = "channelID";
-    public static final String channelName = "Channel Name";
+    public static final String channelName = "Upcoming Event";
 
     private NotificationManager mManager;
 
-    public NotificationHelperFeed(Context base) {
+    public NotificationHelperEvent(Context base) {
         super(base);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             createChannel();
         }
     }
-
     @TargetApi(Build.VERSION_CODES.O)
     private void createChannel() {
         NotificationChannel channel = new NotificationChannel(channelID, channelName,
@@ -40,14 +39,12 @@ public class NotificationHelperFeed extends ContextWrapper {
         if (mManager == null) {
             mManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         }
-
         return mManager;
     }
-
-    public NotificationCompat.Builder getChannelNotification() {
+    public NotificationCompat.Builder getChannelNotification(String title, String description) {
         return new NotificationCompat.Builder(getApplicationContext(), channelID)
-                .setContentTitle("Feed Alarm!")
-                .setContentText("Feed your dog")
+                .setContentTitle("Title")
+                .setContentText(description + " in 10 minutes")
                 .setSmallIcon(R.drawable.ic_alarm_on)
                 .setAutoCancel(true);
     }

@@ -45,7 +45,7 @@ public class eatAlarmActivity extends AppCompatActivity implements TimePickerDia
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_eat_alarm);
-
+        readFromDataBase();
         initFields();
         initClickListenerForButtons();
     }
@@ -54,8 +54,6 @@ public class eatAlarmActivity extends AppCompatActivity implements TimePickerDia
         mTextView = findViewById(R.id.textView);
         mTextView2 = findViewById(R.id.textView_2);
         mTextView3 = findViewById(R.id.textView_3);
-        readFromDataBase();
-
         mButtonTimePicker = findViewById(R.id.button_time_picker);
         mButtonCancelAlarm = findViewById(R.id.button_cancel);
         mButtonTimePicker2 = findViewById(R.id.button_time_picker_2);

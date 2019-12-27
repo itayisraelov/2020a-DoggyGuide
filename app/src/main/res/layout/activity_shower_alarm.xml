@@ -26,18 +26,17 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_gravity="center">
 
-        <Space
-            android:layout_width="40dp"
-            android:layout_height="20dp">
-        </Space>
+
 
         <Button
             android:id="@+id/button_time_picker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/open_time_picker" />
+            android:text="@string/open_time_picker"
+            android:background="@drawable/round_bg"/>
 
         <Space
             android:layout_width="30dp"
@@ -48,7 +47,8 @@
             android:id="@+id/button_cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/cancel_alarm" />
+            android:text="@string/cancel_alarm"
+            android:background="@drawable/round_bg"/>
     </LinearLayout>
 
 
@@ -72,18 +72,17 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_gravity="center">
 
-        <Space
-            android:layout_width="40dp"
-            android:layout_height="20dp">
-        </Space>
+
 
         <Button
             android:id="@+id/button_time_picker_2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/open_time_picker" />
+            android:text="@string/open_time_picker"
+            android:background="@drawable/round_bg"/>
 
         <Space
             android:layout_width="30dp"
@@ -94,7 +93,8 @@
             android:id="@+id/button_cancel_2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/cancel_alarm" />
+            android:text="@string/cancel_alarm"
+            android:background="@drawable/round_bg"/>
     </LinearLayout>
 
     <Space
@@ -116,18 +116,17 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_gravity="center">
 
-        <Space
-            android:layout_width="40dp"
-            android:layout_height="20dp">
-        </Space>
+
 
         <Button
             android:id="@+id/button_time_picker_3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/open_time_picker" />
+            android:text="@string/open_time_picker"
+            android:background="@drawable/round_bg"/>
 
         <Space
             android:layout_width="30dp"
@@ -138,7 +137,8 @@
             android:id="@+id/button_cancel_3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/cancel_alarm" />
+            android:text="@string/cancel_alarm"
+            android:background="@drawable/round_bg"/>
     </LinearLayout>
 
     <Space
@@ -162,6 +162,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="@string/set" />
+        android:text="@string/set"
+        android:background="@drawable/round_bg"/>
 
 </LinearLayout>

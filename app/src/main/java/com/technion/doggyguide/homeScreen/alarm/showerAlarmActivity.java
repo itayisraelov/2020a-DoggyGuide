@@ -45,7 +45,7 @@ public class showerAlarmActivity extends AppCompatActivity implements TimePicker
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shower_alarm);
-
+        readFromDataBase();
         initFields();
         initClickListenerForButtons();
     }
@@ -54,7 +54,6 @@ public class showerAlarmActivity extends AppCompatActivity implements TimePicker
         mTextView = findViewById(R.id.textView);
         mTextView2 = findViewById(R.id.textView_2);
         mTextView3 = findViewById(R.id.textView_3);
-        readFromDataBase();
 
         mButtonTimePicker = findViewById(R.id.button_time_picker);
         mButtonCancelAlarm = findViewById(R.id.button_cancel);

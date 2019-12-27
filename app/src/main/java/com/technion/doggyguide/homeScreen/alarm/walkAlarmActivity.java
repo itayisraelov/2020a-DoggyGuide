@@ -49,7 +49,7 @@ public class walkAlarmActivity extends AppCompatActivity implements TimePickerDi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_walk_alarm);
-
+        readFromDataBase();
         initFields();
         initClickListenerForButtons();
     }
@@ -59,7 +59,6 @@ public class walkAlarmActivity extends AppCompatActivity implements TimePickerDi
         mTextView = findViewById(R.id.textView);
         mTextView2 = findViewById(R.id.textView_2);
         mTextView3 = findViewById(R.id.textView_3);
-        readFromDataBase();
 
         mButtonTimePicker = findViewById(R.id.button_time_picker);
         mButtonCancelAlarm = findViewById(R.id.button_cancel);

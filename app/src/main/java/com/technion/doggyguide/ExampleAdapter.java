@@ -3,6 +3,7 @@ package com.technion.doggyguide;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -32,7 +33,7 @@ public class ExampleAdapter extends RecyclerView.Adapter<ExampleAdapter.ExampleV
     public static class ExampleViewHolder extends RecyclerView.ViewHolder {
         public ImageView mImageView;
         public TextView mTextView1;
-        public ImageView mAlarmImage;
+        public ImageButton mAlarmImage;
 
         public ExampleViewHolder(View itemView, final OnItemClickListener listener) {
             super(itemView);
