@@ -29,7 +29,7 @@
             android:label="Doggy Guide" />
         <activity
             android:name=".MainActivity"
-            android:label="@string/title_activity_main"
+            android:label="DoggyGuide"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
