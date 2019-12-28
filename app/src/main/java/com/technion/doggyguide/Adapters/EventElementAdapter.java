@@ -97,7 +97,7 @@ public class EventElementAdapter extends
                         calendar.set(Calendar.SECOND, 0);
                         if (numOfAlarmClicks % 2 == 1) {
                             startAlarm(calendar);
-                            Toast.makeText(v.getContext(), "Alarm set 10 minutes before the events starts!",
+                            Toast.makeText(v.getContext(), "Alarm set 10 minutes before the event starts!",
                                     Toast.LENGTH_LONG).show();
                         } else {
                             cancelAlarm(calendar);
