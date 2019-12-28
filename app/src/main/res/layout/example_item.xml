@@ -9,7 +9,7 @@
     android:layout_marginStart="8dp"
     android:layout_marginEnd="8dp"
     app:cardCornerRadius="10dp"
-    app:cardBackgroundColor="#FFFFEF"
+    app:cardBackgroundColor="#FFFFFE"
     tools:context=".homeActivity">
 
     <LinearLayout
@@ -41,7 +41,7 @@
                 android:layout_width="50dp"
                 android:layout_height="40dp"
                 android:layout_gravity="end"
-                android:backgroundTint="#FFFFEF"
+                android:backgroundTint="#FFFFFE"
                 android:src="@drawable/ic_alarm" />
 
         </LinearLayout>

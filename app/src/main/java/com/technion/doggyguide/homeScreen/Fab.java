@@ -109,20 +109,23 @@ public class Fab extends AppCompatActivity implements DatePickerDialog.OnDateSet
     public void postbtnHandler(View view) {
         //TODO: create a post and post it to all friends feed
         int startHour = Integer.parseInt(start_time.split(":")[0]);
-        int startMinute = Integer.parseInt(start_time.split(":")[0]);
+        int startMinute = Integer.parseInt(start_time.split(":")[1]);
         int endHour = Integer.parseInt(end_time.split(":")[0]);
-        int endMinute = Integer.parseInt(end_time.split(":")[0]);
+        int endMinute = Integer.parseInt(end_time.split(":")[1]);
         if (endHour < startHour) {
-            Toast.makeText(this, "End time cannot be later than start time!\nTry Again", Toast.LENGTH_LONG);
+            Toast.makeText(this,
+                    "End time cannot be later than start time!\nTry Again", Toast.LENGTH_LONG).show();
             return;
         } else if (endHour == startHour && endMinute < startMinute) {
-            Toast.makeText(this, "End time cannot be later than start time!\nTry Again", Toast.LENGTH_LONG);
+            Toast.makeText(this,
+                    "End time cannot be later than start time!\nTry Again", Toast.LENGTH_LONG).show();
             return;
         }
         posting_time = Calendar.getInstance().getTime().toString();
         final String postID = userID + posting_time;
         addPostToDatabase(postID);
-        Toast.makeText(this, "You have successfully posted a request!", Toast.LENGTH_LONG);
+        Toast.makeText(this,
+                "You have successfully posted a request!", Toast.LENGTH_LONG).show();
         finish();
     }
 
