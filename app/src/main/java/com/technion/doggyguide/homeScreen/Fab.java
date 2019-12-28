@@ -120,7 +120,10 @@ public class Fab extends AppCompatActivity implements DatePickerDialog.OnDateSet
     private void addPostToDatabase(String postID) {
         String name = postname.getText().toString();
         String description = postdescription.getText().toString();
-        PostElement post = new PostElement(name, start_time, end_time, post_time, description);
+        Calendar c = Calendar.getInstance();
+        String posting_date= c.getTime().toString();
+        PostElement post = new PostElement(name, userID, start_time, end_time,
+                post_time, posting_date, description);
         postsRef.document(postID).set(post);
     }
 

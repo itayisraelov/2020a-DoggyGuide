@@ -51,6 +51,9 @@ dependencies {
     //for FirestoreRecyclerAdapter class
     implementation 'com.firebaseui:firebase-ui-firestore:6.1.0'
 
+    //For circular profile image
+    implementation 'de.hdodenhof:circleimageview:1.2.1'
+
 }
 
 apply plugin: 'com.google.gms.google-services'
