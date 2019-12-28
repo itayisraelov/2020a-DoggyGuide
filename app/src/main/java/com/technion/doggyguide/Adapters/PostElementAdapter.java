@@ -95,7 +95,8 @@ public class PostElementAdapter extends FirestoreRecyclerAdapter<PostElement, Po
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
-                    SimpleDateFormat timeFormat = new SimpleDateFormat("dd-MM-yyyy");
+
+                    SimpleDateFormat timeFormat = new SimpleDateFormat("d-M-yyyy");
                     String date = timeFormat.format(myDate);
                     String start_time = postTime.getText().toString().split("-")[0];
                     String end_time = postTime.getText().toString().split("-")[1];

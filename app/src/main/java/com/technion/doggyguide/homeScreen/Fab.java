@@ -21,8 +21,11 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.WriteBatch;
 import com.technion.doggyguide.DatePickerFabFragment;
 import com.technion.doggyguide.R;
 import com.technion.doggyguide.TimePickerFabFragment;
@@ -30,8 +33,8 @@ import com.technion.doggyguide.dataElements.PostElement;
 
 import java.text.DateFormat;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.Map;
+
 
 public class Fab extends AppCompatActivity implements DatePickerDialog.OnDateSetListener,
         TimePickerDialog.OnTimeSetListener {
@@ -60,9 +63,7 @@ public class Fab extends AppCompatActivity implements DatePickerDialog.OnDateSet
     //start and end time for the post event
     private String start_time;
     private String end_time;
-    private String post_time;
-
-
+    private String posting_time;
 
 
     @Override
@@ -107,12 +108,24 @@ public class Fab extends AppCompatActivity implements DatePickerDialog.OnDateSet
 
     public void postbtnHandler(View view) {
         //TODO: create a post and post it to all friends feed
-        post_time = Calendar.getInstance().getTime().toString();
-        final String postID = userID + post_time;
+        int startHour = Integer.parseInt(start_time.split(":")[0]);
+        int startMinute = Integer.parseInt(start_time.split(":")[1]);
+        int endHour = Integer.parseInt(end_time.split(":")[0]);
+        int endMinute = Integer.parseInt(end_time.split(":")[1]);
+        if (endHour < startHour) {
+            Toast.makeText(this,
+                    "End time cannot be later than start time!\nTry Again", Toast.LENGTH_LONG).show();
+            return;
+        } else if (endHour == startHour && endMinute < startMinute) {
+            Toast.makeText(this,
+                    "End time cannot be later than start time!\nTry Again", Toast.LENGTH_LONG).show();
+            return;
+        }
+        posting_time = Calendar.getInstance().getTime().toString();
+        final String postID = userID + posting_time;
         addPostToDatabase(postID);
-        addPostRefToUser(postID);
-        addPostRefToFriends(postID);
-        Toast.makeText(this, "You have successfully posted a request!", Toast.LENGTH_LONG);
+        Toast.makeText(this,
+                "You have successfully posted a request!", Toast.LENGTH_LONG).show();
         finish();
     }
 
@@ -120,53 +133,42 @@ public class Fab extends AppCompatActivity implements DatePickerDialog.OnDateSet
     private void addPostToDatabase(String postID) {
         String name = postname.getText().toString();
         String description = postdescription.getText().toString();
-        Calendar c = Calendar.getInstance();
-        String posting_date= c.getTime().toString();
         PostElement post = new PostElement(name, userID, start_time, end_time,
-                post_time, posting_date, description);
+                postdate.getText().toString(), posting_time, description);
         postsRef.document(postID).set(post);
+        addPostRefToUser(post, postID);
+        addPostRefToFriends(post, postID);
     }
 
-    private void addPostRefToUser(String postID) {
-        Map<String, Object> post_ref = new HashMap<>();
-        post_ref.put(postID,"posts/" + postID);
-        userpostsRef.document(postID)
-                .set(post_ref)
+    private void addPostRefToUser(PostElement post, String postID) {
+        userpostsRef.document(postID).set(post)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "Dog owner document successfully written!");
+                        Log.d(TAG, "added post to user successfully");
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error writing dog owner document", e);
+                        Log.d(TAG, e.getMessage());
                     }
                 });
     }
 
-    private void addPostRefToFriends(final String postID) {
-        friendsRef.document(userID + "-friends")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+    private void addPostRefToFriends(final PostElement post, final String postID) {
+        friendsRef.get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-                            DocumentSnapshot document = task.getResult();
-                            if (document.exists()) {
-                                for(String friendID : document.getData().keySet())
-                                    dogownersRef.document(friendID)
-                                            .collection("posts")
-                                            .document(postID)
-                                            .set("posts/" + postID);
-                            } else {
-                                Log.d(TAG, "No such document");
+                            WriteBatch batch = db.batch();
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Map<String, Object> friendRef = document.getData();
+                                DocumentReference friendDocRef = (DocumentReference) friendRef.get("reference");
+                                batch.set(friendDocRef.collection("posts").document(postID), post);
 
                             }
-                        } else {
-                            Log.d(TAG, "get failed with ", task.getException());
-
                         }
                     }
                 });
@@ -179,22 +181,32 @@ public class Fab extends AppCompatActivity implements DatePickerDialog.OnDateSet
         calendar.set(Calendar.MONTH, month);
         calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
         String pickeddate = DateFormat.getDateInstance(DateFormat.FULL).format(calendar.getTime());
-        postdate =  findViewById(R.id.post_date);
+        postdate = findViewById(R.id.post_date);
         postdate.setText(pickeddate);
     }
 
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-        switch (clicked_btn_id){
+        switch (clicked_btn_id) {
             case R.id.post_starttimepicker:
                 poststarttime = findViewById(R.id.post_starttime);
-                poststarttime.setText("Starts at " + hourOfDay + ":" + minute);
-                start_time = hourOfDay + ":" + minute;
+                if (minute < 10) {
+                    poststarttime.setText("Starts at " + hourOfDay + ":0" + minute);
+                    start_time = hourOfDay + ":0" + minute;
+                } else {
+                    poststarttime.setText("Starts at " + hourOfDay + ":" + minute);
+                    start_time = hourOfDay + ":" + minute;
+                }
                 break;
             case R.id.post_endtimepicker:
                 postendtime = findViewById(R.id.post_endtime);
-                postendtime.setText("Ends at " + hourOfDay + ":" + minute);
-                end_time = hourOfDay + ":" + minute;
+                if (minute < 10) {
+                    postendtime.setText("Ends at " + hourOfDay + ":0" + minute);
+                    end_time = hourOfDay + ":0" + minute;
+                } else {
+                    postendtime.setText("Ends at " + hourOfDay + ":" + minute);
+                    end_time = hourOfDay + ":" + minute;
+                }
                 break;
         }
     }

@@ -7,7 +7,7 @@
     android:layout_marginTop="8dp"
     android:layout_marginStart="8dp"
     android:layout_marginEnd="8dp"
-    app:cardBackgroundColor="#FFFFEF"
+    app:cardBackgroundColor="#FFFFFE"
     app:cardCornerRadius="10dp"
     tools:context=".homeActivity">
     <RelativeLayout
@@ -67,7 +67,7 @@
             android:layout_below="@id/event_time"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:backgroundTint="#FFFFEF"
+            android:backgroundTint="#FFFFFE"
             android:src="@drawable/ic_alarm" />
 
     </RelativeLayout>
