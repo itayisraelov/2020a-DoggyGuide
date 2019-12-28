@@ -41,10 +41,10 @@ class NotificationHelperEvent extends ContextWrapper {
         }
         return mManager;
     }
-    public NotificationCompat.Builder getChannelNotification(String title, String description) {
+    public NotificationCompat.Builder getChannelNotification() {
         return new NotificationCompat.Builder(getApplicationContext(), channelID)
-                .setContentTitle("Title")
-                .setContentText(description + " in 10 minutes")
+                .setContentTitle("New Event Notification")
+                .setContentText("Upcoming event in 10 minutes!\nCheck your calendar")
                 .setSmallIcon(R.drawable.ic_alarm_on)
                 .setAutoCancel(true);
     }
