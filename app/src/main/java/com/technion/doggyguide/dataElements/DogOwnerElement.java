@@ -6,12 +6,25 @@ public class DogOwnerElement {
     private final String org_ID = "bayet.ovid@igdcb.org";
     private String dog_name;
     private String dog_breed;
+    private String mImageUrl;
 
+
+    public DogOwnerElement() {
+        //Need an Empty Constructor
+    }
     public DogOwnerElement(String name, String email, String dog_name, String dog_breed) {
         this.name = name;
         this.email = email;
         this.dog_name = dog_name;
         this.dog_breed = dog_breed;
+    }
+
+    public DogOwnerElement(String name, String email, String dog_name, String dog_breed, String mImageUrl) {
+        this.name = name;
+        this.email = email;
+        this.dog_name = dog_name;
+        this.dog_breed = dog_breed;
+        this.mImageUrl = mImageUrl;
     }
 
     public String getName() {
@@ -33,4 +46,6 @@ public class DogOwnerElement {
     public String getDog_breed() {
         return dog_breed;
     }
+
+    public String getmImageUrl() { return mImageUrl; }
 }

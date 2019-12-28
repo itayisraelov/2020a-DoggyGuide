@@ -5,13 +5,34 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:padding="8dp"
     tools:context=".DogOwnerSignUp">
 
 
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/profile_image"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
+        android:layout_gravity="center"
+        android:src="@drawable/ic_person"
+        android:padding="4dp"/>
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"/>
+
+    <TextView
+        android:id="@+id/img_picker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="Pick a profile image"
+        android:layout_gravity="center"/>
+
     <Space
         android:layout_width="match_parent"
-        android:layout_height="30dp"/>
-
+        android:layout_height="10dp"/>
     <EditText
         android:id="@+id/dogownername"
         android:layout_width="wrap_content"
@@ -23,7 +44,7 @@
 
     <Space
         android:layout_width="match_parent"
-        android:layout_height="25dp"/>
+        android:layout_height="20dp"/>
 
     <EditText
         android:id="@+id/dogowneremail"
@@ -36,7 +57,7 @@
 
     <Space
         android:layout_width="match_parent"
-        android:layout_height="25dp"/>
+        android:layout_height="20dp"/>
 
     <EditText
         android:id="@+id/dogownerpassword"
@@ -49,7 +70,7 @@
 
     <Space
         android:layout_width="match_parent"
-        android:layout_height="25dp"/>
+        android:layout_height="20dp"/>
 
     <EditText
         android:id="@+id/dogownerpasswordconfirmation"
@@ -75,7 +96,7 @@
 
     <Space
         android:layout_width="match_parent"
-        android:layout_height="25dp"/>
+        android:layout_height="20dp"/>
 
     <EditText
         android:id="@+id/dogbreed"
@@ -88,7 +109,7 @@
 
     <Space
         android:layout_width="match_parent"
-        android:layout_height="25dp"/>
+        android:layout_height="20dp"/>
 
     <Button
         android:id="@+id/createaccountdogowner"
@@ -96,7 +117,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:background="@drawable/round_bg"
-        android:onClick="signUpbtnHandler"
         android:text="Sign Up"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
