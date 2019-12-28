@@ -4,16 +4,23 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.technion.doggyguide.Adapters.PostElementAdapter;
 import com.technion.doggyguide.R;
+import com.technion.doggyguide.dataElements.PostElement;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -34,6 +41,15 @@ public class HomeFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+
+    private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
+
+    private String userID;
+
+    private CollectionReference postsRef;
+
+    private PostElementAdapter adapter;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -64,6 +80,10 @@ public class HomeFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
+        userID = mAuth.getCurrentUser().getUid();
+        postsRef = db.collection("dog owners/" + userID + "/posts");
     }
 
     @Override
@@ -80,6 +100,22 @@ public class HomeFragment extends Fragment {
             }
         });
         return view;
+    }
+
+    private void setUpRecyclerView() {
+
+        Query query = postsRef.orderBy("posting_date", Query.Direction.DESCENDING);
+        FirestoreRecyclerOptions<PostElement> options = new FirestoreRecyclerOptions.Builder<PostElement>()
+                .setQuery(query, PostElement.class)
+                .build();
+        adapter = new PostElementAdapter(options);
+        RecyclerView recyclerView = getView().findViewById(R.id.posts_recycler_view);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setAdapter(adapter);
+        if (adapter != null)
+            adapter.startListening();
+
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -101,9 +137,18 @@ public class HomeFragment extends Fragment {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        setUpRecyclerView();
+    }
+
+    @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
+        if (adapter != null) {
+            adapter.stopListening();
+        }
     }
 
     /**

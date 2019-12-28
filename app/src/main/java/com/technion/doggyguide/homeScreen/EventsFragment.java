@@ -59,7 +59,6 @@ public class EventsFragment extends Fragment {
     private CollectionReference eventsondateRef;
 
     private CalendarView calendar;
-    private ImageButton alarmbtn;
 
     private EventElementAdapter adapter;
 
@@ -102,8 +101,6 @@ public class EventsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_events, container, false);
-        View cardview = inflater.inflate(R.layout.event_item, container, false);
-        alarmbtn = cardview.findViewById(R.id.event_alarm);
         calendar = view.findViewById(R.id.calendar);
         calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
@@ -128,7 +125,8 @@ public class EventsFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(adapter);
-        adapter.startListening();
+        if (adapter != null)
+            adapter.startListening();
     }
 
 
@@ -150,6 +148,7 @@ public class EventsFragment extends Fragment {
                     + " must implement OnFragmentInteractionListener");
         }
     }
+    
 
     @Override
     public void onDetach() {

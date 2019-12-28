@@ -1,6 +1,7 @@
 package com.technion.doggyguide.dataElements;
 
 
+
 public class PostElement {
     private String name;
     private String userId;
@@ -9,6 +10,10 @@ public class PostElement {
     private String post_date;
     private String posting_date;
     private String description;
+
+    public PostElement() {
+        //must have an empty constructor
+    }
 
     public PostElement(String name, String userId, String start_time, String end_time,
                        String post_date, String posting_date, String description) {
