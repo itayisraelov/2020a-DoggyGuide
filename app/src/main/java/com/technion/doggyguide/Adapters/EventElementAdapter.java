@@ -92,6 +92,10 @@ public class EventElementAdapter extends
                         } else {
                             minute -= 10;
                         }
+                        String[] d = textViewDate.getText().toString().split("-");
+                        calendar.set(Calendar.YEAR, Integer.parseInt(d[2]));
+                        calendar.set(Calendar.MONTH,  Integer.parseInt(d[1]));
+                        calendar.set(Calendar.DAY_OF_MONTH, Integer.parseInt(d[0]));
                         calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
                         calendar.set(Calendar.MINUTE, minute);
                         calendar.set(Calendar.SECOND, 0);

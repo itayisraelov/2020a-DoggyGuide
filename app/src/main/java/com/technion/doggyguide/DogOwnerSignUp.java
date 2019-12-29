@@ -136,7 +136,7 @@ public class DogOwnerSignUp extends AppCompatActivity {
     }
 
     private void uploadFile(View view) {
-        StorageReference fileRef = mStorageRef.child(System.currentTimeMillis() + '.'
+        StorageReference fileRef = mStorageRef.child(System.currentTimeMillis() + "."
                 + getFileExtension(mImageUri));
         mUploadTask = fileRef.putFile(mImageUri);
     }
