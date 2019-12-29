@@ -120,8 +120,8 @@ public class DogOwnerSignUp extends AppCompatActivity {
                 if (mUploadTask != null && mUploadTask.isInProgress()) {
                     Toast.makeText(DogOwnerSignUp.this, "Upload in progress", Toast.LENGTH_SHORT).show();
                     return;
-                }
-                uploadFile(v);
+                } else if (mImageUri != null)
+                    uploadFile(v);
                 signUpbtnHandler(v);
             }
         });
@@ -164,6 +164,11 @@ public class DogOwnerSignUp extends AppCompatActivity {
         String pwdconfirm = pwdconfirmtxt.getText().toString();
         if (!validateSignup(email, pwd, pwdconfirm))
             return;
+        if (mImageUri == null) {
+            Toast.makeText(DogOwnerSignUp.this,
+                    "Please upload a profile pic", Toast.LENGTH_SHORT).show();
+            return;
+        }
 //        TODO: add this piece of code to sprint 2
 //        if(organizationExists(org_emailtxt.getText().toString())) {
 //            signUpWithEmailAndPassword(email, pwd);

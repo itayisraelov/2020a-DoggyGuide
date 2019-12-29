@@ -22,6 +22,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -113,7 +114,7 @@ public class DogOwnerConnectionFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_dog_owner_connection, container, false);
+        final View view = inflater.inflate(R.layout.fragment_dog_owner_connection, container, false);
         mLoginBtn = view.findViewById(R.id.btnDogownerlogin);
         mSignUpBtn = view.findViewById(R.id.btnDogownersignup);
         mGoogleLoginBtn = view.findViewById(R.id.btnGoogleLogin);
@@ -142,6 +143,8 @@ public class DogOwnerConnectionFragment extends Fragment {
         mSignUpBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Snackbar.make(view, "Google sign in not fully integrated with database",
+                        Snackbar.LENGTH_LONG).show();
                 Intent intent = new Intent(getActivity(), DogOwnerSignUp.class);
                 startActivity(intent);
             }
