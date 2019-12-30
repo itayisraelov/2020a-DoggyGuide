@@ -1,22 +1,43 @@
 package com.technion.doggyguide;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager.widget.ViewPager;
+
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.auth.FirebaseAuth;
 import com.technion.doggyguide.homeScreen.ChatFragment;
 import com.technion.doggyguide.homeScreen.EventsFragment;
 import com.technion.doggyguide.homeScreen.HomeFragment;
 import com.technion.doggyguide.homeScreen.NotificationsFragment;
+import com.technion.doggyguide.ui.main.HomeSectionsPagerAdapter;
 
-public class homeActivity extends AppCompatActivity {
+public class homeActivity extends AppCompatActivity implements
+           HomeFragment.OnFragmentInteractionListener,
+           EventsFragment.OnFragmentInteractionListener,
+           ChatFragment.OnFragmentInteractionListener, NotificationsFragment.OnFragmentInteractionListener {
+
+    private FirebaseAuth mAuth;
+    private GoogleSignInClient mGSC;
+    private GoogleSignInOptions mGSO;
+
+    private static final int[] TAB_ICONS = new int[] {R.drawable.ic_home,
+            R.drawable.ic_event,
+            R.drawable.ic_chat_24px,
+            R.drawable.ic_alarm_add};
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -27,18 +48,34 @@ public class homeActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.search:
                 Toast.makeText(this, "search", Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.Settings:
                 Toast.makeText(this, "Settings", Toast.LENGTH_SHORT).show();
                 return true;
+            case R.id.Credits:
+                Intent intent__ = new Intent(homeActivity.this, Credits.class);
+                startActivity(intent__);
+                return true;
+            case R.id.About:
+                Intent intent_ = new Intent(homeActivity.this, About.class);
+                startActivity(intent_);
+                return true;
             case R.id.profile:
                 Toast.makeText(this, "profile", Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.logout:
-                Toast.makeText(this, "logout", Toast.LENGTH_SHORT).show();
+                mAuth.signOut();
+                mGSC.signOut().addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Intent intent = new Intent(homeActivity.this, MainActivity.class);
+                        finish();
+                        startActivity(intent);
+                    }
+                });
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -49,33 +86,34 @@ public class homeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
-        bottomNavigationView.setOnNavigationItemSelectedListener(navListener);
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                new HomeFragment()).commit();
+        HomeSectionsPagerAdapter homesectionsPagerAdapter = new HomeSectionsPagerAdapter(this,
+                                                                                    getSupportFragmentManager());
+        ViewPager viewPager = findViewById(R.id.home_view_pager);
+        viewPager.setAdapter(homesectionsPagerAdapter);
+        TabLayout tabs = findViewById(R.id.home_tabs);
+        tabs.setupWithViewPager(viewPager, true);
+        tabs.getTabAt(0).setIcon(TAB_ICONS[0]);
+        tabs.getTabAt(1).setIcon(TAB_ICONS[1]);
+        tabs.getTabAt(2).setIcon(TAB_ICONS[2]);
+        tabs.getTabAt(3).setIcon(TAB_ICONS[3]);
+
+
+        // Initialize Firebase Authentication
+        mAuth = FirebaseAuth.getInstance();
+
+        mGSO = new GoogleSignInOptions
+                .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.Web_Client_ID))
+                .requestEmail()
+                .build();
+
+        mGSC = GoogleSignIn.getClient(this, mGSO);
     }
-    private BottomNavigationView.OnNavigationItemSelectedListener navListener =
-            new BottomNavigationView.OnNavigationItemSelectedListener() {
-                @Override
-                public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                    Fragment selectedFragement = null;
-                    switch (menuItem.getItemId()){
-                        case R.id.nav_home:
-                            selectedFragement = new HomeFragment();
-                            break;
-                        case R.id.nav_events:
-                            selectedFragement = new EventsFragment();
-                            break;
-                        case R.id.nav_chat:
-                            selectedFragement = new ChatFragment();
-                            break;
-                        case R.id.nav_notifications:
-                            selectedFragement = new NotificationsFragment();
-                            break;
-                    }
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                            selectedFragement).commit();
-                    return true;
-                }
-            };
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+        //do nothing
+    }
 }
+
+

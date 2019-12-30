@@ -34,10 +34,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:background="@color/colorPrimaryDark"
+        android:background="@drawable/round_bg"
         android:onClick="datePickerHandler"
         android:text="Pick a date"
-        android:textColor="@color/colorTabText"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.458"
@@ -60,10 +59,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:background="@color/colorPrimaryDark"
+        android:background="@drawable/round_bg"
         android:onClick="startTimeHandler"
         android:text="start time"
-        android:textColor="@color/colorTabText"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.458"
@@ -86,10 +84,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:background="@color/colorPrimaryDark"
+        android:background="@drawable/round_bg"
         android:onClick="endTimeHandler"
         android:text="end time"
-        android:textColor="@color/colorTabText"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.458"
@@ -114,28 +111,16 @@
         android:layout_width="match_parent"
         android:layout_height="25dp"/>
 
-    <EditText
-        android:id="@+id/post_options"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:ems="12"
-        android:hint="Dog's Breed"
-        android:inputType="textPersonName"/>
 
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="25dp"/>
 
     <Button
         android:id="@+id/post_createpost"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:background="@color/colorAccent"
+        android:background="@drawable/round_bg"
         android:onClick="postbtnHandler"
         android:text="Post"
-        android:textColor="@color/colorPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.458"

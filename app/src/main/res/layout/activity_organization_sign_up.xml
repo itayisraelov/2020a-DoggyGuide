@@ -56,7 +56,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:ems="12"
-        android:hint="Condfirm Password"
+        android:hint="Confirm Password"
         android:inputType="textPassword" />
 
     <Space
@@ -82,9 +82,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:background="@color/colorAccent"
+        android:background="@drawable/round_bg"
         android:text="Sign Up"
-        android:textColor="@color/colorPrimary"
         android:onClick="signUpbtnHandler"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

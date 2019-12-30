@@ -1,91 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@android:color/holo_orange_dark">
+    tools:context=".MainActivity">
+    <Space
+        android:id="@+id/spacer"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/notifications_fragment"
-        android:layout_gravity="center"
-        android:textSize="30sp"
-        android:layout_centerInParent="true"/>
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_add"
-        app:fabSize="normal"
-        android:id="@+id/fab4"
-        app:elevation="6dp"
-        app:backgroundTint="@color/colorPrimary"
-        android:layout_gravity="end|bottom"
-        android:layout_margin="16dp"/>
-
-
-    <LinearLayout
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_below="@+id/spacer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:layout_gravity="center|top"
+        android:padding="4dp"
+        android:scrollbars="vertical" />
 
-        <EditText
-            android:id="@+id/edit_text_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/title" />
-
-        <EditText
-            android:id="@+id/edit_text_message"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/message" />
-
-        <Button
-            android:id="@+id/send_channel1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/send_on_channel_1" />
-
-        <Button
-            android:id="@+id/send_channel2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/send_on_channel_2" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <Switch
-                android:id="@+id/switch3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Switch" />
-
-            <Button
-                android:id="@+id/time_picker"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="open time picker" />
-
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/textView1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@id/time_picker"
-            android:layout_gravity="center"
-            android:layout_marginBottom="31dp"
-            android:text="time"
-            android:textSize="30sp" />
-    </LinearLayout>
-
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</RelativeLayout>

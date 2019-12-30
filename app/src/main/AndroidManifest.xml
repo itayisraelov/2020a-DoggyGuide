@@ -10,8 +10,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".homeScreen.Fab"
-            android:parentActivityName=".homeActivity"></activity>
+        <activity android:name=".About"></activity>
+        <activity android:name=".Credits" />
+        <activity android:name=".homeScreen.alarm.eatAlarmActivity" />
+        <activity android:name=".homeScreen.alarm.showerAlarmActivity" />
+        <activity android:name=".homeScreen.alarm.walkAlarmActivity" />
+        <activity
+            android:name=".homeScreen.Fab"
+            android:parentActivityName=".homeActivity" />
         <activity
             android:name=".OrganizationSignUp"
             android:parentActivityName=".MainActivity" />
@@ -23,7 +29,7 @@
             android:label="Doggy Guide" />
         <activity
             android:name=".MainActivity"
-            android:label="@string/title_activity_main"
+            android:label="DoggyGuide"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -32,7 +38,10 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".notifications.NotificationReceiver" />
+        <receiver android:name=".notifications.AlertReceiverWalk" />
+        <receiver android:name=".notifications.AlertReceiverShower" />
+        <receiver android:name=".notifications.AlertReceiverFeed" />
+        <receiver android:name=".notifications.AlertRecieverEvent"/>
     </application>
 
 </manifest>

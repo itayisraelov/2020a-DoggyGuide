@@ -14,16 +14,15 @@
         <ImageView
             android:id="@+id/signin_pups"
             android:layout_width="match_parent"
-            android:layout_height="196dp"
-            app:srcCompat="@drawable/signin_pups" />
+            android:layout_height="202dp"
+            app:srcCompat="@mipmap/dog_home_screen" />
+
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorSigninTabsColor"
-            app:tabIndicatorColor="@color/colorAccent"
-            app:tabTextColor="@color/colorTabText" />
+            app:tabIndicatorColor="@color/colorAccent"/>
 
     </com.google.android.material.appbar.AppBarLayout>
 

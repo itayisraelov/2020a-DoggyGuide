@@ -4,9 +4,19 @@
     <string name="tab_text_1">Dog Owner</string>
     <string name="tab_text_2">Organization</string>
 
+    <!-- Home tab layout -->
+    <string name="home_tab_text_1">Home</string>
+    <string name="home_tab_text_2">Events</string>
+    <string name="home_tab_text_3">Chat</string>
+    <string name="home_tab_text_4">Reminders</string>
+    <string name ="accept">ACCEPT</string>
+    <string name="ignore">IGNORE</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="login">LogIn</string>
+    <string name="google_login">Login With Google</string>
+    <string name="Web_Client_ID">1054789748992-0ev3n1am30knlevg1t7404r01ombpmir.apps.googleusercontent.com</string>
     <string name="sign_up">Sign up</string>
     <string name="or">or</string>
     <string name="password">Password</string>
@@ -36,4 +46,24 @@
     <string name="send_on_channel_1">Send on Channel 1</string>
     <string name="send_on_channel_2">Send on Channel 2</string>
     <string name="switch_">Switch</string>
+    <string name="no_alarm_set">No Alarm set</string>
+    <string name="cancel_alarm">cancel alarm</string>
+    <string name="open_time_picker">open time picker</string>
+    <string name="alarm_activity">alarm activity</string>
+    <string name="walking_alarm_activity">walking alarm activity</string>
+    <string name="shower_alarm_activity">shower alarm activity</string>
+    <string name="feed_alarm_activity">feed alarm activity</string>
+    <string name="post">Post</string>
+    <string name="set">Set</string>
+    <string name="line_1">Line 1</string>
+    <string name="set_daily_alarm">Set daily alarm</string>
+    <string name="set_alarm">Set alarm</string>
+    <string name="credits">Credits</string>
+    <string name="photo_by_berkay_gumustekin_on_unsplash">Photo by Berkay Gumustekin on Unsplash</string>
+    <string name="photo_by_autri_taheri_on_unsplash">Photo by Autri Taheri on Unsplash</string>
+    <string name="photo_by_anthony_fomin_on_unsplash">Photo by Anthony Fomin on Unsplash</string>
+    <string name="photo_by_paul_trienekens_on_unsplash">Photo by Paul Trienekens on Unsplash</string>
+    <string name="about">About</string>
+    <string name="about_app">About App:</string>
+    <string name="the_purpose_of_our_app_is_first_to_help_the_dog_owner_with_daily_care_such_as_alerting_him_to_feed_the_dog_or_take_him_out_for_walk_secondly_the_goal_is_to_help_the_dog_owner_to_communicate_with_other_dog_owners_at_the_technion_in_a_convenient_way_such_as_finding_someone_who_can_keep_the_dog_when_needed_or_play_dates_with_other_dogs_and_finally_its_goal_is_to_conveniently_link_the_dog_owner_to_the_organization_such_as_announcing_vaccines_training_or_treatments_that_should_occur_soon">The purpose of our app is first to help the dog owner with daily care, such as alerting him to feed the dog or take him out for walk. Secondly, the goal is to help the dog owner to communicate with other dog owners at the Technion in a convenient way, such as finding someone who can Keep the dog when needed or play dates with other dogs. And finally, its goal is to conveniently link the dog owner to the organization, such as announcing vaccines, training or treatments that should occur soon.</string>
 </resources>

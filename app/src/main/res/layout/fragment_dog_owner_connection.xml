@@ -15,7 +15,7 @@
 
         <Space
             android:layout_width="match_parent"
-            android:layout_height="30dp"/>
+            android:layout_height="10dp"/>
 
         <EditText
             android:id="@+id/home_dogowneremail"
@@ -23,10 +23,6 @@
             android:layout_height="wrap_content"
             android:inputType="textEmailAddress"
             android:hint="@string/email" />
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="25dp"/>
 
         <EditText
             android:id="@+id/home_dogownerpassword"
@@ -46,16 +42,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/login"
-            android:textColor="#FFFFFF"
-            android:background="@color/colorAccent"
             android:onClick="loginClick"
+            android:background="@drawable/round_bg"
             tools:layout_editor_absoluteX="117dp"
             tools:layout_editor_absoluteY="186dp"
             tools:ignore="OnClick" />
 
         <Space
             android:layout_width="match_parent"
-            android:layout_height="10dp"/>
+            android:layout_height="5dp"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -64,16 +59,39 @@
 
         <Space
             android:layout_width="match_parent"
-            android:layout_height="10dp"/>
+            android:layout_height="5dp"/>
 
         <Button
             android:id="@+id/btnDogownersignup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/sign_up"
-            android:textColor="#FFFFFF"
-            android:background="@color/colorAccent"
+            android:background="@drawable/round_bg"
             tools:layout_editor_absoluteX="107dp"
             tools:layout_editor_absoluteY="255dp" />
+
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="5dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/or"/>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="5dp"/>
+        <Button
+            android:id="@+id/btnGoogleLogin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/google_login"
+            android:layout_marginBottom="50dp"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+            android:background="@drawable/round_bg"
+            android:drawableLeft="@drawable/ic_google_logo"/>
     </LinearLayout>
 </FrameLayout>

@@ -1,6 +1,7 @@
 package com.technion.doggyguide.notifications;
 
 import android.annotation.TargetApi;
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
@@ -11,13 +12,13 @@ import androidx.core.app.NotificationCompat;
 
 import com.technion.doggyguide.R;
 
-public class NotificationHelper extends ContextWrapper {
+public class NotificationHelperFeed extends ContextWrapper {
     public static final String channelID = "channelID";
     public static final String channelName = "Channel Name";
 
     private NotificationManager mManager;
 
-    public NotificationHelper(Context base) {
+    public NotificationHelperFeed(Context base) {
         super(base);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             createChannel();
@@ -26,8 +27,12 @@ public class NotificationHelper extends ContextWrapper {
 
     @TargetApi(Build.VERSION_CODES.O)
     private void createChannel() {
-        NotificationChannel channel = new NotificationChannel(channelID, channelName, NotificationManager.IMPORTANCE_HIGH);
-
+        NotificationChannel channel = new NotificationChannel(channelID, channelName,
+                NotificationManager.IMPORTANCE_HIGH);
+        channel.enableLights(true);
+        channel.enableVibration(true);
+        channel.setLightColor(R.color.colorAccent);
+        channel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
         getManager().createNotificationChannel(channel);
     }
 
@@ -41,8 +46,9 @@ public class NotificationHelper extends ContextWrapper {
 
     public NotificationCompat.Builder getChannelNotification() {
         return new NotificationCompat.Builder(getApplicationContext(), channelID)
-                .setContentTitle("Alarm!")
-                .setContentText("Your AlarmManager is working.")
-                .setSmallIcon(R.drawable.ic_alarm_on);
+                .setContentTitle("Feed Alarm!")
+                .setContentText("Feed your dog")
+                .setSmallIcon(R.drawable.ic_alarm_on)
+                .setAutoCancel(true);
     }
 }
