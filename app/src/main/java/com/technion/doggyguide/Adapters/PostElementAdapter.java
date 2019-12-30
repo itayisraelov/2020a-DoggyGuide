@@ -111,7 +111,7 @@ public class PostElementAdapter extends FirestoreRecyclerAdapter<PostElement, Po
                     Log.d(TAG, "Accept Button Clicked");
                     String mydate = postDate.getText().toString();
                     SimpleDateFormat dateFormat = new SimpleDateFormat(
-                            "E, dd MMM yyyy");
+                            "E, MMM dd, yyyy");
 
                     Date myDate = new Date();
                     try {

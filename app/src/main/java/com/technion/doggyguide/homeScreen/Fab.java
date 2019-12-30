@@ -2,6 +2,7 @@ package com.technion.doggyguide.homeScreen;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.icu.text.SimpleDateFormat;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -180,9 +181,10 @@ public class Fab extends AppCompatActivity implements DatePickerDialog.OnDateSet
         calendar.set(Calendar.YEAR, year);
         calendar.set(Calendar.MONTH, month);
         calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-        String pickeddate = DateFormat.getDateInstance(DateFormat.FULL).format(calendar.getTime());
+        SimpleDateFormat format = new SimpleDateFormat("E, MMM dd, yyyy");
+        String pickeddate = format.format(calendar.getTime());
         postdate = findViewById(R.id.post_date);
-        postdate.setText(pickeddate);
+        postdate.setText(pickeddate);;
     }
 
     @Override
