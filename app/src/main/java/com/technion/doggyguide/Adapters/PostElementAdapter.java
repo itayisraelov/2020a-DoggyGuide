@@ -113,7 +113,7 @@ public class PostElementAdapter extends FirestoreRecyclerAdapter<PostElement, Po
                     SimpleDateFormat dateFormat = new SimpleDateFormat(
                             "E, dd MMM yyyy");
 
-                    Date myDate = null;
+                    Date myDate = new Date();
                     try {
                         myDate = dateFormat.parse(mydate);
                     } catch (ParseException e) {
