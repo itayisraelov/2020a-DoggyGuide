@@ -9,3 +9,16 @@ at the Technion in a convenient way,
 such as finding someone who can Keep the dog when needed or "play dates" with other dogs.
 And finally, its goal is to conveniently link the dog owner to the organization,
 such as announcing vaccines, training or treatments that should occur soon.
+
+
+## Licenses
+com.firebaseui:firebase-ui-firestore:6.1.0  - https://github.com/firebase/FirebaseUI-Android/blob/master/LICENSE
+com.squareup.picasso:picasso:2.71828   - https://github.com/codepath/android_guides/blob/master/LICENSE.md
+//For circular profile image
+de.hdodenhof:circleimageview:1.2.1  - https://github.com/lopspower/CircularImageView/blob/master/LICENSE
+
+
+## Made With: 
+picasso, firebaseui,
+firebase: firestore and authentication
+
