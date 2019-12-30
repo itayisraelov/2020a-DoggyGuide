@@ -19,6 +19,5 @@ de.hdodenhof:circleimageview:1.2.1  - https://github.com/lopspower/CircularImage
 
 
 ## Made With: 
-picasso, firebaseui,
-firebase: firestore and authentication
+picasso, firebaseui, firestore, authentication
 
