@@ -31,7 +31,7 @@ import com.technion.doggyguide.R;
 import com.technion.doggyguide.TimePickerFabFragment;
 import com.technion.doggyguide.dataElements.PostElement;
 
-import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Map;
 
@@ -180,7 +180,8 @@ public class Fab extends AppCompatActivity implements DatePickerDialog.OnDateSet
         calendar.set(Calendar.YEAR, year);
         calendar.set(Calendar.MONTH, month);
         calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-        String pickeddate = DateFormat.getDateInstance(DateFormat.FULL).format(calendar.getTime());
+        SimpleDateFormat format = new SimpleDateFormat("E, MMM dd, yyyy");
+        String pickeddate = format.format(calendar.getTime());
         postdate = findViewById(R.id.post_date);
         postdate.setText(pickeddate);
     }
