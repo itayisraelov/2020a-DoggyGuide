@@ -16,9 +16,13 @@ import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.squareup.picasso.Picasso;
 import com.technion.doggyguide.R;
 import com.technion.doggyguide.dataElements.EventElement;
 import com.technion.doggyguide.dataElements.PostElement;
@@ -30,6 +34,7 @@ import java.util.Date;
 public class PostElementAdapter extends FirestoreRecyclerAdapter<PostElement, PostElementAdapter.PostHolder> {
 
     private final String TAG = "Post Adapter";
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
 
     public PostElementAdapter(@NonNull FirestoreRecyclerOptions<PostElement> options) {
@@ -37,9 +42,28 @@ public class PostElementAdapter extends FirestoreRecyclerAdapter<PostElement, Po
     }
 
     @Override
-    protected void onBindViewHolder(@NonNull PostHolder holder, int position, @NonNull PostElement model) {
+    protected void onBindViewHolder(@NonNull final PostHolder holder, int position, @NonNull PostElement model) {
+        db.document("dog owners/" + model.getUserId())
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        String imageUrl = (String) documentSnapshot.get("mImageUrl");
+                        Picasso.get()
+                                .load(imageUrl)
+                                .fit()
+                                .centerCrop()
+                                .into(holder.profileImage);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, e.getMessage());
+                    }
+                });
         String[] postingDate = model.getPosting_date().split(" ");
-        holder.profileImage.setImageResource(R.drawable.ic_person);
+        //holder.profileImage.setImageResource(R.drawable.ic_person);
         holder.userName.setText(model.getName());
         holder.postingTime.setText(postingDate[0] + " " + postingDate[1] + " "
                             + postingDate[2] + " " + postingDate[3]);

@@ -226,19 +226,30 @@ public class DogOwnerSignUp extends AppCompatActivity {
         mUploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                Log.d(TAG, "Uploaded Successfully!");
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        prog_bar.setProgress(0);
+                if (taskSnapshot.getMetadata() != null) {
+                    if (taskSnapshot.getMetadata().getReference() != null) {
+                        Task<Uri> result = taskSnapshot.getStorage().getDownloadUrl();
+                        result.addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                Log.d(TAG, "Uploaded Successfully!");
+                                Handler handler = new Handler();
+                                handler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        prog_bar.setProgress(0);
+                                    }
+                                }, 500);
+                                DogOwnerElement dogowner = new DogOwnerElement(nametxt.getText().toString(),
+                                        emailtxt.getText().toString(), dog_nametxt.getText().toString(),
+                                        dog_breedtxt.getText().toString(),
+                                        uri.toString());
+                                dogownersRef.document(userID).set(dogowner);
+                            }
+                        });
                     }
-                }, 500);
-                DogOwnerElement dogowner = new DogOwnerElement(nametxt.getText().toString(),
-                        emailtxt.getText().toString(), dog_nametxt.getText().toString(),
-                        dog_breedtxt.getText().toString(),
-                        taskSnapshot.getUploadSessionUri().toString());
-                dogownersRef.document(userID).set(dogowner);
+                }
+
             }
         })
         .addOnFailureListener(new OnFailureListener() {
