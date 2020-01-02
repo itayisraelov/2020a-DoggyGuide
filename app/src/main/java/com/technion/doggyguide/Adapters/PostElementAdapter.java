@@ -43,7 +43,7 @@ public class PostElementAdapter extends FirestoreRecyclerAdapter<PostElement, Po
     }
 
     @Override
-    protected void onBindViewHolder(@NonNull final PostHolder holder, int position, @NonNull PostElement model) {
+    protected void onBindViewHolder(@NonNull final PostHolder holder, final int position, @NonNull final PostElement model) {
         db.document("dog owners/" + model.getUserId())
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -71,6 +71,32 @@ public class PostElementAdapter extends FirestoreRecyclerAdapter<PostElement, Po
         holder.postDate.setText(model.getPost_date());
         holder.postTime.setText(model.getStart_time() + "-" + model.getEnd_time());
         holder.postDescription.setText(model.getDescription());
+
+        holder.ignoreButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                Log.d(TAG, "Ignore Button Clicked");
+                FirebaseAuth mAuth = FirebaseAuth.getInstance();
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                String userID = mAuth.getCurrentUser().getUid();
+                CollectionReference posts = db.collection("dog owners/"
+                        + userID + "/posts");
+                posts.document(model.getPostId())
+                        .delete()
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Snackbar.make(v, "Event ignored!", Snackbar.LENGTH_LONG).show();
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.d(TAG, e.getMessage());
+                            }
+                        });
+            }
+        });
     }
 
     @NonNull
@@ -135,18 +161,6 @@ public class PostElementAdapter extends FirestoreRecyclerAdapter<PostElement, Po
                 }
             });
 
-            ignoreButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Log.d(TAG, "Ignore Button Clicked");
-                    FirebaseAuth mAuth = FirebaseAuth.getInstance();
-                    FirebaseFirestore db = FirebaseFirestore.getInstance();
-                    String userID = mAuth.getCurrentUser().getUid();
-                    CollectionReference posts = db.collection("dog owners/"
-                            + userID + "/posts");
-
-                }
-            });
         }
 
     }

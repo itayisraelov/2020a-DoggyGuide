@@ -5,11 +5,9 @@ import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -29,7 +27,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.FileProvider;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -48,16 +45,12 @@ import com.technion.doggyguide.dataElements.DogOwnerElement;
 
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+
 import java.util.HashMap;
 import java.util.Map;
 
 import me.drakeet.materialdialog.MaterialDialog;
 
-import static android.os.Environment.getExternalStoragePublicDirectory;
 
 
 public class DogOwnerSignUp extends AppCompatActivity {
@@ -80,7 +73,6 @@ public class DogOwnerSignUp extends AppCompatActivity {
     private ProgressBar prog_bar;
 
     private Uri mImageUri;
-    private String pathToFile;
 
     private StorageTask mUploadTask;
 
@@ -129,7 +121,6 @@ public class DogOwnerSignUp extends AppCompatActivity {
             public void onClick(View v) {
                 grantingPermission();
                 openFileChooser();
-                //uploadFile(v);
             }
         });
         pickAnImg.setOnClickListener(new View.OnClickListener() {
@@ -137,7 +128,6 @@ public class DogOwnerSignUp extends AppCompatActivity {
             public void onClick(View v) {
                 grantingPermission();
                 openFileChooser();
-                //uploadFile(v);
             }
         });
 
@@ -237,7 +227,6 @@ public class DogOwnerSignUp extends AppCompatActivity {
             mImageUri = data.getData();
             profileImgView.setImageURI(mImageUri);
         }
-        Uri d = data.getData();
         if (requestCode == CAPTURE_IMAGE_REQUEST
                 && resultCode == RESULT_OK
                 && data != null) {
@@ -338,20 +327,20 @@ public class DogOwnerSignUp extends AppCompatActivity {
 
             }
         })
-        .addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.d(TAG, e.getMessage());
-            }
-        })
-        .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                double progress = (100.0 * taskSnapshot.getBytesTransferred() /
-                        taskSnapshot.getTotalByteCount());
-                prog_bar.setProgress((int) progress);
-            }
-        });
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, e.getMessage());
+                    }
+                })
+                .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                        double progress = (100.0 * taskSnapshot.getBytesTransferred() /
+                                taskSnapshot.getTotalByteCount());
+                        prog_bar.setProgress((int) progress);
+                    }
+                });
 
         //adding a reference to organizations database
         Map<String, Object> member = new HashMap<>();

@@ -3,6 +3,7 @@ package com.technion.doggyguide.homeScreen;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.icu.text.SimpleDateFormat;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -13,6 +14,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 
@@ -32,7 +34,6 @@ import com.technion.doggyguide.R;
 import com.technion.doggyguide.TimePickerFabFragment;
 import com.technion.doggyguide.dataElements.PostElement;
 
-import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Map;
 
@@ -115,11 +116,11 @@ public class Fab extends AppCompatActivity implements DatePickerDialog.OnDateSet
         int endMinute = Integer.parseInt(end_time.split(":")[1]);
         if (endHour < startHour) {
             Toast.makeText(this,
-                    "End time cannot be later than start time!\nTry Again", Toast.LENGTH_LONG).show();
+                    "End time cannot be earlier than start time!\nTry Again", Toast.LENGTH_LONG).show();
             return;
         } else if (endHour == startHour && endMinute < startMinute) {
             Toast.makeText(this,
-                    "End time cannot be later than start time!\nTry Again", Toast.LENGTH_LONG).show();
+                    "End time cannot be earlier than start time!\nTry Again", Toast.LENGTH_LONG).show();
             return;
         }
         posting_time = Calendar.getInstance().getTime().toString();
@@ -135,7 +136,7 @@ public class Fab extends AppCompatActivity implements DatePickerDialog.OnDateSet
         String name = postname.getText().toString();
         String description = postdescription.getText().toString();
         PostElement post = new PostElement(name, userID, start_time, end_time,
-                postdate.getText().toString(), posting_time, description);
+                postdate.getText().toString(), posting_time, description, postID);
         postsRef.document(postID).set(post);
         addPostRefToUser(post, postID);
         addPostRefToFriends(post, postID);
@@ -175,6 +176,7 @@ public class Fab extends AppCompatActivity implements DatePickerDialog.OnDateSet
                 });
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
         Calendar calendar = Calendar.getInstance();
