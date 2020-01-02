@@ -20,6 +20,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
@@ -138,6 +139,12 @@ public class PostElementAdapter extends FirestoreRecyclerAdapter<PostElement, Po
                 @Override
                 public void onClick(View v) {
                     Log.d(TAG, "Ignore Button Clicked");
+                    FirebaseAuth mAuth = FirebaseAuth.getInstance();
+                    FirebaseFirestore db = FirebaseFirestore.getInstance();
+                    String userID = mAuth.getCurrentUser().getUid();
+                    CollectionReference posts = db.collection("dog owners/"
+                            + userID + "/posts");
+
                 }
             });
         }

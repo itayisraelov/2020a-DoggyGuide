@@ -34,13 +34,13 @@ public class HomeSectionsPagerAdapter extends FragmentPagerAdapter {
                 fragment = HomeFragment.newInstance("param1", "param2");
                 break;
             case 1:
-                fragment = EventsFragment.newInstance("param1", "param2");
-                break;
-            case 2:
                 fragment = ChatFragment.newInstance("param1", "param2");
                 break;
-            case 3:
+            case 2:
                 fragment = NotificationsFragment.newInstance("param1", "param2");
+                break;
+            case 3:
+                fragment = EventsFragment.newInstance("param1", "param2");
                 break;
         }
         return fragment;

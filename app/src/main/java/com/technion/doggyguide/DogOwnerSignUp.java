@@ -1,16 +1,27 @@
 package com.technion.doggyguide;
 
+import android.Manifest;
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,6 +29,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -34,14 +46,26 @@ import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 import com.technion.doggyguide.dataElements.DogOwnerElement;
 
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
+import me.drakeet.materialdialog.MaterialDialog;
+
+import static android.os.Environment.getExternalStoragePublicDirectory;
 
 
 public class DogOwnerSignUp extends AppCompatActivity {
 
     public final String TAG = "user SignUp Activity";
-    private final int PICK_IMAGE_REQUEST = 1;
+    private final int PICK_IMAGE_REQUEST = 101;
+    private final int CAPTURE_IMAGE_REQUEST = 102;
+    private final int REQUEST_CODE_WRITE_STORAGE = 1;
     private final String ORG_DOC_ID = "euHHrQzHbBKNZsvrmpbT";
     private final String MEMBERS_DOC_ID = "reference_to_members";
     private ImageView profileImgView;
@@ -56,6 +80,7 @@ public class DogOwnerSignUp extends AppCompatActivity {
     private ProgressBar prog_bar;
 
     private Uri mImageUri;
+    private String pathToFile;
 
     private StorageTask mUploadTask;
 
@@ -102,14 +127,16 @@ public class DogOwnerSignUp extends AppCompatActivity {
         profileImgView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openFileChooser(v);
+                grantingPermission();
+                openFileChooser();
                 //uploadFile(v);
             }
         });
         pickAnImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openFileChooser(v);
+                grantingPermission();
+                openFileChooser();
                 //uploadFile(v);
             }
         });
@@ -128,12 +155,66 @@ public class DogOwnerSignUp extends AppCompatActivity {
 
     }
 
-    private void openFileChooser(View view) {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(intent, PICK_IMAGE_REQUEST);
+    private void grantingPermission() {
+        int hasWriteStoragePermission = 0;
+
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            hasWriteStoragePermission = checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        }
+
+        if (hasWriteStoragePermission != PackageManager.PERMISSION_GRANTED) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                requestPermissions(new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        REQUEST_CODE_WRITE_STORAGE);
+            }
+            return;
+        }
     }
+
+    private void openFileChooser(){
+        final ArrayAdapter<String> arrayAdapter
+                = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
+        arrayAdapter.add("Take Photo");
+        arrayAdapter.add("Select Gallery");
+        ListView listView = new ListView(this);
+        listView.setLayoutParams(new ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT));
+        float scale = getResources().getDisplayMetrics().density;
+        int dpAsPixels = (int) (8 * scale + 0.5f);
+        listView.setPadding(0, dpAsPixels, 0, dpAsPixels);
+        listView.setDividerHeight(0);
+        listView.setAdapter(arrayAdapter);
+
+        final MaterialDialog alert = new MaterialDialog(this).setContentView(listView);
+
+        alert.setPositiveButton("Cancel", new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                alert.dismiss();
+            }
+        });
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if(position==0){
+                    alert.dismiss();
+                    Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    if (takePicture.resolveActivity(getPackageManager()) != null) {
+                        startActivityForResult(takePicture, CAPTURE_IMAGE_REQUEST);
+                    }
+                } else {
+                    alert.dismiss();
+                    Intent pickPhoto = new Intent();
+                    pickPhoto.setType("image/*");
+                    pickPhoto.setAction(Intent.ACTION_GET_CONTENT);
+                    startActivityForResult(pickPhoto, PICK_IMAGE_REQUEST);
+                }
+            }
+        });
+        alert.show();
+    }
+
 
     private void uploadFile(View view) {
         StorageReference fileRef = mStorageRef.child(System.currentTimeMillis() + "."
@@ -156,6 +237,19 @@ public class DogOwnerSignUp extends AppCompatActivity {
             mImageUri = data.getData();
             profileImgView.setImageURI(mImageUri);
         }
+        Uri d = data.getData();
+        if (requestCode == CAPTURE_IMAGE_REQUEST
+                && resultCode == RESULT_OK
+                && data != null) {
+            Bitmap bmp = (Bitmap) data.getExtras().get("data");
+            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+            bmp.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+            String path = MediaStore.Images.Media.insertImage(DogOwnerSignUp.this.getContentResolver(),
+                    bmp, "Title", null);
+            mImageUri = Uri.parse(path);
+            profileImgView.setImageURI(mImageUri);
+
+        }
     }
 
     private void signUpbtnHandler(View view) {
@@ -169,14 +263,6 @@ public class DogOwnerSignUp extends AppCompatActivity {
                     "Please upload a profile pic", Toast.LENGTH_SHORT).show();
             return;
         }
-//        TODO: add this piece of code to sprint 2
-//        if(organizationExists(org_emailtxt.getText().toString())) {
-//            signUpWithEmailAndPassword(email, pwd);
-//        } else {
-//            Toast.makeText(DogOwnerSignUp.this,
-//                    "Such Organization does not exist.",
-//                    Toast.LENGTH_LONG).show();
-//        }
         signUpWithEmailAndPassword(email, pwd, view);
 
     }
@@ -309,16 +395,6 @@ public class DogOwnerSignUp extends AppCompatActivity {
         }
         return true;
     }
-
-
-    //TODO: add this piece of code to sprint 2
-//    private boolean organizationExists(String org_ID) {
-//        if (db.collection("organizations")
-//                .whereEqualTo("org_ID", org_ID)
-//                .get().isSuccessful())
-//            return true;
-//        return false;
-//    }
 
     @Override
     public void onStart() {

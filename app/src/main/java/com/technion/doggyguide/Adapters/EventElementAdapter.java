@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.icu.text.SimpleDateFormat;
 import android.os.Build;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +24,6 @@ import com.technion.doggyguide.R;
 import com.technion.doggyguide.dataElements.EventElement;
 import com.technion.doggyguide.notifications.AlertRecieverEvent;
 
-import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -77,39 +75,28 @@ public class EventElementAdapter extends
                     //set reminder 10 mins before start time on this date
                     numOfAlarmClicks++;
                     Calendar calendar = Calendar.getInstance();
-                    String start_time = textViewTime.getText().toString().split("-")[0];
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm");
-                    try {
-                        Date date = dateFormat.parse(start_time);
-                        int hourOfDay = date.getHours();
-                        int minute = date.getMinutes();
-                        if (minute < 10 && minute != 0) {
-                            hourOfDay--;
-                            minute = 60 - (minute % 10);
-                        } else if (minute == 0) {
-                            hourOfDay--;
-                            minute = 50;
-                        } else {
-                            minute -= 10;
-                        }
-                        String[] d = textViewDate.getText().toString().split("-");
-                        calendar.set(Calendar.YEAR, Integer.parseInt(d[2]));
-                        calendar.set(Calendar.MONTH,  Integer.parseInt(d[1]));
-                        calendar.set(Calendar.DAY_OF_MONTH, Integer.parseInt(d[0]));
-                        calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                        calendar.set(Calendar.MINUTE, minute);
-                        calendar.set(Calendar.SECOND, 0);
-                        if (numOfAlarmClicks % 2 == 1) {
-                            startAlarm(calendar);
-                            Toast.makeText(v.getContext(), "Alarm set 10 minutes before the event starts!",
-                                    Toast.LENGTH_LONG).show();
-                        } else {
-                            cancelAlarm(calendar);
-                            Toast.makeText(v.getContext(), "Alarm is canceled!", Toast.LENGTH_LONG).show();
-                        }
-
-                    } catch (ParseException e) {
-                        Log.d(TAG, e.getMessage());
+                    String[] start_time = textViewTime.getText().toString().split("-")[0].split(":");
+                    int hourOfDay = Integer.parseInt(start_time[0]);
+                    int minute = Integer.parseInt(start_time[1]);
+                    if (minute < 10 && minute != 0) {
+                        hourOfDay--;
+                        minute = 60 - (minute % 10);
+                    } else if (minute == 0) {
+                        hourOfDay--;
+                        minute = 50;
+                    } else {
+                        minute -= 10;
+                    }
+                    String[] d = textViewDate.getText().toString().split("-");
+                    calendar.set(Integer.parseInt(d[2]), Integer.parseInt(d[1]) - 1,
+                            Integer.parseInt(d[0]), hourOfDay, minute);
+                    if (numOfAlarmClicks % 2 == 1) {
+                        startAlarm(calendar);
+                        Toast.makeText(v.getContext(), "Alarm set 10 minutes before the event starts!",
+                                Toast.LENGTH_LONG).show();
+                    } else {
+                        cancelAlarm(calendar);
+                        Toast.makeText(v.getContext(), "Alarm is canceled!", Toast.LENGTH_LONG).show();
                     }
 
 
@@ -138,7 +125,5 @@ public class EventElementAdapter extends
                 }
             });
         }
-
-
     }
 }
