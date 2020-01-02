@@ -1,5 +1,6 @@
 package com.technion.doggyguide.loginScreen;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -50,6 +52,7 @@ public class DogOwnerConnectionFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private ProgressDialog mProgressDialog;
 
     private OnFragmentInteractionListener mListener;
 
@@ -97,6 +100,8 @@ public class DogOwnerConnectionFragment extends Fragment {
         // Initialize Firebase Authentication
         mAuth = FirebaseAuth.getInstance();
 
+        mProgressDialog = new ProgressDialog(getActivity());
+
         // Initialize Google Sign In Options
         mGSO = new GoogleSignInOptions
                 .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -123,6 +128,10 @@ public class DogOwnerConnectionFragment extends Fragment {
         mLoginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mProgressDialog.setTitle("LogIn");
+                mProgressDialog.setMessage("Please wait");
+                mProgressDialog.setCanceledOnTouchOutside(false);
+                mProgressDialog.show();
                 String email = emailtxt.getText().toString();
                 String pwd = pwdtxt.getText().toString();
                 if (!validateEmailAndPwd(email, pwd))
@@ -134,6 +143,10 @@ public class DogOwnerConnectionFragment extends Fragment {
         mGoogleLoginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mProgressDialog.setTitle("SignUp");
+                mProgressDialog.setMessage("Please wait until we can register you");
+                mProgressDialog.setCanceledOnTouchOutside(false);
+                mProgressDialog.show();
                 Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
                     @Override
@@ -150,8 +163,10 @@ public class DogOwnerConnectionFragment extends Fragment {
         mSignUpBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 Intent intent = new Intent(getActivity(), DogOwnerSignUp.class);
                 startActivity(intent);
+
             }
         });
         return view;

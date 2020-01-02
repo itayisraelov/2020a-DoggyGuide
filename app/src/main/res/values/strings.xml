@@ -9,7 +9,7 @@
     <string name="home_tab_text_2">Events</string>
     <string name="home_tab_text_3">Chat</string>
     <string name="home_tab_text_4">Reminders</string>
-    <string name ="accept">ACCEPT</string>
+    <string name="accept">ACCEPT</string>
     <string name="ignore">IGNORE</string>
 
     <!-- TODO: Remove or change this placeholder text -->
@@ -66,4 +66,15 @@
     <string name="about">About</string>
     <string name="about_app">About App:</string>
     <string name="the_purpose_of_our_app_is_first_to_help_the_dog_owner_with_daily_care_such_as_alerting_him_to_feed_the_dog_or_take_him_out_for_walk_secondly_the_goal_is_to_help_the_dog_owner_to_communicate_with_other_dog_owners_at_the_technion_in_a_convenient_way_such_as_finding_someone_who_can_keep_the_dog_when_needed_or_play_dates_with_other_dogs_and_finally_its_goal_is_to_conveniently_link_the_dog_owner_to_the_organization_such_as_announcing_vaccines_training_or_treatments_that_should_occur_soon">The purpose of our app is first to help the dog owner with daily care, such as alerting him to feed the dog or take him out for walk. Secondly, the goal is to help the dog owner to communicate with other dog owners at the Technion in a convenient way, such as finding someone who can Keep the dog when needed or play dates with other dogs. And finally, its goal is to conveniently link the dog owner to the organization, such as announcing vaccines, training or treatments that should occur soon.</string>
+    <string name="display_name">Display name</string>
+    <string name="this_is_my_status">This is my status</string>
+    <string name="change_image">change image</string>
+    <string name="change_status">change status</string>
+    <string name="dog_breed">dog breed</string>
+    <string name="the_name_of_the_dog">the name of the dog</string>
+    <string name="itay_israelov">Itay Israelov</string>
+    <string name="user_name">user name</string>
+    <string name="name_of_the_organization">name of the organization</string>
+    <string name="save_changes">save changes</string>
+    <string name="insert_your_status">Insert your status</string>
 </resources>

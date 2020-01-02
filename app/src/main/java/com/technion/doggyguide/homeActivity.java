@@ -23,6 +23,7 @@ import com.technion.doggyguide.homeScreen.ChatFragment;
 import com.technion.doggyguide.homeScreen.EventsFragment;
 import com.technion.doggyguide.homeScreen.HomeFragment;
 import com.technion.doggyguide.homeScreen.NotificationsFragment;
+import com.technion.doggyguide.profile.profile_activity;
 import com.technion.doggyguide.ui.main.HomeSectionsPagerAdapter;
 
 public class homeActivity extends AppCompatActivity implements
@@ -64,7 +65,8 @@ public class homeActivity extends AppCompatActivity implements
                 startActivity(intent_);
                 return true;
             case R.id.profile:
-                Toast.makeText(this, "profile", Toast.LENGTH_SHORT).show();
+                Intent intent_profile = new Intent(homeActivity.this, profile_activity.class);
+                startActivity(intent_profile);
                 return true;
             case R.id.logout:
                 mAuth.signOut();

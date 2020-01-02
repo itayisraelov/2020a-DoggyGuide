@@ -1,5 +1,6 @@
 package com.technion.doggyguide;
 
+import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.net.Uri;
@@ -54,6 +55,7 @@ public class DogOwnerSignUp extends AppCompatActivity {
     private EditText dog_breedtxt;
     private Button sigupbtn;
     private ProgressBar prog_bar;
+    private ProgressDialog mProgressDialog;
 
     private Uri mImageUri;
 
@@ -73,6 +75,7 @@ public class DogOwnerSignUp extends AppCompatActivity {
         getSupportActionBar().setTitle("Sign Up");
         getSupportActionBar().setHomeAsUpIndicator(R.mipmap.ic_up_button);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        mProgressDialog = new ProgressDialog(this);
 
         //Initialize texts
         profileImgView = findViewById(R.id.profile_image);
@@ -169,6 +172,12 @@ public class DogOwnerSignUp extends AppCompatActivity {
                     "Please upload a profile pic", Toast.LENGTH_SHORT).show();
             return;
         }
+        mProgressDialog.setTitle("SignUp");
+        mProgressDialog.setMessage("Please wait until we can register you");
+        mProgressDialog.setCanceledOnTouchOutside(false);
+        mProgressDialog.show();
+//        mProgressDialog.dismiss();
+//        mProgressDialog.hide();
 //        TODO: add this piece of code to sprint 2
 //        if(organizationExists(org_emailtxt.getText().toString())) {
 //            signUpWithEmailAndPassword(email, pwd);
@@ -237,7 +246,7 @@ public class DogOwnerSignUp extends AppCompatActivity {
                 DogOwnerElement dogowner = new DogOwnerElement(nametxt.getText().toString(),
                         emailtxt.getText().toString(), dog_nametxt.getText().toString(),
                         dog_breedtxt.getText().toString(),
-                        taskSnapshot.getUploadSessionUri().toString());
+                        taskSnapshot.getUploadSessionUri().toString(),"I am new in the system");
                 dogownersRef.document(userID).set(dogowner);
             }
         })

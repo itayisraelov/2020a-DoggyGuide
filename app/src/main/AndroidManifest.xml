@@ -10,7 +10,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".About"></activity>
+        <activity android:name=".profile.StatusActivity"
+            android:parentActivityName=".profile.profile_activity"></activity>
+        <activity android:name=".profile.profile_activity" />
+        <activity android:name=".About" />
         <activity android:name=".Credits" />
         <activity android:name=".homeScreen.alarm.eatAlarmActivity" />
         <activity android:name=".homeScreen.alarm.showerAlarmActivity" />
@@ -41,7 +44,7 @@
         <receiver android:name=".notifications.AlertReceiverWalk" />
         <receiver android:name=".notifications.AlertReceiverShower" />
         <receiver android:name=".notifications.AlertReceiverFeed" />
-        <receiver android:name=".notifications.AlertRecieverEvent"/>
+        <receiver android:name=".notifications.AlertRecieverEvent" />
     </application>
 
 </manifest>
