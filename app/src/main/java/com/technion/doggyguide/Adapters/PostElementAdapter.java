@@ -4,10 +4,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -30,6 +28,7 @@ import com.technion.doggyguide.dataElements.PostElement;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 public class PostElementAdapter extends FirestoreRecyclerAdapter<PostElement, PostElementAdapter.PostHolder> {
@@ -77,16 +76,16 @@ public class PostElementAdapter extends FirestoreRecyclerAdapter<PostElement, Po
             public void onClick(final View v) {
                 Log.d(TAG, "Ignore Button Clicked");
                 FirebaseAuth mAuth = FirebaseAuth.getInstance();
-                FirebaseFirestore db = FirebaseFirestore.getInstance();
                 String userID = mAuth.getCurrentUser().getUid();
                 CollectionReference posts = db.collection("dog owners/"
                         + userID + "/posts");
+                Snackbar.make(v, "Post ignored!", Snackbar.LENGTH_LONG).show();
                 posts.document(model.getPostId())
                         .delete()
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
-                                Snackbar.make(v, "Event ignored!", Snackbar.LENGTH_LONG).show();
+                                Log.d(TAG, "Post ignored!");
                             }
                         })
                         .addOnFailureListener(new OnFailureListener() {
@@ -95,6 +94,46 @@ public class PostElementAdapter extends FirestoreRecyclerAdapter<PostElement, Po
                                 Log.d(TAG, e.getMessage());
                             }
                         });
+            }
+        });
+
+        holder.acceptButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FirebaseAuth mAuth = FirebaseAuth.getInstance();
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                String userID = mAuth.getCurrentUser().getUid();
+                Log.d(TAG, "Accept Button Clicked");
+                String mydate = holder.postDate.getText().toString();
+                SimpleDateFormat dateFormat = new SimpleDateFormat(
+                        "E, MMM dd, yyyy");
+
+                Date myDate = new Date();
+                try {
+                    myDate = dateFormat.parse(mydate);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+                SimpleDateFormat timeFormat = new SimpleDateFormat("d-M-yyyy");
+                String date = timeFormat.format(myDate);
+                String start_time = holder.postTime.getText().toString().split("-")[0];
+                String end_time = holder.postTime.getText().toString().split("-")[1];
+                String description = holder.postDescription.getText().toString();
+                String eventID = userID + Calendar.getInstance().getTime().toString();
+                EventElement newEvent = new EventElement("Upcoming Event", date,
+                        start_time, end_time, description, eventID);
+                db.collection("dog owners/" +
+                        userID + "/events by date")
+                        .document(newEvent.getDate())
+                        .collection("events")
+                        .document(newEvent.getEventId()).set(newEvent);
+                CollectionReference posts = db.collection("dog owners/"
+                        + userID + "/posts");
+                Snackbar.make(v, "New event has been created!", Snackbar.LENGTH_LONG).show();
+                //Delete the post from all friends also...
+                posts.document(model.getPostId())
+                        .delete();
             }
         });
     }
@@ -115,8 +154,8 @@ public class PostElementAdapter extends FirestoreRecyclerAdapter<PostElement, Po
         private TextView postDate;
         private TextView postTime;
         private TextView postDescription;
-        private Button acceptButton;
-        private Button ignoreButton;
+        private TextView acceptButton;
+        private TextView ignoreButton;
 
         public PostHolder(final View itemView) {
             super(itemView);
@@ -128,39 +167,6 @@ public class PostElementAdapter extends FirestoreRecyclerAdapter<PostElement, Po
             postDescription = itemView.findViewById(R.id.post_description);
             acceptButton = itemView.findViewById(R.id.post_accept);
             ignoreButton = itemView.findViewById(R.id.post_ignore);
-
-            acceptButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    FirebaseAuth mAuth = FirebaseAuth.getInstance();
-                    FirebaseFirestore db = FirebaseFirestore.getInstance();
-                    String userID = mAuth.getCurrentUser().getUid();
-                    Log.d(TAG, "Accept Button Clicked");
-                    String mydate = postDate.getText().toString();
-                    SimpleDateFormat dateFormat = new SimpleDateFormat(
-                            "E, MMM dd, yyyy");
-
-                    Date myDate = new Date();
-                    try {
-                        myDate = dateFormat.parse(mydate);
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-
-                    SimpleDateFormat timeFormat = new SimpleDateFormat("d-M-yyyy");
-                    String date = timeFormat.format(myDate);
-                    String start_time = postTime.getText().toString().split("-")[0];
-                    String end_time = postTime.getText().toString().split("-")[1];
-                    String description = postDescription.getText().toString();
-                    EventElement newEvent = new EventElement("Upcoming Event", date,
-                            start_time, end_time, description);
-                    db.collection("dog owners/" +
-                             userID + "/events by date")
-                            .document(newEvent.getDate()).collection("events").add(newEvent);
-                    Snackbar.make(v, "New event has been created!", Snackbar.LENGTH_LONG).show();
-                }
-            });
-
         }
 
     }

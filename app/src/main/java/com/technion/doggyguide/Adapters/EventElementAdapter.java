@@ -20,16 +20,24 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.technion.doggyguide.R;
 import com.technion.doggyguide.dataElements.EventElement;
 import com.technion.doggyguide.notifications.AlertRecieverEvent;
 
 import java.util.Calendar;
-import java.util.Date;
 
 public class EventElementAdapter extends
         FirestoreRecyclerAdapter<EventElement, EventElementAdapter.EventHolder> {
     private final String TAG = "Event Adapter";
+    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     public EventElementAdapter(@NonNull FirestoreRecyclerOptions<EventElement> options) {
         super(options);
@@ -37,10 +45,22 @@ public class EventElementAdapter extends
 
     @Override
     protected void onBindViewHolder(@NonNull EventHolder holder, int position, @NonNull EventElement model) {
+        final String userId = mAuth.getCurrentUser().getUid();
+        final DocumentReference eventDocRef = db.collection("dog owners/"
+                + userId + "/events by date").document(model.getDate())
+                .collection("events").document(model.getEventId());
         holder.textViewTitle.setText(model.getTitle());
         holder.textViewTime.setText(model.getStart_time() + "-" + model.getEnd_time());
         holder.textViewDescription.setText(model.getDescription());
         holder.textViewDate.setText(model.getDate());
+
+        holder.imageButtonClear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Snackbar.make(v, "Event canceled!", Snackbar.LENGTH_SHORT).show();
+                eventDocRef.delete();
+            }
+        });
     }
 
     @NonNull
@@ -57,6 +77,7 @@ public class EventElementAdapter extends
         private TextView textViewTime;
         private TextView textViewDescription;
         private ImageButton imageButtonAlarm;
+        private ImageButton imageButtonClear;
         private int numOfAlarmClicks = 0;
 
         public EventHolder(final View itemView) {
@@ -66,7 +87,7 @@ public class EventElementAdapter extends
             textViewTime = itemView.findViewById(R.id.event_time);
             textViewDescription = itemView.findViewById(R.id.event_description);
             imageButtonAlarm = itemView.findViewById(R.id.event_alarm);
-
+            imageButtonClear = itemView.findViewById(R.id.event_cancel);
 
             imageButtonAlarm.setOnClickListener(new View.OnClickListener() {
                 @Override

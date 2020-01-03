@@ -4,8 +4,11 @@ import android.annotation.TargetApi;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.content.Intent;
 import android.os.Build;
 
 import androidx.core.app.NotificationCompat;
@@ -30,9 +33,9 @@ class NotificationHelperEvent extends ContextWrapper {
                 NotificationManager.IMPORTANCE_HIGH);
         channel.enableLights(true);
         channel.enableVibration(true);
-        channel.setLightColor(R.color.colorAccent);
         channel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
         getManager().createNotificationChannel(channel);
+
     }
 
     public NotificationManager getManager() {
