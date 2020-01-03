@@ -15,7 +15,7 @@ such as announcing vaccines, training or treatments that should occur soon.
 com.firebaseui:firebase-ui-firestore:6.1.0  - https://github.com/firebase/FirebaseUI-Android/blob/master/LICENSE
 com.squareup.picasso:picasso:2.71828   - https://github.com/codepath/android_guides/blob/master/LICENSE.md
 de.hdodenhof:circleimageview:1.2.1  - https://github.com/lopspower/CircularImageView/blob/master/LICENSE
-api 'com.theartofdev.edmodo:android-image-cropper:2.8.+' - https://github.com/ArthurHub/Android-Image-Cropper/blob/master/LICENSE.txt
+com.theartofdev.edmodo:android-image-cropper:2.8.+ - https://github.com/ArthurHub/Android-Image-Cropper/blob/master/LICENSE.txt
 
 ## Made With: 
 picasso, firebaseui, firestore, authentication, circleimageview, Image Cropping
