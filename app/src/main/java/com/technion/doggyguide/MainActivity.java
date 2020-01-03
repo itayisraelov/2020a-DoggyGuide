@@ -1,12 +1,14 @@
 package com.technion.doggyguide;
 
 
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
@@ -35,8 +37,6 @@ public class MainActivity extends AppCompatActivity implements
 
         // Initialize Firebase Authentication
         mAuth = FirebaseAuth.getInstance();
-
-
     }
 
     @Override

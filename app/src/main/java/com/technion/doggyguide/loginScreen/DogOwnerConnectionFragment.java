@@ -28,9 +28,19 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.technion.doggyguide.DogOwnerSignUp;
+import com.technion.doggyguide.GoogleSignInDialog;
 import com.technion.doggyguide.R;
+import com.technion.doggyguide.dataElements.DogOwnerElement;
 import com.technion.doggyguide.homeActivity;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -41,12 +51,16 @@ import com.technion.doggyguide.homeActivity;
  * Use the {@link DogOwnerConnectionFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class DogOwnerConnectionFragment extends Fragment {
+public class DogOwnerConnectionFragment extends Fragment implements GoogleSignInDialog.OnInputListener {
     static final int GOOGLE_SIGN_IN = 123;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+
+    private final String ORG_DOC_ID = "euHHrQzHbBKNZsvrmpbT";
+    private final String MEMBERS_DOC_ID = "reference_to_members";
+
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -54,6 +68,8 @@ public class DogOwnerConnectionFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
 
     private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
+    private CollectionReference orgmembersRef;
     private GoogleSignInClient mGSC;
     private GoogleSignInOptions mGSO;
 
@@ -63,6 +79,9 @@ public class DogOwnerConnectionFragment extends Fragment {
     private EditText emailtxt;
     private EditText pwdtxt;
 
+
+    private String mDogName;
+    private String mDogBreed;
 
     public DogOwnerConnectionFragment() {
         // Required empty public constructor
@@ -96,12 +115,15 @@ public class DogOwnerConnectionFragment extends Fragment {
 
         // Initialize Firebase Authentication
         mAuth = FirebaseAuth.getInstance();
-
+        db = FirebaseFirestore.getInstance();
+        orgmembersRef = db.collection("organizations").document(ORG_DOC_ID).collection(MEMBERS_DOC_ID);
         // Initialize Google Sign In Options
         mGSO = new GoogleSignInOptions
                 .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.Web_Client_ID))
+                .requestId()
                 .requestEmail()
+                .requestProfile()
                 .build();
 
         // Build a GoogleSignInClient with the options specified by mGSO.
@@ -134,14 +156,6 @@ public class DogOwnerConnectionFragment extends Fragment {
         mGoogleLoginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        Snackbar.make(view, "Google sign in not fully integrated with database",
-                                Snackbar.LENGTH_LONG).show();
-                    }
-                }, 500);
                 Intent intent = mGSC.getSignInIntent();
                 startActivityForResult(intent, GOOGLE_SIGN_IN);
             }
@@ -195,22 +209,23 @@ public class DogOwnerConnectionFragment extends Fragment {
     }
 
 
-    private void signIWithGoogle(GoogleSignInAccount account) {
+    private void signIWithGoogle(final GoogleSignInAccount account) {
         Log.d("TAG", "firebaseAuthWithGoogle:" + account.getId());
-        AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
-        mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+        final AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
+        final CollectionReference dogowners = db.collection("dog owners");
+        dogowners.whereEqualTo("email", account.getEmail())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            Log.d("TAG", "signInWithCredential:success");
-                            Intent intent = new Intent(getActivity(), homeActivity.class);
-                            getActivity().finish();
-                            startActivity(intent);
-                        } else {
-                            Log.w("TAG", "signInWithCredential:failure", task.getException());
-                            Toast.makeText(getActivity(), "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        List<DocumentSnapshot> docs = task.getResult().getDocuments();
+                        if (docs.isEmpty()) {
+                            GoogleSignInDialog dialog = new GoogleSignInDialog();
+                            dialog.setTargetFragment(DogOwnerConnectionFragment.this, 1);
+                            dialog.show(getFragmentManager(), "MyCustomDialog");
+                            firstGoogleSignIn(credential, account);
+                        } else if (docs.size() == 1) {
+                            GoogleSignIn(credential, account);
                         }
                     }
                 });
@@ -231,6 +246,60 @@ public class DogOwnerConnectionFragment extends Fragment {
             }
 
         }
+    }
+
+    private void firstGoogleSignIn(AuthCredential credential, final GoogleSignInAccount account) {
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            Log.d("TAG", "signInWithCredential:success");
+                            addUserToDatabase(account);
+                            Intent intent = new Intent(getActivity(), homeActivity.class);
+                            getActivity().finish();
+                            startActivity(intent);
+                        } else {
+                            Log.w("TAG", "signInWithCredential:failure", task.getException());
+                            Toast.makeText(getActivity(), "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+
+    private void GoogleSignIn(AuthCredential credential, final GoogleSignInAccount account) {
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            Log.d("TAG", "signInWithCredential:success");
+                            addUserToDatabase(account);
+                            Intent intent = new Intent(getActivity(), homeActivity.class);
+                            getActivity().finish();
+                            startActivity(intent);
+                        } else {
+                            Log.w("TAG", "signInWithCredential:failure", task.getException());
+                            Toast.makeText(getActivity(), "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+
+    private void addUserToDatabase(GoogleSignInAccount account) {
+        DogOwnerElement dogowner = new DogOwnerElement(account.getDisplayName(),
+                account.getEmail(), mDogName, mDogBreed, account.getPhotoUrl().toString());
+        String userId = mAuth.getCurrentUser().getUid();
+        db.collection("dog owners")
+                .document(userId)
+                .set(dogowner);
+
+        Map<String, Object> member = new HashMap<>();
+        member.put(userId, "dog owners/" + userId);
+        orgmembersRef.add(member);
+
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -260,6 +329,13 @@ public class DogOwnerConnectionFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+    }
+
+    @Override
+    public void sendInput(String dogname, String dogbreed) {
+        mDogName = dogname;
+        mDogBreed = dogbreed;
+
     }
 
     /**

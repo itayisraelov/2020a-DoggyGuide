@@ -113,7 +113,7 @@ public class DogOwnerSignUp extends AppCompatActivity {
 
         //Initialize collections references
         dogownersRef = db.collection("dog owners");
-        orgmembersRef = db.collection("organizations/" + ORG_DOC_ID + "/members");
+        orgmembersRef = db.collection("organizations").document(ORG_DOC_ID).collection(MEMBERS_DOC_ID);
 
 
         profileImgView.setOnClickListener(new View.OnClickListener() {
@@ -262,7 +262,7 @@ public class DogOwnerSignUp extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            addUserToDatabase(view);
+                            addUserToDatabase();
                             mAuth.getCurrentUser().sendEmailVerification().
                                     addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
@@ -296,7 +296,7 @@ public class DogOwnerSignUp extends AppCompatActivity {
         });
     }
 
-    private void addUserToDatabase(View view) {
+    private void addUserToDatabase() {
         final String userID = mAuth.getCurrentUser().getUid();
         mUploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
@@ -345,22 +345,8 @@ public class DogOwnerSignUp extends AppCompatActivity {
         //adding a reference to organizations database
         Map<String, Object> member = new HashMap<>();
         member.put(userID, "dog owners/" + userID);
-        orgmembersRef.document(MEMBERS_DOC_ID)
-                .set(member)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "Member reference document successfully written!");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error writing member reference document", e);
-                    }
-                });
+        orgmembersRef.add(member);
     }
-
 
     private boolean validateSignup(String email, String pwd, String pwdconfirm) {
         if (email.isEmpty()) {
