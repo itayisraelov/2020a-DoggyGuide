@@ -16,7 +16,9 @@ com.firebaseui:firebase-ui-firestore:6.1.0  - https://github.com/firebase/Fireba
 com.squareup.picasso:picasso:2.71828   - https://github.com/codepath/android_guides/blob/master/LICENSE.md
 de.hdodenhof:circleimageview:1.2.1  - https://github.com/lopspower/CircularImageView/blob/master/LICENSE
 com.theartofdev.edmodo:android-image-cropper:2.8.+ - https://github.com/ArthurHub/Android-Image-Cropper/blob/master/LICENSE.txt
+com.iceteck.silicompressorr:silicompressor:2.2.2 - https://github.com/Tourenathan-G5organisation/SiliCompressor/blob/master/LICENSE
+
 
 ## Made With: 
-picasso, firebaseui, firestore, authentication, circleimageview, Image Cropping
+picasso, firebaseui, firestore, authentication, circleimageview, Image Cropping, SiliCompressor
 
