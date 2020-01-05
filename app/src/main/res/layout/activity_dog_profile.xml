@@ -72,9 +72,6 @@
         android:layout_gravity="center"
         android:textColor="@color/colorWhite"/>
 
-
-
-
     <Space
         android:layout_width="wrap_content"
         android:layout_height="10dp"/>
@@ -88,11 +85,9 @@
         android:layout_gravity="center"
         android:textColor="@color/colorWhite"/>
 
-
-
     <Space
-    android:layout_width="wrap_content"
-    android:layout_height="30dp"/>
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"/>
 
 
     <Button
@@ -118,7 +113,6 @@
         android:textStyle="bold"
         android:textColor="@color/colorWhite"
         android:background="@color/colorRed"/>
-
 
 </LinearLayout>
 

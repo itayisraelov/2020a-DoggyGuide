@@ -138,7 +138,5 @@ public class EventElementAdapter extends
                 }
             });
         }
-
-
     }
 }

@@ -17,8 +17,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.technion.doggyguide.R;
 import com.technion.doggyguide.dataElements.DogOwnerElement;
-import com.technion.doggyguide.homeActivity;
-import com.technion.doggyguide.homeScreen.alarm.FeedAlarm;
 
 public class StatusActivity extends AppCompatActivity {
     EditText mEditText;
@@ -51,7 +49,7 @@ public class StatusActivity extends AppCompatActivity {
                             dogOwnerElement.setmStatus(mEditText.getText().toString());
                             usersRef.document(userUid).set(dogOwnerElement);
                             finish();
-                            Intent intent_profile = new Intent(StatusActivity.this, profile_activity.class);
+                            Intent intent_profile = new Intent(StatusActivity.this, UserProfileActivity.class);
                             startActivity(intent_profile);
                         }
                     }

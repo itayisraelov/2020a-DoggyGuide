@@ -53,7 +53,17 @@ dependencies {
     implementation 'com.firebaseui:firebase-ui-firestore:6.1.0'
 
     //For circular profile image
-    implementation 'de.hdodenhof:circleimageview:1.2.1'
+    implementation 'de.hdodenhof:circleimageview:3.0.1'
+
+    // for image Cropping Library for Android, optimized for Camera / Gallery.
+    api 'com.theartofdev.edmodo:android-image-cropper:2.8.+'
+
+    //SiliCompressor
+    implementation 'com.iceteck.silicompressorr:silicompressor:2.2.2'
+
+    //compressor
+    implementation 'id.zelory:compressor:2.1.0'
+
 
 }
 

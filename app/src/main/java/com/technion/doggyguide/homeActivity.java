@@ -23,8 +23,10 @@ import com.technion.doggyguide.homeScreen.ChatFragment;
 import com.technion.doggyguide.homeScreen.EventsFragment;
 import com.technion.doggyguide.homeScreen.HomeFragment;
 import com.technion.doggyguide.homeScreen.NotificationsFragment;
-import com.technion.doggyguide.profile.profile_activity;
+import com.technion.doggyguide.profile.DogProfileActivity;
+import com.technion.doggyguide.profile.UserProfileActivity;
 import com.technion.doggyguide.ui.main.HomeSectionsPagerAdapter;
+import com.technion.doggyguide.users.UsersActivity;
 
 public class homeActivity extends AppCompatActivity implements
            HomeFragment.OnFragmentInteractionListener,
@@ -60,14 +62,23 @@ public class homeActivity extends AppCompatActivity implements
                 Intent intent__ = new Intent(homeActivity.this, Credits.class);
                 startActivity(intent__);
                 return true;
+            case R.id.all_users:
+                Intent intent_users = new Intent(homeActivity.this, UsersActivity.class);
+                startActivity(intent_users);
+                return true;
             case R.id.About:
                 Intent intent_ = new Intent(homeActivity.this, About.class);
                 startActivity(intent_);
                 return true;
-            case R.id.profile:
-                Intent intent_profile = new Intent(homeActivity.this, profile_activity.class);
+            case R.id.user_profile:
+                Intent intent_profile = new Intent(homeActivity.this, UserProfileActivity.class);
                 startActivity(intent_profile);
                 return true;
+            case R.id.Dog_profile:
+                Intent intent_dog_profil = new Intent(homeActivity.this, DogProfileActivity.class);
+                startActivity(intent_dog_profil);
+                return true;
+
             case R.id.logout:
                 mAuth.signOut();
                 mGSC.signOut().addOnCompleteListener(this, new OnCompleteListener<Void>() {
