@@ -8,7 +8,6 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.technion.doggyguide.R;
-import com.technion.doggyguide.homeScreen.HomeFragment;
 import android.os.Bundle;
 
 

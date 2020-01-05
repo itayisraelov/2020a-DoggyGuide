@@ -1,5 +1,6 @@
 package com.technion.doggyguide.users;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,8 +10,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.squareup.picasso.Picasso;
+import com.technion.doggyguide.MainActivity;
 import com.technion.doggyguide.R;
-
 import de.hdodenhof.circleimageview.CircleImageView;
 
 
@@ -26,6 +27,17 @@ public class UsersAdapter extends FirestoreRecyclerAdapter<Users, UsersAdapter.U
         holder.setName(model.getName());
         holder.setUri(model.getmImageUrl());
         holder.setStatus(model.getmStatus());
+
+        final String user_id = getSnapshots().getSnapshot(position).getId();
+
+        holder.mView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent profile_intent = new Intent (v.getContext(), UserProfile.class);
+                profile_intent.putExtra("user_id", user_id);
+                v.getContext().startActivity(profile_intent);
+            }
+        });
     }
 
     @NonNull
