@@ -22,7 +22,9 @@ com.theartofdev.edmodo:android-image-cropper:2.8.+ - https://github.com/ArthurHu
 
 com.iceteck.silicompressorr:silicompressor:2.2.2 - https://github.com/Tourenathan-G5organisation/SiliCompressor/blob/master/LICENSE
 
+id.zelory:compressor:2.1.0 - https://github.com/zetbaitsu/Compressor
+
 
 ## Made With: 
-picasso, firebaseui, firestore, authentication, circleimageview, Image Cropping, SiliCompressor
+picasso, firebaseui, firestore, authentication, circleimageview, Image Cropping, SiliCompressor, compressor
 
