@@ -1,32 +1,29 @@
 package com.technion.doggyguide.users;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.squareup.picasso.Picasso;
 import com.technion.doggyguide.R;
 import com.technion.doggyguide.dataElements.DogOwnerElement;
-
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.util.HashMap;
 import java.util.Map;
-
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class UserProfile extends AppCompatActivity {
@@ -35,13 +32,12 @@ public class UserProfile extends AppCompatActivity {
     private TextView mName, mStatus, mDogName, mfriendCount;
     Button mFriendReqBtn;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
-    String userUid;
+    String clickedUserUid;
     private CollectionReference usersRef = db.collection("dog owners");
     private ProgressDialog mProgressDialog;
     private String mCurrent_state;
     FirebaseAuth users = FirebaseAuth.getInstance();
     private String mCurrentUserUid = users.getCurrentUser().getUid();
-    //private DocumentReference mDog_owners = db.collection("dog owners").document(mCurrentUserUid);
     private CollectionReference mFriendReqCollection = db.collection("Friend_req");
 
 
@@ -51,13 +47,9 @@ public class UserProfile extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
 
-        userUid = getIntent().getStringExtra("user_id");
-
+        clickedUserUid = getIntent().getStringExtra("user_id");
         mCurrent_state = "not_friends";
-
-
         mProgressDialog = new ProgressDialog(this);
-
         mName = findViewById(R.id.user_name_id_);
         mStatus =findViewById(R.id.status_id_);
         mDogName = findViewById(R.id.name_of_the_dog_id_);
@@ -71,13 +63,12 @@ public class UserProfile extends AppCompatActivity {
         mProgressDialog.show();
 
         readFromDataBase();
+        requestFeature();
 
         mFriendReqBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mFriendReqBtn.setEnabled(false);
-
-
                 // ----------not_friends -------------------------
                 if(mCurrent_state.equals("not_friends")){
                     notFriends();
@@ -90,16 +81,43 @@ public class UserProfile extends AppCompatActivity {
         });
     }
 
+    private void requestFeature() {
+        mFriendReqCollection
+                .document(mCurrentUserUid)
+                .collection("friends")
+                .document(clickedUserUid)
+                .addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable DocumentSnapshot documentSnapshot,
+                                        @Nullable FirebaseFirestoreException e) {
+                        if(documentSnapshot.getData() != null){
+                            boolean res = documentSnapshot.getData().containsKey("request_type");
+                            if (res){
+                                String req_type = documentSnapshot.get("request_type").toString();
+                                if (req_type.equals("received")) {
+                                    mCurrent_state = "req_received";
+                                    mFriendReqBtn.setText("Accept Friend Request");
+                                } else if(req_type.equals("sent")){
+                                    mCurrent_state = "req_sent";
+                                    mFriendReqBtn.setText("Cancel Friend Request");
+                                }
+                            }
+                        }
+                    }
+                });
+    }
+
+
     private void reqSentAndNeedToCancel() {
         mFriendReqCollection
                 .document(mCurrentUserUid)
                 .collection("friends")
-                .document(userUid)
+                .document(clickedUserUid)
                 .delete().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
                 mFriendReqCollection
-                        .document(userUid )
+                        .document(clickedUserUid)
                         .collection("friends")
                         .document(mCurrentUserUid)
                         .delete().addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -120,7 +138,7 @@ public class UserProfile extends AppCompatActivity {
         mFriendReqCollection
                 .document(mCurrentUserUid)
                 .collection("friends")
-                .document(userUid).set(req_1)
+                .document(clickedUserUid).set(req_1)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
@@ -128,7 +146,7 @@ public class UserProfile extends AppCompatActivity {
                     Map<String, Object> req_2 = new HashMap<>();
                     req_2.put("request_type", "received");
                     mFriendReqCollection
-                            .document(userUid)
+                            .document(clickedUserUid)
                             .collection("friends")
                             .document( mCurrentUserUid).set(req_2)
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -138,8 +156,8 @@ public class UserProfile extends AppCompatActivity {
                             mFriendReqBtn.setEnabled(true);
                             mCurrent_state = "req_sent";
                             mFriendReqBtn.setText("Cancel Friend Request");
-//                            Toast.makeText(UserProfile.this,
-//                                    "request sending successfully", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(UserProfile.this,
+                                    "request sending successfully", Toast.LENGTH_SHORT).show();
                         }
                     });
                 }else{
@@ -151,7 +169,7 @@ public class UserProfile extends AppCompatActivity {
     }
 
     private void readFromDataBase() {
-        DocumentReference docRef = usersRef.document(userUid);
+        final DocumentReference docRef = usersRef.document(clickedUserUid);
         docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
@@ -162,8 +180,10 @@ public class UserProfile extends AppCompatActivity {
                     mStatus.setText("Status is:   " + dogOwnerElement.getmStatus());
                     Picasso.get().load(dogOwnerElement.getmImageUrl()).into(mImage);
                     mProgressDialog.dismiss();
+
                 }
             }
         });
     }
 }
+
