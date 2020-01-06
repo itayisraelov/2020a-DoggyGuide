@@ -36,6 +36,7 @@ import java.util.Calendar;
 public class EventElementAdapter extends
         FirestoreRecyclerAdapter<EventElement, EventElementAdapter.EventHolder> {
     private final String TAG = "Event Adapter";
+
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -72,6 +73,9 @@ public class EventElementAdapter extends
     }
 
     public class EventHolder extends RecyclerView.ViewHolder {
+        public static final String TITLE = "Notification title";
+        public static final String DESCRIPTION = "Notification description";
+
         private TextView textViewTitle;
         private TextView textViewDate;
         private TextView textViewTime;
@@ -129,6 +133,8 @@ public class EventElementAdapter extends
                     int startMinute = Integer.parseInt(textViewTime.getText().toString().split("-")[0].split(":")[1]);
                     AlarmManager alarmManager = (AlarmManager) itemView.getContext().getSystemService(Context.ALARM_SERVICE);
                     Intent intent = new Intent(itemView.getContext(), AlertRecieverEvent.class);
+                    intent.putExtra(TITLE, textViewTitle.getText().toString());
+                    intent.putExtra(DESCRIPTION, textViewDescription.getText().toString());
                     PendingIntent pendingIntent = PendingIntent.getBroadcast(itemView.getContext(),
                             startHour * 3600 + startMinute * 60, intent, 0);
                     alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
@@ -140,6 +146,8 @@ public class EventElementAdapter extends
                     int startMinute = Integer.parseInt(textViewTime.getText().toString().split("-")[0].split(":")[1]);
                     AlarmManager alarmManager = (AlarmManager) itemView.getContext().getSystemService(Context.ALARM_SERVICE);
                     Intent intent = new Intent(itemView.getContext(), AlertRecieverEvent.class);
+                    intent.putExtra(TITLE, textViewTitle.getText().toString());
+                    intent.putExtra(DESCRIPTION, textViewDescription.getText().toString());
                     PendingIntent pendingIntent = PendingIntent.getBroadcast(itemView.getContext(),
                             startHour * 3600 + startMinute * 60, intent, 0);
                     alarmManager.cancel(pendingIntent);

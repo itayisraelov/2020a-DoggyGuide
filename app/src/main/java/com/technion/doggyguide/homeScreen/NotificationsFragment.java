@@ -98,9 +98,11 @@ public class NotificationsFragment extends Fragment {
 
     private void createExampleList() {
         mExampleList = new ArrayList<>();
-        mExampleList.add(new ExampleItem(R.mipmap.dog_walking_, "Take your dog for a walk"));
-        mExampleList.add(new ExampleItem(R.mipmap.dog_shower_, "Give your dog a shower"));
-        mExampleList.add(new ExampleItem(R.mipmap.dog_eatting_, "Feed your dog"));
+
+        mExampleList.add(new ExampleItem(R.mipmap.dog_walking_, "Take your dog for a walk",
+                "Generally, people walk their dog for 4 reasons: elimination, mental stimulation, exercise, and training.\nSo let's go out!"));
+        mExampleList.add(new ExampleItem(R.mipmap.dog_shower_, "Give your dog a shower", "Nobody minds a nice warm bath.\nYes even your doggo!"));
+        mExampleList.add(new ExampleItem(R.mipmap.dog_eatting_, "Feed your dog", "I bet you he's hungry right now!"));
     }
 
     private void buildRecyclerView() {

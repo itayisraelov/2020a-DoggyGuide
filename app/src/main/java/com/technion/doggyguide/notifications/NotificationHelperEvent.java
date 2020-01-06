@@ -44,10 +44,10 @@ class NotificationHelperEvent extends ContextWrapper {
         }
         return mManager;
     }
-    public NotificationCompat.Builder getChannelNotification() {
+    public NotificationCompat.Builder getChannelNotification(String title, String description) {
         return new NotificationCompat.Builder(getApplicationContext(), channelID)
-                .setContentTitle("New Event Notification")
-                .setContentText("Upcoming event in 10 minutes!\nCheck your calendar")
+                .setContentTitle(title)
+                .setContentText(description)
                 .setSmallIcon(R.mipmap.ic_launcher_round)
                 .setAutoCancel(true);
     }
