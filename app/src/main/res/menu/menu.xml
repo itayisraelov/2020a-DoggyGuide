@@ -7,10 +7,17 @@
         android:title="@string/overflow"
         app:showAsAction="ifRoom"/>
 
-    <item android:id="@+id/profile"
-        android:title="Profile"
+    <item android:id="@+id/user_profile"
+        android:title="User Profile"
         app:showAsAction="never"/>
 
+    <item android:id="@+id/Dog_profile"
+        android:title="Dog Profile"
+        app:showAsAction="never"/>
+
+    <item android:id="@+id/all_users"
+        android:title="Users"
+        app:showAsAction="never"/>
     <item android:id="@+id/Settings"
         android:title="Settings"
         app:showAsAction="never"/>

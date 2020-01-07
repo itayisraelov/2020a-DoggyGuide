@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/colorPrimaryDark"
+    tools:context=".profile.UserProfileActivity">
+
+    <Space
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"/>
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/user_image_id"
+        android:layout_width="170dp"
+        android:layout_height="170dp"
+        android:layout_gravity="center"
+        android:src="@drawable/ic_event"
+        app:civ_border_color="#FF000000"
+        app:civ_border_width="2dp"/>
+
+    <Space
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"/>
+    <TextView
+        android:id="@+id/user_name_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/user_name"
+        android:textSize="30sp"
+        android:layout_gravity="center"
+        android:textColor="@color/colorWhite"/>
+
+    <Space
+        android:layout_width="wrap_content"
+        android:layout_height="10dp"/>
+
+    <TextView
+        android:id="@+id/name_of_the_dog_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/the_name_of_the_dog"
+        android:textSize="20sp"
+        android:layout_gravity="center"
+        android:textColor="@color/colorWhite"/>
+
+    <Space
+        android:layout_width="wrap_content"
+        android:layout_height="10dp"/>
+
+    <TextView
+        android:id="@+id/name_of_the_organization_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/name_of_the_organization"
+        android:textSize="20sp"
+        android:layout_gravity="center"
+        android:textColor="@color/colorWhite"/>
+
+    <Space
+        android:layout_width="wrap_content"
+        android:layout_height="10dp"/>
+
+    <TextView
+        android:id="@+id/dog_breed_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/dog_breed"
+        android:textSize="20sp"
+        android:layout_gravity="center"
+        android:textColor="@color/colorWhite"/>
+
+    <Space
+        android:layout_width="wrap_content"
+        android:layout_height="10dp"/>
+
+    <TextView
+        android:id="@+id/status_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/this_is_my_status"
+        android:textSize="20sp"
+        android:layout_gravity="center"
+        android:textColor="@color/colorWhite"/>
+
+    <Space
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"/>
+
+
+    <Button
+        android:id="@+id/change_user_image_id"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/change_image"
+        android:textStyle="bold"
+        android:textColor="@color/colorWhite"
+        android:background="@color/colorRed"/>
+
+    <Space
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"/>
+
+    <Button
+        android:id="@+id/change_status_id"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/change_status"
+        android:textStyle="bold"
+        android:textColor="@color/colorWhite"
+        android:background="@color/colorRed"/>
+
+</LinearLayout>
+
+
+
+
+
+
+

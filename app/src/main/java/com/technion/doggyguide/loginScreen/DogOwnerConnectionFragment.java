@@ -1,15 +1,18 @@
 package com.technion.doggyguide.loginScreen;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -22,6 +25,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -59,6 +63,7 @@ public class DogOwnerConnectionFragment extends Fragment{
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private ProgressDialog mProgressDialog;
 
     private OnFragmentInteractionListener mListener;
 
@@ -114,6 +119,9 @@ public class DogOwnerConnectionFragment extends Fragment{
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
         orgmembersRef = db.collection("organizations").document(ORG_DOC_ID).collection(MEMBERS_DOC_ID);
+
+        mProgressDialog = new ProgressDialog(getActivity());
+
         // Initialize Google Sign In Options
         mGSO = new GoogleSignInOptions
                 .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -142,6 +150,10 @@ public class DogOwnerConnectionFragment extends Fragment{
         mLoginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mProgressDialog.setTitle("LogIn");
+                mProgressDialog.setMessage("Please wait");
+                mProgressDialog.setCanceledOnTouchOutside(false);
+                mProgressDialog.show();
                 String email = emailtxt.getText().toString();
                 String pwd = pwdtxt.getText().toString();
                 if (!validateEmailAndPwd(email, pwd))
@@ -153,6 +165,20 @@ public class DogOwnerConnectionFragment extends Fragment{
         mGoogleLoginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                mProgressDialog.setTitle("SignUp");
+                mProgressDialog.setMessage("Please wait until we can register you");
+                mProgressDialog.setCanceledOnTouchOutside(false);
+                mProgressDialog.show();
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Snackbar.make(view, "Google sign in not fully integrated with database",
+                                Snackbar.LENGTH_LONG).show();
+                    }
+                }, 500);
+
                 Intent intent = mGSC.getSignInIntent();
                 startActivityForResult(intent, GOOGLE_SIGN_IN);
             }
@@ -161,8 +187,10 @@ public class DogOwnerConnectionFragment extends Fragment{
         mSignUpBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 Intent intent = new Intent(getActivity(), DogOwnerSignUp.class);
                 startActivity(intent);
+
             }
         });
         return view;

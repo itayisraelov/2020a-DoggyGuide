@@ -1,6 +1,7 @@
 package com.technion.doggyguide;
 
 import android.Manifest;
+
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Intent;
@@ -76,6 +77,8 @@ public class DogOwnerSignUp extends AppCompatActivity {
     private EditText dog_breedtxt;
     private Button sigupbtn;
     private ProgressBar prog_bar;
+    private ProgressDialog mProgressDialog;
+
     private Uri mImageUri;
     private StorageTask mUploadTask;
     private FirebaseAuth mAuth;
@@ -84,7 +87,6 @@ public class DogOwnerSignUp extends AppCompatActivity {
     private CollectionReference dogownersRef;
     private CollectionReference orgmembersRef;
 
-    private ProgressDialog mProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +95,7 @@ public class DogOwnerSignUp extends AppCompatActivity {
         getSupportActionBar().setTitle("Sign Up");
         getSupportActionBar().setHomeAsUpIndicator(R.mipmap.ic_up_button);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        mProgressDialog = new ProgressDialog(this);
 
         //Initialize texts
         profileImgView = findViewById(R.id.profile_image);
@@ -281,6 +284,12 @@ public class DogOwnerSignUp extends AppCompatActivity {
                     "Please upload a profile pic", Toast.LENGTH_SHORT).show();
             return;
         }
+
+        mProgressDialog.setTitle("SignUp");
+        mProgressDialog.setMessage("Please wait until we can register you");
+        mProgressDialog.setCanceledOnTouchOutside(false);
+        mProgressDialog.show();
+
         signUpWithEmailAndPassword(email, pwd, view);
     }
 
@@ -347,12 +356,13 @@ public class DogOwnerSignUp extends AppCompatActivity {
                                         DogOwnerElement dogowner = new DogOwnerElement(nametxt.getText().toString(),
                                                 emailtxt.getText().toString(), dog_nametxt.getText().toString(),
                                                 dog_breedtxt.getText().toString(),
-                                                uri.toString());
+                                                uri.toString(), "I am new in the system");
                                         dogownersRef.document(userID).set(dogowner);
                                     }
                                 });
                             }
                         }
+
 
                     }
                 })

@@ -2,11 +2,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.technion.doggyguide">
 
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <uses-feature
         android:name="android.hardware.camera"
         android:required="true" />
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:name=".app.App"
@@ -20,6 +22,12 @@
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />
         <activity android:name=".GoogleSignInActivity"></activity>
+        <activity android:name=".users.UserProfile"></activity>
+        <activity android:name=".users.UsersActivity" />
+        <activity android:name=".profile.DogProfileActivity" />
+        <activity android:name=".profile.StatusActivity" />
+
+        <activity android:name=".profile.UserProfileActivity" />
         <activity android:name=".About" />
         <activity android:name=".Credits" />
         <activity android:name=".homeScreen.alarm.eatAlarmActivity" />
