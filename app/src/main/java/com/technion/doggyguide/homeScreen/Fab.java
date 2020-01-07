@@ -142,9 +142,8 @@ public class Fab extends AppCompatActivity implements DatePickerDialog.OnDateSet
                         PostElement post = new PostElement(name, userID, start_time, end_time,
                                 postdate.getText().toString(), posting_time, description, postID);
                         postsRef.document(postID).set(post);
-                        addPostRefToFriends(post, postID);
                         addPostRefToUser(post, postID);
-
+                        addPostRefToFriends(post, postID);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
