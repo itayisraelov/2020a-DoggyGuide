@@ -2,7 +2,6 @@ package com.technion.doggyguide.homeScreen;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.icu.text.SimpleDateFormat;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -32,7 +31,7 @@ import com.technion.doggyguide.R;
 import com.technion.doggyguide.TimePickerFabFragment;
 import com.technion.doggyguide.dataElements.PostElement;
 
-import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Map;
 
