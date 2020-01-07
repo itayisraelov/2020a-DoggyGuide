@@ -11,19 +11,6 @@
         android:layout_width="match_parent"
         android:layout_height="30dp"/>
 
-    <EditText
-        android:id="@+id/post_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:ems="12"
-        android:hint="Name"
-        android:inputType="textPersonName"/>
-
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="25dp"/>
-
     <TextView
         android:id="@+id/post_date"
         android:layout_width="wrap_content"

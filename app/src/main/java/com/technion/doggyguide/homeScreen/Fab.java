@@ -25,6 +25,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -45,7 +46,6 @@ public class Fab extends AppCompatActivity implements DatePickerDialog.OnDateSet
 
     private int clicked_btn_id;
 
-    private EditText postname;
     private TextView postdate;
     private TextView poststarttime;
     private TextView postendtime;
@@ -76,7 +76,6 @@ public class Fab extends AppCompatActivity implements DatePickerDialog.OnDateSet
         getSupportActionBar().setHomeAsUpIndicator(R.mipmap.ic_up_button);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        postname = findViewById(R.id.post_name);
         postdescription = findViewById(R.id.post_description);
 
         mAuth = FirebaseAuth.getInstance();
@@ -132,14 +131,27 @@ public class Fab extends AppCompatActivity implements DatePickerDialog.OnDateSet
     }
 
 
-    private void addPostToDatabase(String postID) {
-        String name = postname.getText().toString();
-        String description = postdescription.getText().toString();
-        PostElement post = new PostElement(name, userID, start_time, end_time,
-                postdate.getText().toString(), posting_time, description, postID);
-        postsRef.document(postID).set(post);
-        addPostRefToUser(post, postID);
-        addPostRefToFriends(post, postID);
+    private void addPostToDatabase(final String postID) {
+        dogownersRef.document(userID)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        String name = documentSnapshot.getString("name");
+                        String description = postdescription.getText().toString();
+                        PostElement post = new PostElement(name, userID, start_time, end_time,
+                                postdate.getText().toString(), posting_time, description, postID);
+                        postsRef.document(postID).set(post);
+                        addPostRefToUser(post, postID);
+                        addPostRefToFriends(post, postID);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "failed to retrieve data from database");
+                    }
+                });
     }
 
     private void addPostRefToUser(PostElement post, String postID) {
@@ -173,6 +185,12 @@ public class Fab extends AppCompatActivity implements DatePickerDialog.OnDateSet
                             }
                         }
                     }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "failed to post to firends " + e.getMessage());
+                    }
                 });
     }
 
@@ -186,7 +204,8 @@ public class Fab extends AppCompatActivity implements DatePickerDialog.OnDateSet
         SimpleDateFormat format = new SimpleDateFormat("E, MMM dd, yyyy");
         String pickeddate = format.format(calendar.getTime());
         postdate = findViewById(R.id.post_date);
-        postdate.setText(pickeddate);;
+        postdate.setText(pickeddate);
+        ;
     }
 
     @Override
