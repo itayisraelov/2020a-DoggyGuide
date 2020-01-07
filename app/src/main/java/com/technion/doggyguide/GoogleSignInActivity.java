@@ -113,7 +113,7 @@ public class GoogleSignInActivity extends AppCompatActivity {
 
     private void addUserToDatabase(GoogleSignInAccount account, String mDogName, String mDogBreed) {
         DogOwnerElement dogowner = new DogOwnerElement(account.getDisplayName(),
-                account.getEmail(), mDogName, mDogBreed, account.getPhotoUrl().toString());
+                account.getEmail(), mDogName, mDogBreed, account.getPhotoUrl().toString(), "I am new in the system");
         String userId = mAuth.getCurrentUser().getUid();
         db.collection("dog owners")
                 .document(userId)
