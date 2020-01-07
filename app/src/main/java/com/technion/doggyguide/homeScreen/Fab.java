@@ -142,8 +142,9 @@ public class Fab extends AppCompatActivity implements DatePickerDialog.OnDateSet
                         PostElement post = new PostElement(name, userID, start_time, end_time,
                                 postdate.getText().toString(), posting_time, description, postID);
                         postsRef.document(postID).set(post);
-                        addPostRefToUser(post, postID);
                         addPostRefToFriends(post, postID);
+                        addPostRefToUser(post, postID);
+
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -176,12 +177,10 @@ public class Fab extends AppCompatActivity implements DatePickerDialog.OnDateSet
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-                            WriteBatch batch = db.batch();
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Map<String, Object> friendRef = document.getData();
                                 DocumentReference friendDocRef = (DocumentReference) friendRef.get("reference");
-                                batch.set(friendDocRef.collection("posts").document(postID), post);
-
+                                friendDocRef.collection("posts").document(postID).set(post);
                             }
                         }
                     }
