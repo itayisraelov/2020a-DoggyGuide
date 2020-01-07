@@ -2,6 +2,8 @@ package com.technion.doggyguide.homeScreen;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.icu.text.SimpleDateFormat;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,6 +14,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 
@@ -22,6 +25,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -31,7 +35,7 @@ import com.technion.doggyguide.R;
 import com.technion.doggyguide.TimePickerFabFragment;
 import com.technion.doggyguide.dataElements.PostElement;
 
-import java.text.SimpleDateFormat;
+
 import java.util.Calendar;
 import java.util.Map;
 
@@ -43,7 +47,6 @@ public class Fab extends AppCompatActivity implements DatePickerDialog.OnDateSet
 
     private int clicked_btn_id;
 
-    private EditText postname;
     private TextView postdate;
     private TextView poststarttime;
     private TextView postendtime;
@@ -74,7 +77,6 @@ public class Fab extends AppCompatActivity implements DatePickerDialog.OnDateSet
         getSupportActionBar().setHomeAsUpIndicator(R.mipmap.ic_up_button);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        postname = findViewById(R.id.post_name);
         postdescription = findViewById(R.id.post_description);
 
         mAuth = FirebaseAuth.getInstance();
@@ -114,11 +116,11 @@ public class Fab extends AppCompatActivity implements DatePickerDialog.OnDateSet
         int endMinute = Integer.parseInt(end_time.split(":")[1]);
         if (endHour < startHour) {
             Toast.makeText(this,
-                    "End time cannot be later than start time!\nTry Again", Toast.LENGTH_LONG).show();
+                    "End time cannot be earlier than start time!\nTry Again", Toast.LENGTH_LONG).show();
             return;
         } else if (endHour == startHour && endMinute < startMinute) {
             Toast.makeText(this,
-                    "End time cannot be later than start time!\nTry Again", Toast.LENGTH_LONG).show();
+                    "End time cannot be earlier than start time!\nTry Again", Toast.LENGTH_LONG).show();
             return;
         }
         posting_time = Calendar.getInstance().getTime().toString();
@@ -130,14 +132,27 @@ public class Fab extends AppCompatActivity implements DatePickerDialog.OnDateSet
     }
 
 
-    private void addPostToDatabase(String postID) {
-        String name = postname.getText().toString();
-        String description = postdescription.getText().toString();
-        PostElement post = new PostElement(name, userID, start_time, end_time,
-                postdate.getText().toString(), posting_time, description);
-        postsRef.document(postID).set(post);
-        addPostRefToUser(post, postID);
-        addPostRefToFriends(post, postID);
+    private void addPostToDatabase(final String postID) {
+        dogownersRef.document(userID)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        String name = documentSnapshot.getString("name");
+                        String description = postdescription.getText().toString();
+                        PostElement post = new PostElement(name, userID, start_time, end_time,
+                                postdate.getText().toString(), posting_time, description, postID);
+                        postsRef.document(postID).set(post);
+                        addPostRefToUser(post, postID);
+                        addPostRefToFriends(post, postID);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "failed to retrieve data from database");
+                    }
+                });
     }
 
     private void addPostRefToUser(PostElement post, String postID) {
@@ -162,18 +177,23 @@ public class Fab extends AppCompatActivity implements DatePickerDialog.OnDateSet
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-                            WriteBatch batch = db.batch();
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Map<String, Object> friendRef = document.getData();
                                 DocumentReference friendDocRef = (DocumentReference) friendRef.get("reference");
-                                batch.set(friendDocRef.collection("posts").document(postID), post);
-
+                                friendDocRef.collection("posts").document(postID).set(post);
                             }
                         }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "failed to post to firends " + e.getMessage());
                     }
                 });
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
         Calendar calendar = Calendar.getInstance();
@@ -184,6 +204,7 @@ public class Fab extends AppCompatActivity implements DatePickerDialog.OnDateSet
         String pickeddate = format.format(calendar.getTime());
         postdate = findViewById(R.id.post_date);
         postdate.setText(pickeddate);
+        ;
     }
 
     @Override

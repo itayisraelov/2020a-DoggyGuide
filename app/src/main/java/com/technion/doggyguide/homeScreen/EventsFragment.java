@@ -105,9 +105,11 @@ public class EventsFragment extends Fragment {
         calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
-                String eventDocId = String.valueOf(dayOfMonth) + "-" +
-                        String.valueOf(month + 1) + "-" + String.valueOf(year);
-                eventsondateRef = eventsbydateRef.document(eventDocId).collection("events");
+                String eventDocId = (String.valueOf(dayOfMonth) + "-" +
+                        String.valueOf(month + 1) + "-" + String.valueOf(year));
+                eventsondateRef = eventsbydateRef
+                        .document(eventDocId)
+                        .collection("events");
                 setUpRecyclerView();
             }
         });

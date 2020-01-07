@@ -10,13 +10,14 @@ public class PostElement {
     private String post_date;
     private String posting_date;
     private String description;
+    private String postId;
 
     public PostElement() {
         //must have an empty constructor
     }
 
     public PostElement(String name, String userId, String start_time, String end_time,
-                       String post_date, String posting_date, String description) {
+                       String post_date, String posting_date, String description, String postId) {
         this.name = name;
         this.userId = userId;
         this.start_time = start_time;
@@ -24,6 +25,7 @@ public class PostElement {
         this.post_date = post_date;
         this.posting_date = posting_date;
         this.description = description;
+        this.postId = postId;
     }
 
     public String getName() {
@@ -47,4 +49,6 @@ public class PostElement {
     public String getPosting_date() { return posting_date; }
 
     public String getDescription() { return description; }
+
+    public String getPostId() { return postId; }
 }

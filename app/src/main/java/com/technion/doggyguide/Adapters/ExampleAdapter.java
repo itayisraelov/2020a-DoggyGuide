@@ -36,12 +36,14 @@ public class ExampleAdapter extends RecyclerView.Adapter<ExampleAdapter.ExampleV
     public static class ExampleViewHolder extends RecyclerView.ViewHolder {
         public ImageView mImageView;
         public TextView mTextView1;
+        public TextView mTextView2;
         public ImageButton mAlarmImage;
 
         public ExampleViewHolder(View itemView, final OnItemClickListener listener) {
             super(itemView);
             mImageView = itemView.findViewById(R.id.imageView);
-            mTextView1 = itemView.findViewById(R.id.textView);
+            mTextView1 = itemView.findViewById(R.id.title);
+            mTextView2 = itemView.findViewById(R.id.description);
             mAlarmImage = itemView.findViewById(R.id.get_alarm);
 
             mAlarmImage.setOnClickListener(new View.OnClickListener() {
@@ -82,7 +84,7 @@ public class ExampleAdapter extends RecyclerView.Adapter<ExampleAdapter.ExampleV
     @Override
     public void onBindViewHolder(ExampleViewHolder holder, int position) {
         ExampleItem currentItem = mExampleList.get(position);
-
+        holder.mTextView2.setText(currentItem.getmDescription());
         holder.mImageView.setImageResource(currentItem.getImageResource());
         holder.mTextView1.setText(currentItem.getText1());
     }

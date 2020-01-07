@@ -35,9 +35,9 @@ public class homeActivity extends AppCompatActivity implements
     private GoogleSignInOptions mGSO;
 
     private static final int[] TAB_ICONS = new int[] {R.drawable.ic_home,
-            R.drawable.ic_event,
             R.drawable.ic_chat_24px,
-            R.drawable.ic_alarm_add};
+            R.drawable.ic_alarm_add,
+            R.drawable.ic_event};
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

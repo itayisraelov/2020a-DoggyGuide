@@ -6,17 +6,20 @@ public class EventElement {
     private String start_time;
     private String end_time;
     private String description;
+    private String eventId;
 
     public EventElement() {
         //Empty constructor needed
     }
 
-    public EventElement(String title, String date, String start_time, String end_time, String description) {
+    public EventElement(String title, String date, String start_time, String end_time,
+                        String description, String eventId) {
         this.title = title;
         this.date = date;
         this.start_time = start_time;
         this.end_time = end_time;
         this.description = description;
+        this.eventId = eventId;
     }
 
     public String getTitle() {
@@ -36,4 +39,6 @@ public class EventElement {
     public String getDescription() {
         return description;
     }
+
+    public String getEventId() { return eventId; }
 }
