@@ -22,6 +22,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.text.DateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -39,7 +42,7 @@ public class UserProfile extends AppCompatActivity {
     FirebaseAuth users = FirebaseAuth.getInstance();
     private String mCurrentUserUid = users.getCurrentUser().getUid();
     private CollectionReference mFriendReqCollection = db.collection("Friend_req");
-
+    private CollectionReference mFriendsCollection = db.collection("Friends");
 
 
     @Override
@@ -75,14 +78,41 @@ public class UserProfile extends AppCompatActivity {
                 }
                 // ----------req_sent -------------------------
                 if(mCurrent_state.equals("req_sent")){
-                    reqSentAndNeedToCancel();
+                    reqSentAndNeedToCancel("not_friends", "Send Friend request");
                 }
                 // ----------req_received -------------------------
                 if(mCurrent_state.equals("req_received")){
-
+                    acceptFriends();
                 }
             }
         });
+    }
+
+    private void acceptFriends() {
+        final String currentDate = DateFormat.getDateTimeInstance().format(new Date());
+        Map<String, Object> req_1 = new HashMap<>();
+        req_1.put("date", currentDate);
+        mFriendsCollection
+                .document(mCurrentUserUid)
+                .collection("friends")
+                .document(clickedUserUid).set(req_1)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Map<String, Object> req_2 = new HashMap<>();
+                        req_2.put("date", currentDate);
+                        mFriendsCollection
+                                .document(clickedUserUid )
+                                .collection("friends")
+                                .document(mCurrentUserUid).set(req_2)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        reqSentAndNeedToCancel("friends", "UnFriend This Person");
+                                    }
+                                });
+                    }
+                });
     }
 
     private void requestFeature() {
@@ -94,25 +124,43 @@ public class UserProfile extends AppCompatActivity {
                     @Override
                     public void onEvent(@Nullable DocumentSnapshot documentSnapshot,
                                         @Nullable FirebaseFirestoreException e) {
-                        if(documentSnapshot.getData() != null){
+                        if(documentSnapshot.getData() != null) {
                             boolean res = documentSnapshot.getData().containsKey("request_type");
-                            if (res){
+                            if (res) {
                                 String req_type = documentSnapshot.get("request_type").toString();
                                 if (req_type.equals("received")) {
                                     mCurrent_state = "req_received";
                                     mFriendReqBtn.setText("Accept Friend Request");
-                                } else if(req_type.equals("sent")){
+                                } else if (req_type.equals("sent")) {
                                     mCurrent_state = "req_sent";
                                     mFriendReqBtn.setText("Cancel Friend Request");
                                 }
+                                mProgressDialog.dismiss();
                             }
-                        }
+                        }else {
+                                mFriendsCollection
+                                        .document(mCurrentUserUid)
+                                        .collection("friends")
+                                        .document(clickedUserUid)
+                                        .addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                                            @Override
+                                            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                                                if(documentSnapshot.getData() != null){
+                                                    if(documentSnapshot.getData().containsKey("date")){
+                                                        mCurrent_state = "friends";
+                                                        mFriendReqBtn.setText("UnFriend This Person");
+                                                    }
+                                                }
+                                                mProgressDialog.dismiss();
+                                            }
+                                        });
+                            }
                     }
                 });
     }
 
 
-    private void reqSentAndNeedToCancel() {
+    private void reqSentAndNeedToCancel(final String status, final String text) {
         mFriendReqCollection
                 .document(mCurrentUserUid)
                 .collection("friends")
@@ -128,8 +176,8 @@ public class UserProfile extends AppCompatActivity {
                     @Override
                     public void onSuccess(Void aVoid) {
                         mFriendReqBtn.setEnabled(true);
-                        mCurrent_state = "not_friends";
-                        mFriendReqBtn.setText("Send Friend request");
+                        mCurrent_state = status;
+                        mFriendReqBtn.setText(text);
                     }
                 });
             }
@@ -156,8 +204,6 @@ public class UserProfile extends AppCompatActivity {
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
-
-                            mFriendReqBtn.setEnabled(true);
                             mCurrent_state = "req_sent";
                             mFriendReqBtn.setText("Cancel Friend Request");
                             Toast.makeText(UserProfile.this,
@@ -168,6 +214,7 @@ public class UserProfile extends AppCompatActivity {
                     Toast.makeText(UserProfile.this,
                             "Failed sending request", Toast.LENGTH_SHORT).show();
                 }
+                mFriendReqBtn.setEnabled(true);
             }
         });
     }

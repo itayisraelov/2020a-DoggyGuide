@@ -53,6 +53,7 @@ public class UserProfileActivity extends AppCompatActivity {
         mStorageRef = FirebaseStorage.getInstance().getReference();
         mProgressDialog = new ProgressDialog(this);
 
+
         init_text_view_and_buttons();
         readFromDataBase();
     }
