@@ -77,6 +77,10 @@ public class UserProfile extends AppCompatActivity {
                 if(mCurrent_state.equals("req_sent")){
                     reqSentAndNeedToCancel();
                 }
+                // ----------req_received -------------------------
+                if(mCurrent_state.equals("req_received")){
+
+                }
             }
         });
     }
@@ -125,7 +129,7 @@ public class UserProfile extends AppCompatActivity {
                     public void onSuccess(Void aVoid) {
                         mFriendReqBtn.setEnabled(true);
                         mCurrent_state = "not_friends";
-                        mFriendReqBtn.setText("Friend request");
+                        mFriendReqBtn.setText("Send Friend request");
                     }
                 });
             }
