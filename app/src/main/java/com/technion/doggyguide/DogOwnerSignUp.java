@@ -3,7 +3,6 @@ package com.technion.doggyguide;
 import android.Manifest;
 
 import android.app.ProgressDialog;
-import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -15,7 +14,6 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.MimeTypeMap;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -27,7 +25,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -55,7 +52,7 @@ import java.util.Map;
 
 
 import com.theartofdev.edmodo.cropper.CropImage;
-import com.theartofdev.edmodo.cropper.CropImageView;
+
 import id.zelory.compressor.Compressor;
 import me.drakeet.materialdialog.MaterialDialog;
 
@@ -82,7 +79,7 @@ public class DogOwnerSignUp extends AppCompatActivity {
     private ProgressDialog mProgressDialog;
 
     private Uri mImageUri;
-    private StorageTask mUploadTask;
+    private StorageTask<UploadTask.TaskSnapshot> mUploadTask;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     private StorageReference mStorageRef;
@@ -345,7 +342,7 @@ public class DogOwnerSignUp extends AppCompatActivity {
                                 Task<Uri> result = taskSnapshot.getStorage().getDownloadUrl();
                                 result.addOnSuccessListener(new OnSuccessListener<Uri>() {
                                     @Override
-                                    public void onSuccess(Uri uri) {
+                                    public void onSuccess(final Uri uri) {
                                         Log.d(TAG, "Uploaded Successfully!");
                                         Handler handler = new Handler();
                                         handler.postDelayed(new Runnable() {
@@ -360,18 +357,15 @@ public class DogOwnerSignUp extends AppCompatActivity {
                                                         new OnSuccessListener<InstanceIdResult>() {
                                                             @Override
                                                             public void onSuccess(InstanceIdResult instanceIdResult) {
-                                                                String newToken = instanceIdResult.getToken();
-
-
+                                                                String deviceToken = instanceIdResult.getToken();
+                                                                DogOwnerElement dogowner = new DogOwnerElement(nametxt.getText().toString(),
+                                                                        emailtxt.getText().toString(), dog_nametxt.getText().toString(),
+                                                                        dog_breedtxt.getText().toString(),
+                                                                        uri.toString(), "I am new in the system", deviceToken);
+                                                                dogownersRef.document(userID).set(dogowner);
 
                                                             }
                                                         });
-
-                                        DogOwnerElement dogowner = new DogOwnerElement(nametxt.getText().toString(),
-                                                emailtxt.getText().toString(), dog_nametxt.getText().toString(),
-                                                dog_breedtxt.getText().toString(),
-                                                uri.toString(), "I am new in the system");
-                                        dogownersRef.document(userID).set(dogowner);
                                     }
                                 });
                             }

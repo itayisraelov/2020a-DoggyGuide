@@ -270,8 +270,8 @@ public class UserProfile extends AppCompatActivity {
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 DogOwnerElement dogOwnerElement = documentSnapshot.toObject(DogOwnerElement.class);
                 if (dogOwnerElement != null){
-                    mName.setText("User name:   " + dogOwnerElement.getName());
-                    mDogName.setText("Name of the dog:   " + dogOwnerElement.getDog_name());
+                    mName.setText("User name:   " + dogOwnerElement.getmName());
+                    mDogName.setText("Name of the dog:   " + dogOwnerElement.getmDog_name());
                     mStatus.setText("Status is:   " + dogOwnerElement.getmStatus());
                     Picasso.get().load(dogOwnerElement.getmImageUrl()).into(mImage);
                     mProgressDialog.dismiss();

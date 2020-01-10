@@ -95,9 +95,9 @@ public class UserProfileActivity extends AppCompatActivity {
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 DogOwnerElement dogOwnerElement = documentSnapshot.toObject(DogOwnerElement.class);
                 if (dogOwnerElement != null){
-                    user_name_tv.setText("User name:   " + dogOwnerElement.getName());
-                    dog_breed_tv.setText("Dog food:   " + dogOwnerElement.getDog_breed());
-                    name_of_the_dog_tv.setText("Name of the dog:   " + dogOwnerElement.getDog_name());
+                    user_name_tv.setText("User name:   " + dogOwnerElement.getmName());
+                    dog_breed_tv.setText("Dog food:   " + dogOwnerElement.getmDog_breed());
+                    name_of_the_dog_tv.setText("Name of the dog:   " + dogOwnerElement.getmDog_name());
                     name_of_the_organization_tv.setText("Organization id:   " + dogOwnerElement.getOrg_ID());
                     status_tv.setText("Status is:   " + dogOwnerElement.getmStatus());
                     Picasso.get().load(dogOwnerElement.getmImageUrl()).into(mCircleImageView);

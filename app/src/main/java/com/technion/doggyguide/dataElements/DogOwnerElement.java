@@ -2,60 +2,87 @@ package com.technion.doggyguide.dataElements;
 
 public class DogOwnerElement {
     private final String org_ID = "bayet.ovid@igdcb.org";
-    private String name;
-    private String email;
-    private String dog_name;
-    private String dog_breed;
+    private String mName;
+    private String mEmail;
+    private String mDog_name;
+    private String mDog_breed;
     private String mImageUrl;
     private String mStatus;
+    private String mDeviceToken;
 
 
     public DogOwnerElement() {
         //Need an Empty Constructor
     }
 
-    public DogOwnerElement(String name, String email, String dog_name,
-                           String dog_breed, String mImageUrl, String mStatus) {
-        this.name = name;
-        this.email = email;
-        this.dog_name = dog_name;
-        this.dog_breed = dog_breed;
+    public DogOwnerElement(String mName, String mEmail, String mDog_name,
+                           String mDog_breed, String mImageUrl, String mStatus, String mDeviceToken) {
+        this.mName = mName;
+        this.mEmail = mEmail;
+        this.mDog_name = mDog_name;
+        this.mDog_breed = mDog_breed;
         this.mImageUrl = mImageUrl;
         this.mStatus = mStatus;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-
-    public String getEmail() {
-        return email;
+        this.mDeviceToken = mDeviceToken;
     }
 
     public String getOrg_ID() {
         return org_ID;
     }
 
-
-    public String getDog_name() {
-        return dog_name;
+    public String getmName() {
+        return mName;
     }
 
-
-    public String getDog_breed() {
-        return dog_breed;
+    public void setmName(String mName) {
+        this.mName = mName;
     }
 
+    public String getmEmail() {
+        return mEmail;
+    }
+
+    public void setmEmail(String mEmail) {
+        this.mEmail = mEmail;
+    }
+
+    public String getmDog_name() {
+        return mDog_name;
+    }
+
+    public void setmDog_name(String mDog_name) {
+        this.mDog_name = mDog_name;
+    }
+
+    public String getmDog_breed() {
+        return mDog_breed;
+    }
+
+    public void setmDog_breed(String mDog_breed) {
+        this.mDog_breed = mDog_breed;
+    }
 
     public String getmImageUrl() {
         return mImageUrl;
     }
 
+    public void setmImageUrl(String mImageUrl) {
+        this.mImageUrl = mImageUrl;
+    }
 
     public String getmStatus() {
         return mStatus;
     }
 
-    public void setmStatus(String mStatus) { this.mStatus = mStatus; }
+    public void setmStatus(String mStatus) {
+        this.mStatus = mStatus;
+    }
+
+    public String getmDeviceToken() {
+        return mDeviceToken;
+    }
+
+    public void setmDeviceToken(String mDeviceToken) {
+        this.mDeviceToken = mDeviceToken;
+    }
 }
