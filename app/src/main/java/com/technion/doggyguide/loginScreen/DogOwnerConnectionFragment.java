@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -24,6 +23,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthCredential;
@@ -31,9 +31,12 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.technion.doggyguide.DogOwnerSignUp;
 import com.technion.doggyguide.GoogleSignInActivity;
 import com.technion.doggyguide.R;
@@ -70,6 +73,7 @@ public class DogOwnerConnectionFragment extends Fragment{
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     private CollectionReference orgmembersRef;
+    private CollectionReference mDogOwnersCollection;
     private GoogleSignInClient mGSC;
     private GoogleSignInOptions mGSO;
 
@@ -118,8 +122,11 @@ public class DogOwnerConnectionFragment extends Fragment{
         // Initialize Firebase Authentication
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
-        orgmembersRef = db.collection("organizations").document(ORG_DOC_ID).collection(MEMBERS_DOC_ID);
+        orgmembersRef = db.collection("organizations")
+                .document(ORG_DOC_ID)
+                .collection(MEMBERS_DOC_ID);
 
+        mDogOwnersCollection = db.collection("dog owners");
         mProgressDialog = new ProgressDialog(getActivity());
 
         // Initialize Google Sign In Options
@@ -216,9 +223,20 @@ public class DogOwnerConnectionFragment extends Fragment{
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             if (mAuth.getCurrentUser().isEmailVerified()) {
-                                Intent intent = new Intent(getActivity(), homeActivity.class);
-                                getActivity().finish();
-                                startActivity(intent);
+                                FirebaseInstanceId.getInstance().getInstanceId()
+                                        .addOnSuccessListener(getActivity(),
+                                                new OnSuccessListener<InstanceIdResult>() {
+                                                    @Override
+                                                    public void onSuccess(InstanceIdResult instanceIdResult) {
+                                                        String deviceToken = instanceIdResult.getToken();
+                                                        mDogOwnersCollection
+                                                                .document(mAuth.getCurrentUser().getUid())
+                                                                .update("mDeviceToken", deviceToken);
+                                                        Intent intent = new Intent(getActivity(), homeActivity.class);
+                                                        getActivity().finish();
+                                                        startActivity(intent);
+                                                    }
+                                                });
                             } else {
                                 Toast.makeText(getActivity(),
                                         "This email is registered but hasn't been verified yet.\nPlease verify your email",
