@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.squareup.picasso.Picasso;
-import com.technion.doggyguide.MainActivity;
 import com.technion.doggyguide.R;
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -24,7 +23,7 @@ public class UsersAdapter extends FirestoreRecyclerAdapter<Users, UsersAdapter.U
 
     @Override
     protected void onBindViewHolder(@NonNull UsersViewHolder holder, int position, @NonNull Users model) {
-        holder.setName(model.getName());
+        holder.setName(model.getmName());
         holder.setUri(model.getmImageUrl());
         holder.setStatus(model.getmStatus());
 

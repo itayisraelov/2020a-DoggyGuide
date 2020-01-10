@@ -1,12 +1,12 @@
 package com.technion.doggyguide.users;
 
 public class Users {
-    private String name;
+    private String mName;
     private String mImageUrl;
     private String mStatus;
 
     public Users(String name, String mImageUrl, String mStatus) {
-        this.name = name;
+        this.mName = name;
         this.mImageUrl = mImageUrl;
         this.mStatus = mStatus;
     }
@@ -14,12 +14,12 @@ public class Users {
     public Users() {
     }
 
-    public String getName() {
-        return name;
+    public String getmName() {
+        return mName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setmName(String mName) {
+        this.mName = mName;
     }
 
     public String getmImageUrl() {

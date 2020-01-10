@@ -25,11 +25,12 @@ public class UsersActivity extends AppCompatActivity {
         setContentView(R.layout.activity_users);
 
         db = FirebaseFirestore.getInstance();
+
         mUsersRef = db.collection("dog owners");
     }
 
     private void setUpRecyclerView() {
-        Query query = mUsersRef.orderBy("name", Query.Direction.DESCENDING);
+        Query query = mUsersRef.orderBy("mName", Query.Direction.DESCENDING);
         FirestoreRecyclerOptions<Users> options = new FirestoreRecyclerOptions.Builder<Users>()
                 .setQuery(query, Users.class)
                 .build();
