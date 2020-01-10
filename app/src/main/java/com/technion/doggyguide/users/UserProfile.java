@@ -33,7 +33,7 @@ public class UserProfile extends AppCompatActivity {
 
     private CircleImageView mImage;
     private TextView mName, mStatus, mDogName, mfriendCount;
-    Button mFriendReqBtn;
+    Button mFriendReqBtn, mDeclineReqBtn;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     String clickedUserUid;
     private CollectionReference usersRef = db.collection("dog owners");
@@ -43,6 +43,7 @@ public class UserProfile extends AppCompatActivity {
     private String mCurrentUserUid = users.getCurrentUser().getUid();
     private CollectionReference mFriendReqCollection = db.collection("Friend_req");
     private CollectionReference mFriendsCollection = db.collection("Friends");
+    private CollectionReference mNotificationsCollection = db.collection("notifications");
 
 
     @Override
@@ -50,21 +51,7 @@ public class UserProfile extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
 
-        clickedUserUid = getIntent().getStringExtra("user_id");
-        mCurrent_state = "not_friends";
-        mProgressDialog = new ProgressDialog(this);
-        mName = findViewById(R.id.user_name_id_);
-        mStatus =findViewById(R.id.status_id_);
-        mDogName = findViewById(R.id.name_of_the_dog_id_);
-        mfriendCount = findViewById(R.id.total_friends_);
-        mFriendReqBtn = findViewById(R.id.friend_request);
-        mImage = findViewById(R.id.user_image_id_);
-
-        mProgressDialog.setTitle("Uploading data from users...");
-        mProgressDialog.setMessage("Please wait while we upload and process the data.");
-        mProgressDialog.setCanceledOnTouchOutside(false);
-        mProgressDialog.show();
-
+        initSomeFields();
         readFromDataBase();
         requestFeature();
 
@@ -86,6 +73,28 @@ public class UserProfile extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void initSomeFields() {
+        clickedUserUid = getIntent().getStringExtra("user_id");
+        mCurrent_state = "not_friends";
+        mProgressDialog = new ProgressDialog(this);
+        mName = findViewById(R.id.user_name_id_);
+        mStatus =findViewById(R.id.status_id_);
+        mDogName = findViewById(R.id.name_of_the_dog_id_);
+        mfriendCount = findViewById(R.id.total_friends_);
+        mFriendReqBtn = findViewById(R.id.friend_request);
+        mDeclineReqBtn = findViewById(R.id.decline_friend_request);
+        mImage = findViewById(R.id.user_image_id_);
+
+        // Don't show the cancel button
+        mDeclineReqBtn.setVisibility(View.INVISIBLE);
+        mDeclineReqBtn.setEnabled(false);
+
+        mProgressDialog.setTitle("Uploading data from users...");
+        mProgressDialog.setMessage("Please wait while we upload and process the data.");
+        mProgressDialog.setCanceledOnTouchOutside(false);
+        mProgressDialog.show();
     }
 
     private void acceptFriends() {
@@ -131,9 +140,17 @@ public class UserProfile extends AppCompatActivity {
                                 if (req_type.equals("received")) {
                                     mCurrent_state = "req_received";
                                     mFriendReqBtn.setText("Accept Friend Request");
+
+                                    // Don't show the cancel button
+                                    mDeclineReqBtn.setVisibility(View.VISIBLE);
+                                    mDeclineReqBtn.setEnabled(true);
                                 } else if (req_type.equals("sent")) {
                                     mCurrent_state = "req_sent";
                                     mFriendReqBtn.setText("Cancel Friend Request");
+
+                                    // Don't show the cancel button
+                                    mDeclineReqBtn.setVisibility(View.INVISIBLE);
+                                    mDeclineReqBtn.setEnabled(false);
                                 }
                                 mProgressDialog.dismiss();
                             }
@@ -149,6 +166,10 @@ public class UserProfile extends AppCompatActivity {
                                                     if(documentSnapshot.getData().containsKey("date")){
                                                         mCurrent_state = "friends";
                                                         mFriendReqBtn.setText("UnFriend This Person");
+
+                                                        // Don't show the cancel button
+                                                        mDeclineReqBtn.setVisibility(View.INVISIBLE);
+                                                        mDeclineReqBtn.setEnabled(false);
                                                     }
                                                 }
                                                 mProgressDialog.dismiss();
@@ -178,6 +199,10 @@ public class UserProfile extends AppCompatActivity {
                         mFriendReqBtn.setEnabled(true);
                         mCurrent_state = status;
                         mFriendReqBtn.setText(text);
+
+                        // Don't show the cancel button
+                        mDeclineReqBtn.setVisibility(View.INVISIBLE);
+                        mDeclineReqBtn.setEnabled(false);
                     }
                 });
             }
@@ -204,8 +229,27 @@ public class UserProfile extends AppCompatActivity {
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
-                            mCurrent_state = "req_sent";
-                            mFriendReqBtn.setText("Cancel Friend Request");
+                            Map<String, Object> notification = new HashMap<>();
+                            notification.put("from", mCurrentUserUid);
+                            notification.put("type", "request");
+                            mNotificationsCollection
+                                    .document(clickedUserUid)
+                                    .collection("keys notifications")
+                                    .document()
+                                    .set(notification)
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            mCurrent_state = "req_sent";
+                                            mFriendReqBtn.setText("Cancel Friend Request");
+
+                                            // Don't show the cancel button
+                                            mDeclineReqBtn.setVisibility(View.INVISIBLE);
+                                            mDeclineReqBtn.setEnabled(false);
+                                        }
+                                    });
+
+
                             Toast.makeText(UserProfile.this,
                                     "request sending successfully", Toast.LENGTH_SHORT).show();
                         }

@@ -38,6 +38,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -308,7 +310,7 @@ public class DogOwnerSignUp extends AppCompatActivity {
                                                 Toast.makeText(DogOwnerSignUp.this,
                                                         "Please check your email for verification.",
                                                         Toast.LENGTH_LONG).show();
-                                                //TODO: insert the user id to the organizations' database
+
                                                 mAuth.signOut();
                                                 Intent intent = new Intent(DogOwnerSignUp.this, MainActivity.class);
                                                 finish();
@@ -335,8 +337,7 @@ public class DogOwnerSignUp extends AppCompatActivity {
 
     private void addUserToDatabase() {
         final String userID = mAuth.getCurrentUser().getUid();
-        mUploadTask
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+        mUploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         if (taskSnapshot.getMetadata() != null) {
@@ -353,6 +354,19 @@ public class DogOwnerSignUp extends AppCompatActivity {
                                                 prog_bar.setProgress(0);
                                             }
                                         }, 500);
+
+                                        FirebaseInstanceId.getInstance().getInstanceId()
+                                                .addOnSuccessListener(DogOwnerSignUp.this,
+                                                        new OnSuccessListener<InstanceIdResult>() {
+                                                            @Override
+                                                            public void onSuccess(InstanceIdResult instanceIdResult) {
+                                                                String newToken = instanceIdResult.getToken();
+
+
+
+                                                            }
+                                                        });
+
                                         DogOwnerElement dogowner = new DogOwnerElement(nametxt.getText().toString(),
                                                 emailtxt.getText().toString(), dog_nametxt.getText().toString(),
                                                 dog_breedtxt.getText().toString(),
