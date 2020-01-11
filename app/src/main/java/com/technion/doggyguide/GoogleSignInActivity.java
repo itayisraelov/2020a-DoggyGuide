@@ -14,15 +14,19 @@ import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.technion.doggyguide.dataElements.DogOwnerElement;
 import com.technion.doggyguide.loginScreen.DogOwnerConnectionFragment;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -111,17 +115,25 @@ public class GoogleSignInActivity extends AppCompatActivity {
                 });
     }
 
-    private void addUserToDatabase(GoogleSignInAccount account, String mDogName, String mDogBreed) {
-        DogOwnerElement dogowner = new DogOwnerElement(account.getDisplayName(),
-                account.getEmail(), mDogName, mDogBreed, account.getPhotoUrl().toString(), "I am new in the system");
-        String userId = mAuth.getCurrentUser().getUid();
-        db.collection("dog owners")
-                .document(userId)
-                .set(dogowner);
+    private void addUserToDatabase(final GoogleSignInAccount account, final String mDogName, final String mDogBreed) {
+        FirebaseInstanceId.getInstance()
+                .getInstanceId().addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
+                    @Override
+                    public void onSuccess(InstanceIdResult instanceIdResult) {
+                        String mDeviceToken = instanceIdResult.getToken();
+                        DogOwnerElement dogowner = new DogOwnerElement(account.getDisplayName(),
+                                account.getEmail(), mDogName, mDogBreed,
+                                account.getPhotoUrl().toString(),
+                                "I am new in the system", Arrays.asList(mDeviceToken));
+                        String userId = mAuth.getCurrentUser().getUid();
+                        db.collection("dog owners")
+                                .document(userId)
+                                .set(dogowner);
 
-        Map<String, Object> member = new HashMap<>();
-        member.put(userId, "dog owners/" + userId);
-        orgmembersRef.add(member);
-
+                        Map<String, Object> member = new HashMap<>();
+                        member.put("reference", "dog owners/" + userId);
+                        orgmembersRef.add(member);
+                    }
+                });
     }
 }

@@ -1,61 +1,66 @@
 package com.technion.doggyguide.dataElements;
 
+import java.util.List;
+
 public class DogOwnerElement {
-    private final String org_ID = "bayet.ovid@igdcb.org";
-    private String name;
-    private String email;
-    private String dog_name;
-    private String dog_breed;
+    private final String mOrgId = "bayet.ovid@igdcb.org";
+    private String mName;
+    private String mEmail;
+    private String mDogName;
+    private String mDogBreed;
     private String mImageUrl;
     private String mStatus;
+    private List<String> mTokens;
 
 
     public DogOwnerElement() {
         //Need an Empty Constructor
     }
 
-    public DogOwnerElement(String name, String email, String dog_name,
-                           String dog_breed, String mImageUrl, String mStatus) {
-        this.name = name;
-        this.email = email;
-        this.dog_name = dog_name;
-        this.dog_breed = dog_breed;
+    public DogOwnerElement(String mName, String mEmail, String mDogName,
+                           String mDogBreed, String mImageUrl, String mStatus, List<String> mTokens) {
+        this.mName = mName;
+        this.mEmail = mEmail;
+        this.mDogName = mDogName;
+        this.mDogBreed = mDogBreed;
         this.mImageUrl = mImageUrl;
         this.mStatus = mStatus;
+        this.mTokens = mTokens;
     }
 
-    public String getName() {
-        return name;
+    public String getmOrgId() {
+        return mOrgId;
     }
 
-
-    public String getEmail() {
-        return email;
+    public String getmName() {
+        return mName;
     }
 
-    public String getOrg_ID() {
-        return org_ID;
+    public String getmEmail() {
+        return mEmail;
     }
 
-
-    public String getDog_name() {
-        return dog_name;
+    public String getmDogName() {
+        return mDogName;
     }
 
-
-    public String getDog_breed() {
-        return dog_breed;
+    public String getmDogBreed() {
+        return mDogBreed;
     }
-
 
     public String getmImageUrl() {
         return mImageUrl;
     }
 
-
     public String getmStatus() {
         return mStatus;
     }
 
-    public void setmStatus(String mStatus) { this.mStatus = mStatus; }
+    public List<String> getmTokens() {
+        return mTokens;
+    }
+
+    public void setmStatus(String mStatus) {
+        this.mStatus = mStatus;
+    }
 }

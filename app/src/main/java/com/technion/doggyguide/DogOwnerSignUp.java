@@ -27,7 +27,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -38,6 +37,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -48,12 +49,12 @@ import com.technion.doggyguide.dataElements.DogOwnerElement;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 
 import com.theartofdev.edmodo.cropper.CropImage;
-import com.theartofdev.edmodo.cropper.CropImageView;
 import id.zelory.compressor.Compressor;
 import me.drakeet.materialdialog.MaterialDialog;
 
@@ -344,7 +345,7 @@ public class DogOwnerSignUp extends AppCompatActivity {
                                 Task<Uri> result = taskSnapshot.getStorage().getDownloadUrl();
                                 result.addOnSuccessListener(new OnSuccessListener<Uri>() {
                                     @Override
-                                    public void onSuccess(Uri uri) {
+                                    public void onSuccess(final Uri uri) {
                                         Log.d(TAG, "Uploaded Successfully!");
                                         Handler handler = new Handler();
                                         handler.postDelayed(new Runnable() {
@@ -353,11 +354,20 @@ public class DogOwnerSignUp extends AppCompatActivity {
                                                 prog_bar.setProgress(0);
                                             }
                                         }, 500);
-                                        DogOwnerElement dogowner = new DogOwnerElement(nametxt.getText().toString(),
-                                                emailtxt.getText().toString(), dog_nametxt.getText().toString(),
-                                                dog_breedtxt.getText().toString(),
-                                                uri.toString(), "I am new in the system");
-                                        dogownersRef.document(userID).set(dogowner);
+                                        FirebaseInstanceId.getInstance().getInstanceId()
+                                                .addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
+                                            @Override
+                                            public void onSuccess(InstanceIdResult instanceIdResult) {
+                                                String mDeviceToken = instanceIdResult.getToken();
+                                                DogOwnerElement dogowner = new DogOwnerElement(nametxt.getText().toString(),
+                                                        emailtxt.getText().toString(), dog_nametxt.getText().toString(),
+                                                        dog_breedtxt.getText().toString(),
+                                                        uri.toString(),
+                                                        "I am new in the system", Arrays.asList(mDeviceToken));
+                                                dogownersRef.document(userID).set(dogowner);
+                                            }
+                                        });
+
                                     }
                                 });
                             }
@@ -383,7 +393,7 @@ public class DogOwnerSignUp extends AppCompatActivity {
 
         //adding a reference to organizations database
         Map<String, Object> member = new HashMap<>();
-        member.put(userID, "dog owners/" + userID);
+        member.put("reference", "dog owners/" + userID);
         orgmembersRef.add(member);
     }
 
