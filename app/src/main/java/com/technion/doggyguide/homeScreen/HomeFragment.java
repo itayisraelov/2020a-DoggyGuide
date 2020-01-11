@@ -83,7 +83,7 @@ public class HomeFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
         userID = mAuth.getCurrentUser().getUid();
-        postsRef = db.collection("dog owners/" + userID + "/posts");
+        postsRef = db.collection("dogOwners/" + userID + "/posts");
     }
 
     @Override

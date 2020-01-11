@@ -33,7 +33,7 @@ public class UserProfile extends AppCompatActivity {
     Button mFriendReqBtn;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     String clickedUserUid;
-    private CollectionReference usersRef = db.collection("dog owners");
+    private CollectionReference usersRef = db.collection("dogOwners");
     private ProgressDialog mProgressDialog;
     private String mCurrent_state;
     FirebaseAuth users = FirebaseAuth.getInstance();

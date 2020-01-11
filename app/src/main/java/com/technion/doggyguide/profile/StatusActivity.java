@@ -25,7 +25,7 @@ public class StatusActivity extends AppCompatActivity {
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     FirebaseAuth users = FirebaseAuth.getInstance();
-    private CollectionReference usersRef = db.collection("dog owners");
+    private CollectionReference usersRef = db.collection("dogOwners");
     String userUid = users.getCurrentUser().getUid();
 
     @Override

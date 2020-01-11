@@ -47,8 +47,8 @@ public class EventElementAdapter extends
     @Override
     protected void onBindViewHolder(@NonNull EventHolder holder, int position, @NonNull EventElement model) {
         final String userId = mAuth.getCurrentUser().getUid();
-        final DocumentReference eventDocRef = db.collection("dog owners/"
-                + userId + "/events by date").document(model.getDate())
+        final DocumentReference eventDocRef = db.collection("dogOwners/"
+                + userId + "/eventsByDate").document(model.getDate())
                 .collection("events").document(model.getEventId());
         holder.textViewTitle.setText(model.getTitle());
         holder.textViewTime.setText(model.getStart_time() + "-" + model.getEnd_time());

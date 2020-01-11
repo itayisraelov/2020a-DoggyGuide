@@ -126,12 +126,12 @@ public class GoogleSignInActivity extends AppCompatActivity {
                                 account.getPhotoUrl().toString(),
                                 "I am new in the system", Arrays.asList(mDeviceToken));
                         String userId = mAuth.getCurrentUser().getUid();
-                        db.collection("dog owners")
+                        db.collection("dogOwners")
                                 .document(userId)
                                 .set(dogowner);
 
                         Map<String, Object> member = new HashMap<>();
-                        member.put("reference", "dog owners/" + userId);
+                        member.put("reference", "dogOwners/" + userId);
                         orgmembersRef.add(member);
                     }
                 });

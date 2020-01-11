@@ -25,7 +25,7 @@ public class UsersActivity extends AppCompatActivity {
         setContentView(R.layout.activity_users);
 
         db = FirebaseFirestore.getInstance();
-        mUsersRef = db.collection("dog owners");
+        mUsersRef = db.collection("dogOwners");
     }
 
     private void setUpRecyclerView() {

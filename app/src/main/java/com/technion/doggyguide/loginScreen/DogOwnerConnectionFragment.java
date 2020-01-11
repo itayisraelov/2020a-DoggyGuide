@@ -217,7 +217,7 @@ public class DogOwnerConnectionFragment extends Fragment {
                                     @Override
                                     public void onSuccess(InstanceIdResult instanceIdResult) {
                                         String mDeviceToken = instanceIdResult.getToken();
-                                        db.collection("dog owners")
+                                        db.collection("dogOwners")
                                                 .document(mAuth.getCurrentUser().getUid())
                                                 .update("mDeviceToken", mDeviceToken);
                                         Intent intent = new Intent(getActivity(), homeActivity.class);
@@ -244,7 +244,7 @@ public class DogOwnerConnectionFragment extends Fragment {
     private void signIWithGoogle(final GoogleSignInAccount account) {
         Log.d("TAG", "firebaseAuthWithGoogle:" + account.getId());
         final AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
-        final CollectionReference dogowners = db.collection("dog owners");
+        final CollectionReference dogowners = db.collection("dogOwners");
         dogowners.whereEqualTo("mEmail", account.getEmail())
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -294,7 +294,7 @@ public class DogOwnerConnectionFragment extends Fragment {
                                 @Override
                                 public void onSuccess(InstanceIdResult instanceIdResult) {
                                     final String mDeviceToken = instanceIdResult.getToken();
-                                    final DocumentReference mUserRef = db.collection("dog owners")
+                                    final DocumentReference mUserRef = db.collection("dogOwners")
                                             .document(mAuth.getCurrentUser().getUid());
                                     mUserRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                         @Override

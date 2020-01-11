@@ -40,7 +40,7 @@ public class walkAlarmActivity extends AppCompatActivity implements TimePickerDi
     Button mButtonSet;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     FirebaseAuth users = FirebaseAuth.getInstance();
-    private CollectionReference usersRef = db.collection("dog owners");
+    private CollectionReference usersRef = db.collection("dogOwners");
     String userUid = users.getCurrentUser().getUid();
     private CollectionReference alarmsByUserUidRef = usersRef.document(userUid).collection("Alarms");
 

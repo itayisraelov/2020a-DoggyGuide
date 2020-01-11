@@ -84,9 +84,9 @@ public class Fab extends AppCompatActivity implements DatePickerDialog.OnDateSet
         userID = mAuth.getCurrentUser().getUid();
 
         postsRef = db.collection("posts");
-        dogownersRef = db.collection("dog owners");
-        friendsRef = db.collection("dog owners/" + userID + "/friends");
-        userpostsRef = db.collection("dog owners/" + userID + "/posts");
+        dogownersRef = db.collection("dogOwners");
+        friendsRef = db.collection("dogOwners/" + userID + "/friends");
+        userpostsRef = db.collection("dogOwners/" + userID + "/posts");
 
     }
 

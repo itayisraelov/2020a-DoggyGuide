@@ -47,7 +47,7 @@ public class PostElementAdapter extends FirestoreRecyclerAdapter<PostElement, Po
 
     @Override
     protected void onBindViewHolder(@NonNull final PostHolder holder, final int position, @NonNull final PostElement model) {
-        db.document("dog owners/" + model.getUserId())
+        db.document("dogOwners/" + model.getUserId())
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
@@ -81,7 +81,7 @@ public class PostElementAdapter extends FirestoreRecyclerAdapter<PostElement, Po
                 Log.d(TAG, "Ignore Button Clicked");
                 FirebaseAuth mAuth = FirebaseAuth.getInstance();
                 String userID = mAuth.getCurrentUser().getUid();
-                CollectionReference posts = db.collection("dog owners/"
+                CollectionReference posts = db.collection("dogOwners/"
                         + userID + "/posts");
                 Snackbar.make(v, "Post ignored!", Snackbar.LENGTH_LONG).show();
                 posts.document(model.getPostId())
@@ -128,16 +128,16 @@ public class PostElementAdapter extends FirestoreRecyclerAdapter<PostElement, Po
                 //Creating an Event
                 EventElement newEvent = new EventElement("Upcoming Event", date,
                         start_time, end_time, description, eventID);
-                db.collection("dog owners/" +
-                        userID + "/events by date")
+                db.collection("dogOwners/" +
+                        userID + "/eventsByDate")
                         .document(newEvent.getDate())
                         .collection("events")
                         .document(newEvent.getEventId()).set(newEvent);
-                final CollectionReference posts = db.collection("dog owners/"
+                final CollectionReference posts = db.collection("dogOwners/"
                         + userID + "/posts");
                 Snackbar.make(v, "New event has been created!", Snackbar.LENGTH_LONG).show();
                 //Creating a PostNotificationElement
-                db.collection("dog owners")
+                db.collection("dogOwners")
                         .document(userID)
                         .get()
                         .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -147,7 +147,7 @@ public class PostElementAdapter extends FirestoreRecyclerAdapter<PostElement, Po
                                 String name = doc.getString("mName");
                                 PostNotificationElement newPostNotify = new PostNotificationElement("New Post Accept",
                                         name + " has accepted your post", userID, model.getUserId());
-                                db.collection("post notifications").add(newPostNotify)
+                                db.collection("postNotifications").add(newPostNotify)
                                         .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                                             @Override
                                             public void onSuccess(DocumentReference documentReference) {

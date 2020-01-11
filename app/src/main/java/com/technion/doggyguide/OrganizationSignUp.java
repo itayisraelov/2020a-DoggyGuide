@@ -113,7 +113,7 @@ public class OrganizationSignUp extends AppCompatActivity {
         String userID = mAuth.getCurrentUser().getUid();
 
 
-        db.collection("dog owners").document(userID)
+        db.collection("dogOwners").document(userID)
                 .set(org)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override

@@ -7,7 +7,7 @@ const firebaseTriggers = functions.region('europe-west1').firestore;
 const db = admin.firestore();
 
 exports.postNotification = firebaseTriggers
-      .document('/post notifications/{notificatioId}').onWrite((snap, context) => {
+      .document('postNotifications/{notificatioId}').onWrite((snap, context) => {
       const notifcationRecieverId = snap.data().mReciever;
       const payload = {
         data: {

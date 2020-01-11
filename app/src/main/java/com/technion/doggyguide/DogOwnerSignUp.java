@@ -119,7 +119,7 @@ public class DogOwnerSignUp extends AppCompatActivity {
         mStorageRef = FirebaseStorage.getInstance().getReference("uploads");
 
         //Initialize collections references
-        dogownersRef = db.collection("dog owners");
+        dogownersRef = db.collection("dogOwners");
         orgmembersRef = db.collection("organizations").document(ORG_DOC_ID).collection(MEMBERS_DOC_ID);
 
 
@@ -393,7 +393,7 @@ public class DogOwnerSignUp extends AppCompatActivity {
 
         //adding a reference to organizations database
         Map<String, Object> member = new HashMap<>();
-        member.put("reference", "dog owners/" + userID);
+        member.put("reference", "dogOwners/" + userID);
         orgmembersRef.add(member);
     }
 

@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements
                 @Override
                 public void onSuccess(InstanceIdResult instanceIdResult) {
                     final String mDeviceToken = instanceIdResult.getToken();
-                    final DocumentReference mUserRef = db.collection("dog owners")
+                    final DocumentReference mUserRef = db.collection("dogOwners")
                             .document(user.getUid());
                     mUserRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                         @Override

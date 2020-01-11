@@ -38,7 +38,7 @@ public class UserProfileActivity extends AppCompatActivity {
     Button change_user_image_bt, change_status_bt;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     FirebaseAuth users = FirebaseAuth.getInstance();
-    private CollectionReference usersRef = db.collection("dog owners");
+    private CollectionReference usersRef = db.collection("dogOwners");
     String userUid = users.getCurrentUser().getUid();
     CircleImageView mCircleImageView;
     private static final int GALLERY_PICK = 1;
