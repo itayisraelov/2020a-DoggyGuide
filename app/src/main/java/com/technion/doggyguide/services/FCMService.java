@@ -13,14 +13,28 @@ import com.google.firebase.messaging.RemoteMessage;
 import com.technion.doggyguide.MainActivity;
 import com.technion.doggyguide.R;
 
-public class PostService extends FirebaseMessagingService {
-    private final String CHANNEL_ID = "Post Notifications";
+public class FCMService extends FirebaseMessagingService {
+    private String CHANNEL_ID = "";
+    private  Intent intent;
+    private PendingIntent pendingIntent;
+
     @Override
     public void onMessageReceived(RemoteMessage payload) {
         super.onMessageReceived(payload);
-        Intent intent = new Intent(this, MainActivity.class);
+
+        switch(payload.getData().get("notification_type")) {
+            case "POST":
+                CHANNEL_ID = "Post Notification";
+                intent = new Intent(this, MainActivity.class);
+                break;
+            case "Friend_Req":
+                CHANNEL_ID = "FriendReq Notifications";
+                intent = new Intent(this, MainActivity.class);
+                break;
+        }
+
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+        pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
                 .setSmallIcon(R.mipmap.ic_launcher_round)
