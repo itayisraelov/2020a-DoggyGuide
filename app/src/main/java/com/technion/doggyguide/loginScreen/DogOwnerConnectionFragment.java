@@ -43,16 +43,9 @@ import com.technion.doggyguide.R;
 import com.technion.doggyguide.homeActivity;
 
 import java.util.List;
+import java.util.Set;
 
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link DogOwnerConnectionFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link DogOwnerConnectionFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class DogOwnerConnectionFragment extends Fragment {
     public static final String EXTRA_CREDINTIAL = "com.technion.doggyguide.EXTRA_CREDINTIAL";
     public static final String EXTRA_ACCOUNT = "com.technion.doggyguide.EXTRA_ACCOUNT";
@@ -83,15 +76,6 @@ public class DogOwnerConnectionFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment DogOwnerConnectionFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static DogOwnerConnectionFragment newInstance(String param1, String param2) {
         DogOwnerConnectionFragment fragment = new DogOwnerConnectionFragment();
         Bundle args = new Bundle();
@@ -216,13 +200,22 @@ public class DogOwnerConnectionFragment extends Fragment {
                                         .getInstanceId().addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
                                     @Override
                                     public void onSuccess(InstanceIdResult instanceIdResult) {
-                                        String mDeviceToken = instanceIdResult.getToken();
-                                        db.collection("dogOwners")
-                                                .document(mAuth.getCurrentUser().getUid())
-                                                .update("mDeviceToken", mDeviceToken);
-                                        Intent intent = new Intent(getActivity(), homeActivity.class);
-                                        getActivity().finish();
-                                        startActivity(intent);
+                                        final String mDeviceToken = instanceIdResult.getToken();
+                                        final DocumentReference mUserRef = db
+                                                .document("dogOwners/" + mAuth.getCurrentUser().getUid());
+                                        mUserRef.get()
+                                                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                        List<String> tokens = (List<String>) task.getResult().get("mTokens");
+                                                        if (!tokens.contains(mDeviceToken))
+                                                            tokens.add(mDeviceToken);
+                                                        mUserRef.update("mTokens", tokens);
+                                                        Intent intent = new Intent(getActivity(), homeActivity.class);
+                                                        getActivity().finish();
+                                                        startActivity(intent);
+                                                    }
+                                                });
                                     }
                                 });
 
@@ -302,7 +295,8 @@ public class DogOwnerConnectionFragment extends Fragment {
                                             if (task.isSuccessful()) {
                                                 DocumentSnapshot doc = task.getResult();
                                                 List<String> tokens = (List<String>) doc.get("mTokens");
-                                                tokens.add(mDeviceToken);
+                                                if(!tokens.contains(mDeviceToken))
+                                                    tokens.add(mDeviceToken);
                                                 mUserRef.update("mTokens", tokens);
                                                 Intent intent = new Intent(getActivity(), homeActivity.class);
                                                 getActivity().finish();
@@ -352,16 +346,6 @@ public class DogOwnerConnectionFragment extends Fragment {
     }
 
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);

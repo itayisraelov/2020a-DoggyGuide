@@ -7,8 +7,9 @@ const firebaseTriggers = functions.region('europe-west1').firestore;
 const db = admin.firestore();
 
 exports.postNotification = firebaseTriggers
-      .document('postNotifications/{notificatioId}').onWrite((snap, context) => {
+      .document('postNotifications/{notificatioId}').onCreate((snap, context) => {
       const notifcationRecieverId = snap.data().mReciever;
+      console.log('reciever_id is ' + notifcationRecieverId);
       const payload = {
         data: {
             notification_type: 'POST',
@@ -19,13 +20,13 @@ exports.postNotification = firebaseTriggers
             notification_id: context.params.notificatioId
         }
       };
-      return db.collection('dog owners')
-        .document(notifcationRecieverId)
+      return db.collection('dogOwners')
+        .doc(notifcationRecieverId)
         .get()
         .then(recieverDoc => {
             console.log('Retrieving FCM tokens');
             const tokens = recieverDoc.data().mTokens;
             console.log('Sending notification payload');
-            return admin.message().sendToDevice(tokens, payload);
+            return admin.messaging().sendToDevice(tokens, payload);
         });
 });

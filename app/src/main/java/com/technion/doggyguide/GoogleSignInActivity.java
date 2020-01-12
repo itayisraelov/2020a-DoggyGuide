@@ -29,6 +29,7 @@ import com.technion.doggyguide.loginScreen.DogOwnerConnectionFragment;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class GoogleSignInActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
@@ -124,7 +125,7 @@ public class GoogleSignInActivity extends AppCompatActivity {
                         DogOwnerElement dogowner = new DogOwnerElement(account.getDisplayName(),
                                 account.getEmail(), mDogName, mDogBreed,
                                 account.getPhotoUrl().toString(),
-                                "I am new in the system", Arrays.asList(mDeviceToken));
+                                "I am new in the system",  Arrays.asList(mDeviceToken));
                         String userId = mAuth.getCurrentUser().getUid();
                         db.collection("dogOwners")
                                 .document(userId)
