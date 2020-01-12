@@ -46,6 +46,7 @@ public class Fab extends AppCompatActivity implements DatePickerDialog.OnDateSet
     private final String TAG = "FAB POST";
 
     private int clicked_btn_id;
+    String mDogOwners = "dogOwners";
 
     private TextView postdate;
     private TextView poststarttime;
@@ -84,9 +85,9 @@ public class Fab extends AppCompatActivity implements DatePickerDialog.OnDateSet
         userID = mAuth.getCurrentUser().getUid();
 
         postsRef = db.collection("posts");
-        dogownersRef = db.collection("dog owners");
-        friendsRef = db.collection("dog owners/" + userID + "/friends");
-        userpostsRef = db.collection("dog owners/" + userID + "/posts");
+        dogownersRef = db.collection(mDogOwners);
+        friendsRef = db.collection(mDogOwners + "/" + userID + "/friends");
+        userpostsRef = db.collection(mDogOwners + "/" + userID + "/posts");
 
     }
 

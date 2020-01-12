@@ -47,6 +47,7 @@ import com.technion.doggyguide.dataElements.DogOwnerElement;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -85,6 +86,7 @@ public class DogOwnerSignUp extends AppCompatActivity {
     private StorageReference mStorageRef;
     private CollectionReference dogownersRef;
     private CollectionReference orgmembersRef;
+    String mDogOwners = "dogOwners";
 
 
     @Override
@@ -117,7 +119,7 @@ public class DogOwnerSignUp extends AppCompatActivity {
         mStorageRef = FirebaseStorage.getInstance().getReference("uploads");
 
         //Initialize collections references
-        dogownersRef = db.collection("dog owners");
+        dogownersRef = db.collection(mDogOwners);
         orgmembersRef = db.collection("organizations").document(ORG_DOC_ID).collection(MEMBERS_DOC_ID);
 
 
@@ -357,11 +359,11 @@ public class DogOwnerSignUp extends AppCompatActivity {
                                                         new OnSuccessListener<InstanceIdResult>() {
                                                             @Override
                                                             public void onSuccess(InstanceIdResult instanceIdResult) {
-                                                                String deviceToken = instanceIdResult.getToken();
+                                                                String mDeviceToken = instanceIdResult.getToken();
                                                                 DogOwnerElement dogowner = new DogOwnerElement(nametxt.getText().toString(),
                                                                         emailtxt.getText().toString(), dog_nametxt.getText().toString(),
                                                                         dog_breedtxt.getText().toString(),
-                                                                        uri.toString(), "I am new in the system", deviceToken);
+                                                                        uri.toString(), "I am new in the system", Arrays.asList(mDeviceToken));
                                                                 dogownersRef.document(userID).set(dogowner);
 
                                                             }
@@ -391,7 +393,7 @@ public class DogOwnerSignUp extends AppCompatActivity {
 
         //adding a reference to organizations database
         Map<String, Object> member = new HashMap<>();
-        member.put(userID, "dog owners/" + userID);
+        member.put(userID, mDogOwners + "/" + userID);
         orgmembersRef.add(member);
     }
 

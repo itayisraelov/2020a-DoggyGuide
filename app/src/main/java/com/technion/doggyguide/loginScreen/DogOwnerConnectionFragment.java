@@ -13,10 +13,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -41,7 +39,6 @@ import com.technion.doggyguide.DogOwnerSignUp;
 import com.technion.doggyguide.GoogleSignInActivity;
 import com.technion.doggyguide.R;
 import com.technion.doggyguide.homeActivity;
-
 import java.util.List;
 
 
@@ -67,6 +64,7 @@ public class DogOwnerConnectionFragment extends Fragment{
     private String mParam1;
     private String mParam2;
     private ProgressDialog mProgressDialog;
+    String mDogOwners = "dogOwners";
 
     private OnFragmentInteractionListener mListener;
 
@@ -126,7 +124,7 @@ public class DogOwnerConnectionFragment extends Fragment{
                 .document(ORG_DOC_ID)
                 .collection(MEMBERS_DOC_ID);
 
-        mDogOwnersCollection = db.collection("dog owners");
+        mDogOwnersCollection = db.collection(mDogOwners);
         mProgressDialog = new ProgressDialog(getActivity());
 
         // Initialize Google Sign In Options
@@ -223,20 +221,33 @@ public class DogOwnerConnectionFragment extends Fragment{
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             if (mAuth.getCurrentUser().isEmailVerified()) {
-                                FirebaseInstanceId.getInstance().getInstanceId()
-                                        .addOnSuccessListener(getActivity(),
-                                                new OnSuccessListener<InstanceIdResult>() {
+                                mProgressDialog.setTitle("LogIn");
+                                mProgressDialog.setMessage("Please wait");
+                                mProgressDialog.setCanceledOnTouchOutside(false);
+                                mProgressDialog.show();
+                                FirebaseInstanceId.getInstance()
+                                        .getInstanceId().addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
+                                    @Override
+                                    public void onSuccess(InstanceIdResult instanceIdResult) {
+                                        final String mDeviceToken = instanceIdResult.getToken();
+                                        final DocumentReference mUserRef = db
+                                                .document("dogOwners/" + mAuth.getCurrentUser().getUid());
+                                        mUserRef.get()
+                                                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                                     @Override
-                                                    public void onSuccess(InstanceIdResult instanceIdResult) {
-                                                        String deviceToken = instanceIdResult.getToken();
-                                                        mDogOwnersCollection
-                                                                .document(mAuth.getCurrentUser().getUid())
-                                                                .update("mDeviceToken", deviceToken);
+                                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                        List<String> tokens = (List<String>) task.getResult().get("mTokens");
+                                                        if (!tokens.contains(mDeviceToken))
+                                                            tokens.add(mDeviceToken);
+                                                        mUserRef.update("mTokens", tokens);
                                                         Intent intent = new Intent(getActivity(), homeActivity.class);
                                                         getActivity().finish();
                                                         startActivity(intent);
                                                     }
                                                 });
+                                    }
+                                });
+
                             } else {
                                 Toast.makeText(getActivity(),
                                         "This email is registered but hasn't been verified yet.\nPlease verify your email",
@@ -255,7 +266,7 @@ public class DogOwnerConnectionFragment extends Fragment{
     private void signIWithGoogle(final GoogleSignInAccount account) {
         Log.d("TAG", "firebaseAuthWithGoogle:" + account.getId());
         final AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
-        final CollectionReference dogowners = db.collection("dog owners");
+        final CollectionReference dogowners = db.collection(mDogOwners);
         dogowners.whereEqualTo("email", account.getEmail())
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {

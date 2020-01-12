@@ -52,6 +52,7 @@ public class EventsFragment extends Fragment {
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
+    String mDogOwners = "dogOwners";
 
     private String userID;
 
@@ -94,7 +95,7 @@ public class EventsFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
         userID = mAuth.getCurrentUser().getUid();
-        eventsbydateRef = db.collection("dog owners/" + userID + "/events by date");
+        eventsbydateRef = db.collection(mDogOwners + "/" + userID + "/events by date");
     }
 
     @Override

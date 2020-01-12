@@ -36,7 +36,8 @@ public class UserProfile extends AppCompatActivity {
     Button mFriendReqBtn, mDeclineReqBtn;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     String clickedUserUid;
-    private CollectionReference usersRef = db.collection("dog owners");
+    String mDogOwners = "dogOwners";
+    private CollectionReference usersRef = db.collection(mDogOwners);
     private ProgressDialog mProgressDialog;
     private String mCurrent_state;
     FirebaseAuth users = FirebaseAuth.getInstance();
@@ -232,9 +233,12 @@ public class UserProfile extends AppCompatActivity {
                             Map<String, Object> notification = new HashMap<>();
                             notification.put("from", mCurrentUserUid);
                             notification.put("type", "request");
+                            notification.put("receiverId", clickedUserUid);
+                            notification.put("text", mCurrentUserUid + "send Friend Request to" + clickedUserUid);
+
                             mNotificationsCollection
                                     .document(clickedUserUid)
-                                    .collection("keys notifications")
+                                    .collection("keysNotifications")
                                     .document()
                                     .set(notification)
                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -271,7 +275,7 @@ public class UserProfile extends AppCompatActivity {
                 DogOwnerElement dogOwnerElement = documentSnapshot.toObject(DogOwnerElement.class);
                 if (dogOwnerElement != null){
                     mName.setText("User name:   " + dogOwnerElement.getmName());
-                    mDogName.setText("Name of the dog:   " + dogOwnerElement.getmDog_name());
+                    mDogName.setText("Name of the dog:   " + dogOwnerElement.getmDogName());
                     mStatus.setText("Status is:   " + dogOwnerElement.getmStatus());
                     Picasso.get().load(dogOwnerElement.getmImageUrl()).into(mImage);
                     mProgressDialog.dismiss();

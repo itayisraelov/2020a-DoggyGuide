@@ -26,6 +26,7 @@ import com.google.firebase.iid.InstanceIdResult;
 import com.technion.doggyguide.dataElements.DogOwnerElement;
 import com.technion.doggyguide.loginScreen.DogOwnerConnectionFragment;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,6 +34,7 @@ public class GoogleSignInActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     private CollectionReference orgmembersRef;
+    String mDogOwners = "dogOwners";
 
 
     private final String ORG_DOC_ID = "euHHrQzHbBKNZsvrmpbT";
@@ -115,24 +117,24 @@ public class GoogleSignInActivity extends AppCompatActivity {
     }
 
     private void addUserToDatabase(final GoogleSignInAccount account, final String mDogName, final String mDogBreed) {
-        FirebaseInstanceId.getInstance().getInstanceId()
-                .addOnSuccessListener(GoogleSignInActivity.this,
-                        new OnSuccessListener<InstanceIdResult>() {
-                            @Override
-                            public void onSuccess(InstanceIdResult instanceIdResult) {
-                                String deviceToken = instanceIdResult.getToken();
-                                DogOwnerElement dogowner = new DogOwnerElement(account.getDisplayName(),
-                                        account.getEmail(), mDogName,
-                                        mDogBreed, account.getPhotoUrl().toString(),
-                                        "I am new in the system", deviceToken);
-                                String userId = mAuth.getCurrentUser().getUid();
-                                db.collection("dog owners")
-                                        .document(userId)
-                                        .set(dogowner);
-                                Map<String, Object> member = new HashMap<>();
-                                member.put(userId, "dog owners/" + userId);
-                                orgmembersRef.add(member);
-                            }
-                        });
+        FirebaseInstanceId.getInstance()
+                .getInstanceId().addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
+            @Override
+            public void onSuccess(InstanceIdResult instanceIdResult) {
+                String mDeviceToken = instanceIdResult.getToken();
+                DogOwnerElement dogowner = new DogOwnerElement(account.getDisplayName(),
+                        account.getEmail(), mDogName, mDogBreed,
+                        account.getPhotoUrl().toString(),
+                        "I am new in the system",  Arrays.asList(mDeviceToken));
+                String userId = mAuth.getCurrentUser().getUid();
+                db.collection("dogOwners")
+                        .document(userId)
+                        .set(dogowner);
+
+                Map<String, Object> member = new HashMap<>();
+                member.put("reference", "dogOwners/" + userId);
+                orgmembersRef.add(member);
+            }
+        });
     }
 }

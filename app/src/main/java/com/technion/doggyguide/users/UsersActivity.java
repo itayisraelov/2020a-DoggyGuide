@@ -17,6 +17,7 @@ public class UsersActivity extends AppCompatActivity {
     private UsersAdapter mAdapter;
     private CollectionReference mUsersRef;
     private FirebaseFirestore db;
+    String mDogOwners = "dogOwners";
 
 
     @Override
@@ -26,7 +27,7 @@ public class UsersActivity extends AppCompatActivity {
 
         db = FirebaseFirestore.getInstance();
 
-        mUsersRef = db.collection("dog owners");
+        mUsersRef = db.collection(mDogOwners);
     }
 
     private void setUpRecyclerView() {

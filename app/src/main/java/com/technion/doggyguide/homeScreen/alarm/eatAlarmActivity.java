@@ -32,12 +32,13 @@ import java.util.Calendar;
 public class eatAlarmActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener{
     private TextView mTextView, mTextView2, mTextView3;
     private Integer mWhichButtonIsClicked;
+    String mDogOwners = "dogOwners";
     Button mButtonTimePicker, mButtonTimePicker2, mButtonTimePicker3;
     Button mButtonCancelAlarm, mButtonCancelAlarm2, mButtonCancelAlarm3;
     Button mButtonSet;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     FirebaseAuth users = FirebaseAuth.getInstance();
-    private CollectionReference usersRef = db.collection("dog owners");
+    private CollectionReference usersRef = db.collection(mDogOwners);
     String userUid = users.getCurrentUser().getUid();
     private CollectionReference alarmsByUserUidRef = usersRef.document(userUid).collection("Alarms");
 

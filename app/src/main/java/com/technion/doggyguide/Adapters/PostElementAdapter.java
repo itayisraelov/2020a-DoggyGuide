@@ -34,6 +34,7 @@ import java.util.Date;
 public class PostElementAdapter extends FirestoreRecyclerAdapter<PostElement, PostElementAdapter.PostHolder> {
 
     private final String TAG = "Post Adapter";
+    String mDogOwners = "dogOwners";
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
 
@@ -43,7 +44,7 @@ public class PostElementAdapter extends FirestoreRecyclerAdapter<PostElement, Po
 
     @Override
     protected void onBindViewHolder(@NonNull final PostHolder holder, final int position, @NonNull final PostElement model) {
-        db.document("dog owners/" + model.getUserId())
+        db.document(mDogOwners + "/" + model.getUserId())
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
@@ -77,7 +78,7 @@ public class PostElementAdapter extends FirestoreRecyclerAdapter<PostElement, Po
                 Log.d(TAG, "Ignore Button Clicked");
                 FirebaseAuth mAuth = FirebaseAuth.getInstance();
                 String userID = mAuth.getCurrentUser().getUid();
-                CollectionReference posts = db.collection("dog owners/"
+                CollectionReference posts = db.collection(mDogOwners + "/"
                         + userID + "/posts");
                 Snackbar.make(v, "Post ignored!", Snackbar.LENGTH_LONG).show();
                 posts.document(model.getPostId())
@@ -123,12 +124,12 @@ public class PostElementAdapter extends FirestoreRecyclerAdapter<PostElement, Po
                 String eventID = userID + Calendar.getInstance().getTime().toString();
                 EventElement newEvent = new EventElement("Upcoming Event", date,
                         start_time, end_time, description, eventID);
-                db.collection("dog owners/" +
+                db.collection(mDogOwners + "/" +
                         userID + "/events by date")
                         .document(newEvent.getDate())
                         .collection("events")
                         .document(newEvent.getEventId()).set(newEvent);
-                CollectionReference posts = db.collection("dog owners/"
+                CollectionReference posts = db.collection( mDogOwners + "/"
                         + userID + "/posts");
                 Snackbar.make(v, "New event has been created!", Snackbar.LENGTH_LONG).show();
                 //Delete the post from all friends also...

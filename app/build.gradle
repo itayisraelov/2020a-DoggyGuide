@@ -73,6 +73,7 @@ dependencies {
     implementation 'id.zelory:compressor:2.1.0'
 
     implementation 'com.theartofdev.edmodo:android-image-cropper:2.8.0'
+    implementation 'com.google.firebase:firebase-messaging:20.1.0'
 }
 
 apply plugin: 'com.google.gms.google-services'

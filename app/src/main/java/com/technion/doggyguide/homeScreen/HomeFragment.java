@@ -40,12 +40,14 @@ public class HomeFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
+
     private OnFragmentInteractionListener mListener;
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
 
     private String userID;
+    String mDogOwners = "dogOwners";
 
     private CollectionReference postsRef;
 
@@ -83,7 +85,7 @@ public class HomeFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
         userID = mAuth.getCurrentUser().getUid();
-        postsRef = db.collection("dog owners/" + userID + "/posts");
+        postsRef = db.collection(mDogOwners + "/" + userID + "/posts");
     }
 
     @Override

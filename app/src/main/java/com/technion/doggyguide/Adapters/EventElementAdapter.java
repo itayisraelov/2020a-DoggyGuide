@@ -36,6 +36,7 @@ import java.util.Calendar;
 public class EventElementAdapter extends
         FirestoreRecyclerAdapter<EventElement, EventElementAdapter.EventHolder> {
     private final String TAG = "Event Adapter";
+    String mDogOwners = "dogOwners";
 
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -47,7 +48,7 @@ public class EventElementAdapter extends
     @Override
     protected void onBindViewHolder(@NonNull EventHolder holder, int position, @NonNull EventElement model) {
         final String userId = mAuth.getCurrentUser().getUid();
-        final DocumentReference eventDocRef = db.collection("dog owners/"
+        final DocumentReference eventDocRef = db.collection(  mDogOwners + "/"
                 + userId + "/events by date").document(model.getDate())
                 .collection("events").document(model.getEventId());
         holder.textViewTitle.setText(model.getTitle());
