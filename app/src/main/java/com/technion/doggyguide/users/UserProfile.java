@@ -265,7 +265,7 @@ public class UserProfile extends AppCompatActivity {
                             notification.put("from", mCurrentUserUid);
                             notification.put("type", "request");
                             notification.put("receiverId", clickedUserUid);
-                            notification.put("text", mCurrentUserUid + "send Friend Request to" + clickedUserUid);
+                            notification.put("text", mCurrentUserUid + " send Friend Request to " + clickedUserUid);
 
                             mNotificationsCollection
                                     .document(clickedUserUid)
