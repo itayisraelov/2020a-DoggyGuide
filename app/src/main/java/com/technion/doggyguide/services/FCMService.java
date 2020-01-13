@@ -1,7 +1,6 @@
 package com.technion.doggyguide.services;
 
 
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 
