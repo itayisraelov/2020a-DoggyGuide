@@ -59,3 +59,21 @@ exports.postNotification = firebaseTriggers
             return admin.messaging().sendToDevice(tokens, payload);
         });
 });
+
+
+exports.onAcceptPost = firebaseTriggers
+      .document('dogOwners/{userId}/acceptedPosts/{postId}').onCreate((snap, context) => {
+      const postId = context.params.postId;
+      return db.collection('dogOwners')
+        .get()
+        .then(snapshot => {
+          snapshot.forEach(doc => {
+             const postCopyRef = db.collection('dogOwners')
+                                   .doc(doc.id)
+                                   .collection('posts')
+                                   .doc(postId);
+            postCopyRef.delete();
+          });
+          return;
+        });
+});

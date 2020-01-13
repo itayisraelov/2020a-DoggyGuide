@@ -12,8 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -24,6 +22,8 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
 import com.technion.doggyguide.R;
 import com.technion.doggyguide.dataElements.EventElement;
@@ -135,6 +135,8 @@ public class PostElementAdapter extends FirestoreRecyclerAdapter<PostElement, Po
                         .document(newEvent.getEventId()).set(newEvent);
                 final CollectionReference posts = db.collection("dogOwners/"
                         + userID + "/posts");
+                final CollectionReference acceptedPosts = db.collection("dogOwners/"
+                        + userID + "/acceptedPosts");
                 Snackbar.make(v, "New event has been created!", Snackbar.LENGTH_LONG).show();
                 //Creating a PostNotificationElement
                 db.collection("dogOwners")
@@ -154,9 +156,11 @@ public class PostElementAdapter extends FirestoreRecyclerAdapter<PostElement, Po
                                                 Log.d(TAG, "added a notification element");
                                             }
                                         });
-                                //Delete the post from all friends also...
                                 posts.document(model.getPostId())
                                         .delete();
+                                /*---Adding the post to accepted posts---*/
+                                acceptedPosts.document(model.getPostId()).set(model);
+
                             }
                         });
             }

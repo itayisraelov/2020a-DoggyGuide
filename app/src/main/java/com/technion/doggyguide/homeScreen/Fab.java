@@ -137,7 +137,7 @@ public class Fab extends AppCompatActivity implements DatePickerDialog.OnDateSet
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        String name = documentSnapshot.getString("name");
+                        String name = documentSnapshot.getString("mName");
                         String description = postdescription.getText().toString();
                         PostElement post = new PostElement(name, userID, start_time, end_time,
                                 postdate.getText().toString(), posting_time, description, postID);
