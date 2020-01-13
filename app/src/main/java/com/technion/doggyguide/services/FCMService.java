@@ -2,13 +2,13 @@ package com.technion.doggyguide.services;
 
 import android.app.PendingIntent;
 import android.content.Intent;
-import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.technion.doggyguide.MainActivity;
 import com.technion.doggyguide.R;
+import com.technion.doggyguide.users.UserProfile;
 
 public class FCMService extends FirebaseMessagingService {
     private String CHANNEL_ID = "";
@@ -25,7 +25,9 @@ public class FCMService extends FirebaseMessagingService {
                 break;
             case "Friend_Req":
                 CHANNEL_ID = "FriendReq Notifications";
-                intent = new Intent(this, MainActivity.class);
+                String from_user_id = payload.getData().get("sender_id");
+                intent = new Intent(this, UserProfile.class);
+                intent.putExtra("user_id", from_user_id);
                 break;
 
         }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.technion.doggyguide">
 
 
@@ -12,12 +13,12 @@
 
     <application
         android:name=".app.App"
-        android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        tools:ignore="GoogleAppIndexingWarning">
         <service
             android:name=".services.FCMService"
             android:exported="false">
@@ -28,8 +29,8 @@
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />
-        <activity android:name=".GoogleSignInActivity"></activity>
-        <activity android:name=".users.UserProfile"></activity>
+        <activity android:name=".GoogleSignInActivity" />
+        <activity android:name=".users.UserProfile" />
         <activity android:name=".users.UsersActivity" />
         <activity android:name=".profile.DogProfileActivity" />
         <activity android:name=".profile.StatusActivity" />

@@ -3,12 +3,14 @@ package com.technion.doggyguide;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
@@ -16,9 +18,15 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.technion.doggyguide.homeScreen.ChatFragment;
 import com.technion.doggyguide.homeScreen.EventsFragment;
 import com.technion.doggyguide.homeScreen.HomeFragment;
@@ -28,6 +36,11 @@ import com.technion.doggyguide.profile.UserProfileActivity;
 import com.technion.doggyguide.ui.main.HomeSectionsPagerAdapter;
 import com.technion.doggyguide.users.UsersActivity;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 public class homeActivity extends AppCompatActivity implements
            HomeFragment.OnFragmentInteractionListener,
            EventsFragment.OnFragmentInteractionListener,
@@ -36,11 +49,21 @@ public class homeActivity extends AppCompatActivity implements
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGSC;
     private GoogleSignInOptions mGSO;
+    private FirebaseFirestore db;
 
     private static final int[] TAB_ICONS = new int[] {R.drawable.ic_home,
             R.drawable.ic_chat_24px,
             R.drawable.ic_alarm_add,
             R.drawable.ic_event};
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
+        super.onCreate(savedInstanceState, persistentState);
+
+        db = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
+
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -51,6 +74,7 @@ public class homeActivity extends AppCompatActivity implements
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
         switch (item.getItemId()) {
             case R.id.search:
                 Toast.makeText(this, "search", Toast.LENGTH_SHORT).show();
