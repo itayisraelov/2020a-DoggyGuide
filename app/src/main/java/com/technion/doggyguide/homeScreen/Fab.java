@@ -29,7 +29,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.WriteBatch;
 import com.technion.doggyguide.DatePickerFabFragment;
 import com.technion.doggyguide.R;
 import com.technion.doggyguide.TimePickerFabFragment;
@@ -46,7 +45,6 @@ public class Fab extends AppCompatActivity implements DatePickerDialog.OnDateSet
     private final String TAG = "FAB POST";
 
     private int clicked_btn_id;
-    String mDogOwners = "dogOwners";
 
     private TextView postdate;
     private TextView poststarttime;
@@ -85,9 +83,9 @@ public class Fab extends AppCompatActivity implements DatePickerDialog.OnDateSet
         userID = mAuth.getCurrentUser().getUid();
 
         postsRef = db.collection("posts");
-        dogownersRef = db.collection(mDogOwners);
-        friendsRef = db.collection(mDogOwners + "/" + userID + "/friends");
-        userpostsRef = db.collection(mDogOwners + "/" + userID + "/posts");
+        dogownersRef = db.collection("dogOwners");
+        friendsRef = db.collection("dogOwners/" + userID + "/friends");
+        userpostsRef = db.collection("dogOwners/" + userID + "/posts");
 
     }
 
@@ -144,7 +142,6 @@ public class Fab extends AppCompatActivity implements DatePickerDialog.OnDateSet
                         PostElement post = new PostElement(name, userID, start_time, end_time,
                                 postdate.getText().toString(), posting_time, description, postID);
                         postsRef.document(postID).set(post);
-                        addPostRefToUser(post, postID);
                         addPostRefToFriends(post, postID);
                     }
                 })
@@ -152,22 +149,6 @@ public class Fab extends AppCompatActivity implements DatePickerDialog.OnDateSet
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.d(TAG, "failed to retrieve data from database");
-                    }
-                });
-    }
-
-    private void addPostRefToUser(PostElement post, String postID) {
-        userpostsRef.document(postID).set(post)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "added post to user successfully");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, e.getMessage());
                     }
                 });
     }

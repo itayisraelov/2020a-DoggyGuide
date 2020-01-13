@@ -3,6 +3,7 @@ package com.technion.doggyguide;
 import android.Manifest;
 
 import android.app.ProgressDialog;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -14,6 +15,7 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.MimeTypeMap;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -50,10 +52,10 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 
 import com.theartofdev.edmodo.cropper.CropImage;
-
 import id.zelory.compressor.Compressor;
 import me.drakeet.materialdialog.MaterialDialog;
 
@@ -80,13 +82,12 @@ public class DogOwnerSignUp extends AppCompatActivity {
     private ProgressDialog mProgressDialog;
 
     private Uri mImageUri;
-    private StorageTask<UploadTask.TaskSnapshot> mUploadTask;
+    private StorageTask mUploadTask;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     private StorageReference mStorageRef;
     private CollectionReference dogownersRef;
     private CollectionReference orgmembersRef;
-    String mDogOwners = "dogOwners";
 
 
     @Override
@@ -119,7 +120,7 @@ public class DogOwnerSignUp extends AppCompatActivity {
         mStorageRef = FirebaseStorage.getInstance().getReference("uploads");
 
         //Initialize collections references
-        dogownersRef = db.collection(mDogOwners);
+        dogownersRef = db.collection("dogOwners");
         orgmembersRef = db.collection("organizations").document(ORG_DOC_ID).collection(MEMBERS_DOC_ID);
 
 
@@ -309,7 +310,7 @@ public class DogOwnerSignUp extends AppCompatActivity {
                                                 Toast.makeText(DogOwnerSignUp.this,
                                                         "Please check your email for verification.",
                                                         Toast.LENGTH_LONG).show();
-
+                                                //TODO: insert the user id to the organizations' database
                                                 mAuth.signOut();
                                                 Intent intent = new Intent(DogOwnerSignUp.this, MainActivity.class);
                                                 finish();
@@ -336,7 +337,8 @@ public class DogOwnerSignUp extends AppCompatActivity {
 
     private void addUserToDatabase() {
         final String userID = mAuth.getCurrentUser().getUid();
-        mUploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+        mUploadTask
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         if (taskSnapshot.getMetadata() != null) {
@@ -353,21 +355,20 @@ public class DogOwnerSignUp extends AppCompatActivity {
                                                 prog_bar.setProgress(0);
                                             }
                                         }, 500);
-
                                         FirebaseInstanceId.getInstance().getInstanceId()
-                                                .addOnSuccessListener(DogOwnerSignUp.this,
-                                                        new OnSuccessListener<InstanceIdResult>() {
-                                                            @Override
-                                                            public void onSuccess(InstanceIdResult instanceIdResult) {
-                                                                String mDeviceToken = instanceIdResult.getToken();
-                                                                DogOwnerElement dogowner = new DogOwnerElement(nametxt.getText().toString(),
-                                                                        emailtxt.getText().toString(), dog_nametxt.getText().toString(),
-                                                                        dog_breedtxt.getText().toString(),
-                                                                        uri.toString(), "I am new in the system", Arrays.asList(mDeviceToken));
-                                                                dogownersRef.document(userID).set(dogowner);
+                                                .addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
+                                                    @Override
+                                                    public void onSuccess(InstanceIdResult instanceIdResult) {
+                                                        String mDeviceToken = instanceIdResult.getToken();
+                                                        DogOwnerElement dogowner = new DogOwnerElement(nametxt.getText().toString(),
+                                                                emailtxt.getText().toString(), dog_nametxt.getText().toString(),
+                                                                dog_breedtxt.getText().toString(),
+                                                                uri.toString(),
+                                                                "I am new in the system", Arrays.asList(mDeviceToken));
+                                                        dogownersRef.document(userID).set(dogowner);
+                                                    }
+                                                });
 
-                                                            }
-                                                        });
                                     }
                                 });
                             }
@@ -393,7 +394,7 @@ public class DogOwnerSignUp extends AppCompatActivity {
 
         //adding a reference to organizations database
         Map<String, Object> member = new HashMap<>();
-        member.put(userID, mDogOwners + "/" + userID);
+        member.put("reference", "dogOwners/" + userID);
         orgmembersRef.add(member);
     }
 

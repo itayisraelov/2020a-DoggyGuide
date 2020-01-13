@@ -13,8 +13,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -39,65 +41,40 @@ import com.technion.doggyguide.DogOwnerSignUp;
 import com.technion.doggyguide.GoogleSignInActivity;
 import com.technion.doggyguide.R;
 import com.technion.doggyguide.homeActivity;
+
 import java.util.List;
 
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link DogOwnerConnectionFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link DogOwnerConnectionFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class DogOwnerConnectionFragment extends Fragment{
+public class DogOwnerConnectionFragment extends Fragment {
+    public static final String EXTRA_CREDINTIAL = "com.technion.doggyguide.EXTRA_CREDINTIAL";
+    public static final String EXTRA_ACCOUNT = "com.technion.doggyguide.EXTRA_ACCOUNT";
     static final int GOOGLE_SIGN_IN = 123;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
     private final String ORG_DOC_ID = "euHHrQzHbBKNZsvrmpbT";
     private final String MEMBERS_DOC_ID = "reference_to_members";
-
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
     private ProgressDialog mProgressDialog;
-    String mDogOwners = "dogOwners";
-
     private OnFragmentInteractionListener mListener;
-
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     private CollectionReference orgmembersRef;
-    private CollectionReference mDogOwnersCollection;
     private GoogleSignInClient mGSC;
     private GoogleSignInOptions mGSO;
-
     private Button mLoginBtn;
     private Button mSignUpBtn;
     private Button mGoogleLoginBtn;
     private EditText emailtxt;
     private EditText pwdtxt;
 
-
-    public static final String EXTRA_CREDINTIAL = "com.technion.doggyguide.EXTRA_CREDINTIAL";
-    public static final String EXTRA_ACCOUNT = "com.technion.doggyguide.EXTRA_ACCOUNT";
-
     public DogOwnerConnectionFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment DogOwnerConnectionFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static DogOwnerConnectionFragment newInstance(String param1, String param2) {
         DogOwnerConnectionFragment fragment = new DogOwnerConnectionFragment();
         Bundle args = new Bundle();
@@ -120,11 +97,8 @@ public class DogOwnerConnectionFragment extends Fragment{
         // Initialize Firebase Authentication
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
-        orgmembersRef = db.collection("organizations")
-                .document(ORG_DOC_ID)
-                .collection(MEMBERS_DOC_ID);
+        orgmembersRef = db.collection("organizations").document(ORG_DOC_ID).collection(MEMBERS_DOC_ID);
 
-        mDogOwnersCollection = db.collection(mDogOwners);
         mProgressDialog = new ProgressDialog(getActivity());
 
         // Initialize Google Sign In Options
@@ -155,10 +129,6 @@ public class DogOwnerConnectionFragment extends Fragment{
         mLoginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mProgressDialog.setTitle("LogIn");
-                mProgressDialog.setMessage("Please wait");
-                mProgressDialog.setCanceledOnTouchOutside(false);
-                mProgressDialog.show();
                 String email = emailtxt.getText().toString();
                 String pwd = pwdtxt.getText().toString();
                 if (!validateEmailAndPwd(email, pwd))
@@ -266,8 +236,8 @@ public class DogOwnerConnectionFragment extends Fragment{
     private void signIWithGoogle(final GoogleSignInAccount account) {
         Log.d("TAG", "firebaseAuthWithGoogle:" + account.getId());
         final AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
-        final CollectionReference dogowners = db.collection(mDogOwners);
-        dogowners.whereEqualTo("email", account.getEmail())
+        final CollectionReference dogowners = db.collection("dogOwners");
+        dogowners.whereEqualTo("mEmail", account.getEmail())
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -304,7 +274,6 @@ public class DogOwnerConnectionFragment extends Fragment{
     }
 
 
-
     private void GoogleSignIn(AuthCredential credential, final GoogleSignInAccount account) {
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
@@ -312,9 +281,30 @@ public class DogOwnerConnectionFragment extends Fragment{
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             Log.d("TAG", "signInWithCredential:success");
-                            Intent intent = new Intent(getActivity(), homeActivity.class);
-                            getActivity().finish();
-                            startActivity(intent);
+                            FirebaseInstanceId.getInstance()
+                                    .getInstanceId().addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
+                                @Override
+                                public void onSuccess(InstanceIdResult instanceIdResult) {
+                                    final String mDeviceToken = instanceIdResult.getToken();
+                                    final DocumentReference mUserRef = db.collection("dogOwners")
+                                            .document(mAuth.getCurrentUser().getUid());
+                                    mUserRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                            if (task.isSuccessful()) {
+                                                DocumentSnapshot doc = task.getResult();
+                                                List<String> tokens = (List<String>) doc.get("mTokens");
+                                                if(!tokens.contains(mDeviceToken))
+                                                    tokens.add(mDeviceToken);
+                                                mUserRef.update("mTokens", tokens);
+                                                Intent intent = new Intent(getActivity(), homeActivity.class);
+                                                getActivity().finish();
+                                                startActivity(intent);
+                                            }
+                                        }
+                                    });
+                                }
+                            });
                         } else {
                             Log.w("TAG", "signInWithCredential:failure", task.getException());
                             Toast.makeText(getActivity(), "Authentication failed.",
@@ -323,7 +313,6 @@ public class DogOwnerConnectionFragment extends Fragment{
                     }
                 });
     }
-
 
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -356,17 +345,6 @@ public class DogOwnerConnectionFragment extends Fragment{
     }
 
 
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);

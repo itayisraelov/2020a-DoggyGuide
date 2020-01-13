@@ -14,17 +14,21 @@ import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
 import com.technion.doggyguide.R;
 import com.technion.doggyguide.dataElements.EventElement;
 import com.technion.doggyguide.dataElements.PostElement;
+import com.technion.doggyguide.dataElements.PostNotificationElement;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -34,7 +38,6 @@ import java.util.Date;
 public class PostElementAdapter extends FirestoreRecyclerAdapter<PostElement, PostElementAdapter.PostHolder> {
 
     private final String TAG = "Post Adapter";
-    String mDogOwners = "dogOwners";
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
 
@@ -44,7 +47,7 @@ public class PostElementAdapter extends FirestoreRecyclerAdapter<PostElement, Po
 
     @Override
     protected void onBindViewHolder(@NonNull final PostHolder holder, final int position, @NonNull final PostElement model) {
-        db.document(mDogOwners + "/" + model.getUserId())
+        db.document("dogOwners/" + model.getUserId())
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
@@ -67,7 +70,7 @@ public class PostElementAdapter extends FirestoreRecyclerAdapter<PostElement, Po
         //holder.profileImage.setImageResource(R.drawable.ic_person);
         holder.userName.setText(model.getName());
         holder.postingTime.setText(postingDate[0] + " " + postingDate[1] + " "
-                            + postingDate[2] + " " + postingDate[3]);
+                + postingDate[2] + " " + postingDate[3]);
         holder.postDate.setText(model.getPost_date());
         holder.postTime.setText(model.getStart_time() + "-" + model.getEnd_time());
         holder.postDescription.setText(model.getDescription());
@@ -78,7 +81,7 @@ public class PostElementAdapter extends FirestoreRecyclerAdapter<PostElement, Po
                 Log.d(TAG, "Ignore Button Clicked");
                 FirebaseAuth mAuth = FirebaseAuth.getInstance();
                 String userID = mAuth.getCurrentUser().getUid();
-                CollectionReference posts = db.collection(mDogOwners + "/"
+                CollectionReference posts = db.collection("dogOwners/"
                         + userID + "/posts");
                 Snackbar.make(v, "Post ignored!", Snackbar.LENGTH_LONG).show();
                 posts.document(model.getPostId())
@@ -102,8 +105,8 @@ public class PostElementAdapter extends FirestoreRecyclerAdapter<PostElement, Po
             @Override
             public void onClick(View v) {
                 FirebaseAuth mAuth = FirebaseAuth.getInstance();
-                FirebaseFirestore db = FirebaseFirestore.getInstance();
-                String userID = mAuth.getCurrentUser().getUid();
+                final FirebaseFirestore db = FirebaseFirestore.getInstance();
+                final String userID = mAuth.getCurrentUser().getUid();
                 Log.d(TAG, "Accept Button Clicked");
                 String mydate = holder.postDate.getText().toString();
                 SimpleDateFormat dateFormat = new SimpleDateFormat(
@@ -122,19 +125,40 @@ public class PostElementAdapter extends FirestoreRecyclerAdapter<PostElement, Po
                 String end_time = holder.postTime.getText().toString().split("-")[1];
                 String description = holder.postDescription.getText().toString();
                 String eventID = userID + Calendar.getInstance().getTime().toString();
+                //Creating an Event
                 EventElement newEvent = new EventElement("Upcoming Event", date,
                         start_time, end_time, description, eventID);
-                db.collection(mDogOwners + "/" +
-                        userID + "/events by date")
+                db.collection("dogOwners/" +
+                        userID + "/eventsByDate")
                         .document(newEvent.getDate())
                         .collection("events")
                         .document(newEvent.getEventId()).set(newEvent);
-                CollectionReference posts = db.collection( mDogOwners + "/"
+                final CollectionReference posts = db.collection("dogOwners/"
                         + userID + "/posts");
                 Snackbar.make(v, "New event has been created!", Snackbar.LENGTH_LONG).show();
-                //Delete the post from all friends also...
-                posts.document(model.getPostId())
-                        .delete();
+                //Creating a PostNotificationElement
+                db.collection("dogOwners")
+                        .document(userID)
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                DocumentSnapshot doc = task.getResult();
+                                String name = doc.getString("mName");
+                                PostNotificationElement newPostNotify = new PostNotificationElement("New Post Accept",
+                                        name + " has accepted your post", userID, model.getUserId());
+                                db.collection("postNotifications").add(newPostNotify)
+                                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                            @Override
+                                            public void onSuccess(DocumentReference documentReference) {
+                                                Log.d(TAG, "added a notification element");
+                                            }
+                                        });
+                                //Delete the post from all friends also...
+                                posts.document(model.getPostId())
+                                        .delete();
+                            }
+                        });
             }
         });
     }
