@@ -72,6 +72,37 @@ public class UserProfile extends AppCompatActivity {
                 if(mCurrent_state.equals("req_received")){
                     acceptFriends();
                 }
+                // ----------unFriend -------------------------
+                if(mCurrent_state.equals("friends")){
+                    cancelFriends();
+                }
+            }
+        });
+    }
+
+    private void cancelFriends() {
+        mFriendsCollection
+                .document(mCurrentUserUid)
+                .collection("friends")
+                .document(clickedUserUid)
+                .delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                mFriendsCollection
+                        .document(clickedUserUid)
+                        .collection("friends")
+                        .document(mCurrentUserUid)
+                        .delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        mCurrent_state = "not_friends";
+                        mFriendReqBtn.setText("Send Friend Request");
+                        mFriendReqBtn.setEnabled(true);
+                        // Don't show the cancel button
+                        mDeclineReqBtn.setVisibility(View.INVISIBLE);
+                        mDeclineReqBtn.setEnabled(false);
+                    }
+                });
             }
         });
     }
@@ -104,7 +135,7 @@ public class UserProfile extends AppCompatActivity {
         req_1.put("date", currentDate);
         mFriendsCollection
                 .document(mCurrentUserUid)
-                .collection("friends")
+                .collection("c")
                 .document(clickedUserUid).set(req_1)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
