@@ -1,38 +1,60 @@
 package com.technion.doggyguide.services;
 
+import android.app.AlarmManager;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
+
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.technion.doggyguide.MainActivity;
 import com.technion.doggyguide.R;
 import com.technion.doggyguide.users.UserProfile;
 
+import java.util.Map;
+
+
 public class FCMService extends FirebaseMessagingService {
-    private String CHANNEL_ID = "";
-    private  Intent intent;
+    private String CHANNEL_ID = "Push Notifications";
+    private Intent intent;
     private PendingIntent pendingIntent;
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
-    public void onMessageReceived(RemoteMessage payload) {
+    public void onMessageReceived(@NonNull RemoteMessage payload) {
         super.onMessageReceived(payload);
-        switch(payload.getData().get("notification_type")) {
+        NotificationManager mNotifyMgr = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationChannel mChannel;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            mChannel = new NotificationChannel(
+                    CHANNEL_ID, CHANNEL_ID, NotificationManager.IMPORTANCE_DEFAULT);
+            mChannel.enableVibration(true);
+            mChannel.enableLights(true);
+            mChannel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
+            mNotifyMgr.createNotificationChannel(mChannel);
+        }
+        switch (payload.getData().get("notification_type")) {
             case "POST":
-                CHANNEL_ID = "Post Notification";
                 intent = new Intent(this, MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
                 break;
             case "Friend_Req":
-                CHANNEL_ID = "FriendReq Notifications";
                 String from_user_id = payload.getData().get("sender_id");
                 intent = new Intent(this, UserProfile.class);
                 intent.putExtra("user_id", from_user_id);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
                 break;
-
         }
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
                 .setSmallIcon(R.mipmap.ic_launcher_round)
@@ -45,7 +67,6 @@ public class FCMService extends FirebaseMessagingService {
                 .setAutoCancel(true);
 
         int mNotificationId = (int) System.currentTimeMillis();
-        NotificationManagerCompat mNotifyMgr = NotificationManagerCompat.from(this);
         mNotifyMgr.notify(mNotificationId, mBuilder.build());
     }
 }

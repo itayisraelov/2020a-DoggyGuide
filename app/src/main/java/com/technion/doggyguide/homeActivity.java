@@ -49,7 +49,7 @@ public class homeActivity extends AppCompatActivity implements
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGSC;
     private GoogleSignInOptions mGSO;
-    private FirebaseFirestore db;
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();;
 
     private static final int[] TAB_ICONS = new int[] {R.drawable.ic_home,
             R.drawable.ic_chat_24px,
@@ -60,7 +60,6 @@ public class homeActivity extends AppCompatActivity implements
     public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
         super.onCreate(savedInstanceState, persistentState);
 
-        db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
 
     }
@@ -104,6 +103,25 @@ public class homeActivity extends AppCompatActivity implements
                 return true;
 
             case R.id.logout:
+                final DocumentReference userRef = db.document("dogOwners/" + mAuth.getCurrentUser().getUid());
+                userRef.get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        final List<String> mTokens = (List<String>) documentSnapshot.get("mTokens");
+                        FirebaseInstanceId
+                                .getInstance()
+                                .getInstanceId()
+                                .addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
+                                    @Override
+                                    public void onSuccess(InstanceIdResult instanceIdResult) {
+                                        String mDeviceToken = instanceIdResult.getToken();
+                                        mTokens.remove((String) mDeviceToken);
+                                        userRef.update("mTokens", mTokens);
+                                    }
+                                });
+                    }
+                });
                 mAuth.signOut();
                 mGSC.signOut().addOnCompleteListener(this, new OnCompleteListener<Void>() {
                     @Override

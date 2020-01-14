@@ -31,7 +31,7 @@ public class UsersActivity extends AppCompatActivity {
     }
 
     private void setUpRecyclerView() {
-        Query query = mUsersRef.orderBy("mName", Query.Direction.DESCENDING);
+        Query query = mUsersRef.orderBy("mName", Query.Direction.ASCENDING);
         FirestoreRecyclerOptions<Users> options = new FirestoreRecyclerOptions.Builder<Users>()
                 .setQuery(query, Users.class)
                 .build();

@@ -25,7 +25,6 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -141,19 +140,10 @@ public class DogOwnerConnectionFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                mProgressDialog.setTitle("SignUp");
-                mProgressDialog.setMessage("Please wait until we can register you");
+                mProgressDialog.setTitle("Sign In");
+                mProgressDialog.setMessage("Please wait...");
                 mProgressDialog.setCanceledOnTouchOutside(false);
                 mProgressDialog.show();
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        Snackbar.make(view, "Google sign in not fully integrated with database",
-                                Snackbar.LENGTH_LONG).show();
-                    }
-                }, 500);
-
                 Intent intent = mGSC.getSignInIntent();
                 startActivityForResult(intent, GOOGLE_SIGN_IN);
             }
