@@ -77,3 +77,24 @@ exports.onAcceptPost = firebaseTriggers
           return;
         });
 });
+
+
+exports.onAcceptFriend = firebaseTriggers
+      .document('dogOwners/{recieverId}/friends/{senderId}').onCreate((snap, context) => {
+      const recieverId = context.params.recieverId;
+      const senderId = context.params.senderId;
+      const reciever = db.doc('dogOwners/' + recieverId);
+      const friendRef = db.doc('dogOwners/' + senderId + "/friends/" + recieverId);
+      const newFriend = {
+        reference: reciever
+      };
+      return friendRef.set(newFriend);
+});
+
+exports.onCancelFriend = firebaseTriggers
+      .document('dogOwners/{mCurrId}/friends/{deletedId}').onDelete((snap, context) => {
+      const mCurrId = context.params.mCurrId;
+      const deletedId = context.params.deletedId;
+      const friendshipRef = db.doc('dogOwners/' + deletedId + "/friends/" + mCurrId);
+      return friendshipRef.delete();
+});
