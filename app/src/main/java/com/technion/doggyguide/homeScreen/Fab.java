@@ -6,6 +6,9 @@ import android.icu.text.SimpleDateFormat;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -22,6 +25,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -65,7 +69,7 @@ public class Fab extends AppCompatActivity implements DatePickerDialog.OnDateSet
     //start and end time for the post event
     private String start_time;
     private String end_time;
-    private String posting_time;
+    private Timestamp posting_time;
 
 
     @Override
@@ -89,6 +93,13 @@ public class Fab extends AppCompatActivity implements DatePickerDialog.OnDateSet
 
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.post_menu, menu);
+        return true;
+    }
+
     public void datePickerHandler(View view) {
         clicked_btn_id = R.id.post_datepicker;
         DialogFragment datepicker = new DatePickerFabFragment();
@@ -107,7 +118,7 @@ public class Fab extends AppCompatActivity implements DatePickerDialog.OnDateSet
         endtimepicker.show(getSupportFragmentManager(), "end time picker");
     }
 
-    public void postbtnHandler(View view) {
+    public boolean postbtnHandler(MenuItem item) {
         //TODO: create a post and post it to all friends feed
         int startHour = Integer.parseInt(start_time.split(":")[0]);
         int startMinute = Integer.parseInt(start_time.split(":")[1]);
@@ -116,18 +127,19 @@ public class Fab extends AppCompatActivity implements DatePickerDialog.OnDateSet
         if (endHour < startHour) {
             Toast.makeText(this,
                     "End time cannot be earlier than start time!\nTry Again", Toast.LENGTH_LONG).show();
-            return;
+            return true;
         } else if (endHour == startHour && endMinute < startMinute) {
             Toast.makeText(this,
                     "End time cannot be earlier than start time!\nTry Again", Toast.LENGTH_LONG).show();
-            return;
+            return true;
         }
-        posting_time = Calendar.getInstance().getTime().toString();
-        final String postID = userID + posting_time;
+        posting_time = Timestamp.now();
+        final String postID = userID + posting_time.toDate().toString();
         addPostToDatabase(postID);
         Toast.makeText(this,
                 "You have successfully posted a request!", Toast.LENGTH_LONG).show();
         finish();
+        return true;
     }
 
 

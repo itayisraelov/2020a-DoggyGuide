@@ -66,11 +66,14 @@ public class PostElementAdapter extends FirestoreRecyclerAdapter<PostElement, Po
                         Log.d(TAG, e.getMessage());
                     }
                 });
-        String[] postingDate = model.getPosting_date().split(" ");
-        //holder.profileImage.setImageResource(R.drawable.ic_person);
+        String[] postingDate = model.getPosting_date().toDate().toString().split(" ");
+        String[] postingHour = postingDate[3].split(":");
         holder.userName.setText(model.getName());
-        holder.postingTime.setText(postingDate[0] + " " + postingDate[1] + " "
-                + postingDate[2] + " " + postingDate[3]);
+        holder.postingTime.setText(postingDate[0] + " "
+                + postingDate[1] + " "
+                + postingDate[2] + " "
+                + postingHour[0] + ":"
+                + postingHour[1]);
         holder.postDate.setText(model.getPost_date());
         holder.postTime.setText(model.getStart_time() + "-" + model.getEnd_time());
         holder.postDescription.setText(model.getDescription());

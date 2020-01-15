@@ -1,6 +1,7 @@
 package com.technion.doggyguide.dataElements;
 
 
+import com.google.firebase.Timestamp;
 
 public class PostElement {
     private String name;
@@ -8,7 +9,7 @@ public class PostElement {
     private String start_time;
     private String end_time;
     private String post_date;
-    private String posting_date;
+    private Timestamp posting_date;
     private String description;
     private String postId;
 
@@ -17,7 +18,7 @@ public class PostElement {
     }
 
     public PostElement(String name, String userId, String start_time, String end_time,
-                       String post_date, String posting_date, String description, String postId) {
+                       String post_date, Timestamp posting_date, String description, String postId) {
         this.name = name;
         this.userId = userId;
         this.start_time = start_time;
@@ -46,7 +47,7 @@ public class PostElement {
         return post_date;
     }
 
-    public String getPosting_date() { return posting_date; }
+    public Timestamp getPosting_date() { return posting_date; }
 
     public String getDescription() { return description; }
 
