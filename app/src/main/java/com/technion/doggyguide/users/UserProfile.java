@@ -25,10 +25,12 @@ import com.squareup.picasso.Picasso;
 import com.technion.doggyguide.R;
 import com.technion.doggyguide.dataElements.DogOwnerElement;
 
+import java.text.DateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
 import de.hdodenhof.circleimageview.CircleImageView;
+
 
 public class UserProfile extends AppCompatActivity {
 
@@ -83,6 +85,7 @@ public class UserProfile extends AppCompatActivity {
     }
 
     private void acceptFriends() {
+        /*---Inserting to dogOwners/userId1/firends/userId2---*/
         DocumentReference mNewFriend = db.document("dogOwners/" + clickedUserUid);
         Map<String, DocumentReference> data = new HashMap<>();
         data.put("reference", mNewFriend);
@@ -95,9 +98,36 @@ public class UserProfile extends AppCompatActivity {
                         reqSentAndNeedToCancel("friends", "UnFriend This Person");
                     }
                 });
+
+        /*---Itay implementation---*/
+        final String currentDate = DateFormat.getDateTimeInstance().format(new Date());
+        Map<String, Object> req_1 = new HashMap<>();
+        req_1.put("date", currentDate);
+        mFriendsCollection
+                .document(mCurrentUserUid)
+                .collection("c")
+                .document(clickedUserUid).set(req_1)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Map<String, Object> req_2 = new HashMap<>();
+                        req_2.put("date", currentDate);
+                        mFriendsCollection
+                                .document(clickedUserUid )
+                                .collection("friends")
+                                .document(mCurrentUserUid).set(req_2)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        reqSentAndNeedToCancel("friends", "UnFriend This Person");
+                                    }
+                                });
+                    }
+                });
     }
 
     private void cancelFriends() {
+        /*---Removing from dogOwners/userId1/firends/userId2---*/
         DocumentReference mCancelFriend = db.document("dogOwners/" + mCurrentUserUid + "/friends/" + clickedUserUid);
         mCancelFriend.delete()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -111,6 +141,32 @@ public class UserProfile extends AppCompatActivity {
                         mDeclineReqBtn.setEnabled(false);
                     }
                 });
+
+        /*---Itay implementation---*/
+        mFriendsCollection
+                .document(mCurrentUserUid)
+                .collection("friends")
+                .document(clickedUserUid)
+                .delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                mFriendsCollection
+                        .document(clickedUserUid)
+                        .collection("friends")
+                        .document(mCurrentUserUid)
+                        .delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        mCurrent_state = "not_friends";
+                        mFriendReqBtn.setText("Send Friend Request");
+                        mFriendReqBtn.setEnabled(true);
+                        // Don't show the cancel button
+                        mDeclineReqBtn.setVisibility(View.INVISIBLE);
+                        mDeclineReqBtn.setEnabled(false);
+                    }
+                });
+            }
+        });
     }
 
     private void initSomeFields() {
