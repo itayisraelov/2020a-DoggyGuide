@@ -86,4 +86,5 @@
     <string name="total_friends">total friends</string>
     <string name="total_friends_">Total friends</string>
     <string name="send_friend_request">send friend request</string>
+    <string name="date">date</string>
 </resources>

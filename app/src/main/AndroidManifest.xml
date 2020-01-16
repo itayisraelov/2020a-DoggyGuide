@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.technion.doggyguide">
 
-
     <uses-feature
         android:name="android.hardware.camera"
         android:required="true" />
@@ -19,13 +18,17 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".friends.FriendsActivity"></activity>
+        <activity android:name=".friends.Friends" />
+
         <service
             android:name=".services.FCMService"
             android:exported="false">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />
@@ -34,7 +37,6 @@
         <activity android:name=".users.UsersActivity" />
         <activity android:name=".profile.DogProfileActivity" />
         <activity android:name=".profile.StatusActivity" />
-
         <activity android:name=".profile.UserProfileActivity" />
         <activity android:name=".About" />
         <activity android:name=".Credits" />

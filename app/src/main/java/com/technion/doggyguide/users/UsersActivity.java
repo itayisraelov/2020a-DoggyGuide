@@ -13,10 +13,7 @@ import android.os.Bundle;
 
 public class UsersActivity extends AppCompatActivity {
 
-    private RecyclerView mUsersListRecycleView;
-    private UsersAdapter mAdapter;
     private CollectionReference mUsersRef;
-    private FirebaseFirestore db;
     String mDogOwners = "dogOwners";
 
 
@@ -25,8 +22,7 @@ public class UsersActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_users);
 
-        db = FirebaseFirestore.getInstance();
-
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
         mUsersRef = db.collection(mDogOwners);
     }
 
@@ -36,14 +32,13 @@ public class UsersActivity extends AppCompatActivity {
                 .setQuery(query, Users.class)
                 .build();
 
-        mAdapter = new UsersAdapter(options);
-        mUsersListRecycleView = findViewById(R.id.recyclerView_id);
+        UsersAdapter mAdapter = new UsersAdapter(options);
+        RecyclerView mUsersListRecycleView = findViewById(R.id.recyclerView_id);
         mUsersListRecycleView.setHasFixedSize(true);
         mUsersListRecycleView.setLayoutManager(new LinearLayoutManager(this));
 
         mUsersListRecycleView.setAdapter(mAdapter);
-        if (mAdapter != null)
-            mAdapter.startListening();
+        mAdapter.startListening();
     }
 
     @Override
