@@ -36,7 +36,7 @@
             android:maxLines="1"
             android:layout_toStartOf="@id/get_alarm"
             android:layout_toLeftOf="@id/get_alarm"
-            android:textColor="#7C4D1B"
+            android:textColor="#A74A35"
             android:textStyle="bold|italic"
             android:padding="8sp"
             android:textSize="20sp" />
@@ -51,10 +51,10 @@
             android:layout_alignParentBottom="true"
             android:layout_toStartOf="@id/get_alarm"
             android:layout_toLeftOf="@id/get_alarm"
-            android:textColor="#C4E0B8A8"
-            android:textStyle="bold|italic"
+            android:textColor="#E9D8D8"
+            android:textStyle="italic"
             android:padding="8sp"
-            android:textSize="17sp" />
+            android:textSize="14sp" />
 
         <ImageButton
             android:id="@+id/get_alarm"

@@ -46,6 +46,9 @@ public class eatAlarmActivity extends AppCompatActivity implements TimePickerDia
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_eat_alarm);
+        getSupportActionBar().setTitle("Set Alarm");
+        getSupportActionBar().setHomeAsUpIndicator(R.mipmap.ic_up_button);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         readFromDataBase();
         initFields();
         initClickListenerForButtons();
@@ -53,15 +56,10 @@ public class eatAlarmActivity extends AppCompatActivity implements TimePickerDia
 
     private void initFields() {
         mTextView = findViewById(R.id.textView);
-        mTextView2 = findViewById(R.id.textView_2);
-        mTextView3 = findViewById(R.id.textView_3);
+
         mButtonTimePicker = findViewById(R.id.button_time_picker);
         mButtonCancelAlarm = findViewById(R.id.button_cancel);
-        mButtonTimePicker2 = findViewById(R.id.button_time_picker_2);
-        mButtonCancelAlarm2 = findViewById(R.id.button_cancel_2);
-        mButtonTimePicker3 = findViewById(R.id.button_time_picker_3);
-        mButtonCancelAlarm3 = findViewById(R.id.button_cancel_3);
-        mButtonSet = findViewById(R.id.setButton);
+
     }
 
     private void initClickListenerForButtons() {
@@ -81,42 +79,6 @@ public class eatAlarmActivity extends AppCompatActivity implements TimePickerDia
             }
         });
 
-        mButtonTimePicker2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mWhichButtonIsClicked = 5;
-                DialogFragment timePicker = new TimePickerFragment();
-                timePicker.show(getSupportFragmentManager(), "time picker");
-            }
-        });
-        mButtonCancelAlarm2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mWhichButtonIsClicked = 5;
-                cancelAlarm();
-            }
-        });
-        mButtonTimePicker3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mWhichButtonIsClicked = 6;
-                DialogFragment timePicker = new TimePickerFragment();
-                timePicker.show(getSupportFragmentManager(), "time picker");
-            }
-        });
-        mButtonCancelAlarm3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mWhichButtonIsClicked = 6;
-                cancelAlarm();
-            }
-        });
-        mButtonSet.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
     }
 
 

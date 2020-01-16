@@ -135,7 +135,7 @@ public class EventElementAdapter extends
                     AlarmManager alarmManager = (AlarmManager) itemView.getContext().getSystemService(Context.ALARM_SERVICE);
                     Intent intent = new Intent(itemView.getContext(), AlertRecieverEvent.class);
                     intent.putExtra(TITLE, textViewTitle.getText().toString());
-                    intent.putExtra(DESCRIPTION, textViewDescription.getText().toString());
+                    intent.putExtra(DESCRIPTION, textViewDescription.getText().toString() + " in 10 minutes");
                     PendingIntent pendingIntent = PendingIntent.getBroadcast(itemView.getContext(),
                             startHour * 3600 + startMinute * 60, intent, 0);
                     alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
