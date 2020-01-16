@@ -22,9 +22,11 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 import com.technion.doggyguide.friends.FriendsActivity;
@@ -40,7 +42,9 @@ import com.technion.doggyguide.users.UsersActivity;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class homeActivity extends AppCompatActivity implements
            HomeFragment.OnFragmentInteractionListener,
@@ -50,7 +54,13 @@ public class homeActivity extends AppCompatActivity implements
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGSC;
     private GoogleSignInOptions mGSO;
-    private FirebaseFirestore db;
+
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    String mDogOwners = "dogOwners";
+    private CollectionReference usersRef = db.collection(mDogOwners);
+    FirebaseAuth users = FirebaseAuth.getInstance();
+    private String mCurrentUserUid = users.getCurrentUser().getUid();
+    private DocumentReference currentUserDocument = usersRef.document(mCurrentUserUid);
 
     private static final int[] TAB_ICONS = new int[] {R.drawable.ic_home,
             R.drawable.ic_chat_24px,
@@ -156,6 +166,22 @@ public class homeActivity extends AppCompatActivity implements
     @Override
     public void onFragmentInteraction(Uri uri) {
         //do nothing
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        // itay change
+        Map<String, Object> data = new HashMap<>();
+        data.put("online", true);
+        currentUserDocument.set(data, SetOptions.merge());
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        currentUserDocument.update("online",false);
     }
 }
 

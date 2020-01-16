@@ -29,6 +29,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.firestore.WriteBatch;
 import com.technion.doggyguide.DatePickerFabFragment;
 import com.technion.doggyguide.R;
@@ -37,6 +38,7 @@ import com.technion.doggyguide.dataElements.PostElement;
 
 
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Map;
 
 
@@ -46,16 +48,15 @@ public class Fab extends AppCompatActivity implements DatePickerDialog.OnDateSet
     private final String TAG = "FAB POST";
 
     private int clicked_btn_id;
-    String mDogOwners = "dogOwners";
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     private TextView postdate;
     private TextView poststarttime;
     private TextView postendtime;
     private EditText postdescription;
-
+    String mDogOwners = "dogOwners";
 
     private FirebaseAuth mAuth;
-    private FirebaseFirestore db;
 
     private String userID;
 
@@ -88,7 +89,6 @@ public class Fab extends AppCompatActivity implements DatePickerDialog.OnDateSet
         dogownersRef = db.collection(mDogOwners);
         friendsRef = db.collection(mDogOwners + "/" + userID + "/friends");
         userpostsRef = db.collection(mDogOwners + "/" + userID + "/posts");
-
     }
 
     public void datePickerHandler(View view) {
