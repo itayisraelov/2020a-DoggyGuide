@@ -4,6 +4,7 @@ public class Friends {
     private String mName;
     private String mImageUrl;
     private String mStatus;
+//    private String online;
 
     public Friends() { }
 

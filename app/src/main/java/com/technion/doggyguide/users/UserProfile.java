@@ -144,6 +144,7 @@ public class UserProfile extends AppCompatActivity {
                     req_1.put("mName", friend_clicked.getmName());
                     req_1.put("mImageUrl", friend_clicked.getmImageUrl());
                     req_1.put("mStatus", friend_clicked.getmStatus());
+//                    req_1.put("online", friend_clicked.getOnline());
                     mFriendsCollection
                             .document(mCurrentUserUid)
                             .collection("friends")
@@ -162,6 +163,7 @@ public class UserProfile extends AppCompatActivity {
                                                 req_2.put("mName", friend_current.getmName());
                                                 req_2.put("mImageUrl", friend_current.getmImageUrl());
                                                 req_2.put("mStatus", friend_current.getmStatus());
+//                                                req_2.put("online", friend_current.getOnline());
                                                 mFriendsCollection
                                                         .document(clickedUserUid )
                                                         .collection("friends")

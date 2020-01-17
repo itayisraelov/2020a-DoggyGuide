@@ -25,7 +25,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
@@ -59,8 +61,7 @@ public class homeActivity extends AppCompatActivity implements
     String mDogOwners = "dogOwners";
     private CollectionReference usersRef = db.collection(mDogOwners);
     FirebaseAuth users = FirebaseAuth.getInstance();
-    private String mCurrentUserUid = users.getCurrentUser().getUid();
-    private DocumentReference currentUserDocument = usersRef.document(mCurrentUserUid);
+
 
     private static final int[] TAB_ICONS = new int[] {R.drawable.ic_home,
             R.drawable.ic_chat_24px,
@@ -171,17 +172,36 @@ public class homeActivity extends AppCompatActivity implements
     @Override
     protected void onStart() {
         super.onStart();
+//        if(users.getCurrentUser() != null){
+//            String mCurrentUserUid = users.getCurrentUser().getUid();
+//            final DocumentReference currentUserDocument = usersRef.document(mCurrentUserUid);
+//            currentUserDocument.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+//                @Override
+//                public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+//                    Map<String, Object> data = new HashMap<>();
+//                    data.put("online", "true");
+//                    currentUserDocument.set(data, SetOptions.merge());
+//                }
+//            });
+//        }
 
-        // itay change
-        Map<String, Object> data = new HashMap<>();
-        data.put("online", true);
-        currentUserDocument.set(data, SetOptions.merge());
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        currentUserDocument.update("online",false);
+//        if(users.getCurrentUser() != null){
+//            String mCurrentUserUid = users.getCurrentUser().getUid();
+//            final DocumentReference currentUserDocument = usersRef.document(mCurrentUserUid);
+//            currentUserDocument.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+//                @Override
+//                public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+//                    Map<String, Object> data = new HashMap<>();
+//                    data.put("online", "true");
+//                    currentUserDocument.update("online","false");
+//                }
+//            });
+//        }
     }
 }
 

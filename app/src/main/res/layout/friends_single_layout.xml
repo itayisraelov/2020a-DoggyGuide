@@ -51,5 +51,16 @@
             android:textSize="18sp"
             android:text="@string/status" />
 
+<!--        <ImageView-->
+<!--            android:id="@+id/user_single_online_icon"-->
+<!--            android:layout_width="40dp"-->
+<!--            android:layout_height="40dp"-->
+<!--            android:layout_alignParentEnd="true"-->
+<!--            android:layout_alignParentRight="true"-->
+<!--            android:layout_marginEnd="52dp"-->
+<!--            android:layout_marginRight="52dp"-->
+<!--            android:visibility="invisible"-->
+<!--            app:srcCompat="@drawable/online_icon" />-->
+
     </RelativeLayout>
 </androidx.cardview.widget.CardView>
