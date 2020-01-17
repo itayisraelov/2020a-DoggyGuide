@@ -42,12 +42,9 @@
         <activity android:name=".profile.UserProfileActivity" />
         <activity android:name=".About" />
         <activity android:name=".Credits" />
-        <activity android:name=".homeScreen.alarm.eatAlarmActivity"
-                  android:parentActivityName=".homeActivity"/>
-        <activity android:name=".homeScreen.alarm.showerAlarmActivity"
-                  android:parentActivityName=".homeActivity"/>
-        <activity android:name=".homeScreen.alarm.walkAlarmActivity"
-                  android:parentActivityName=".homeActivity"/>
+        <activity android:name=".homeScreen.alarm.eatAlarmActivity" />
+        <activity android:name=".homeScreen.alarm.showerAlarmActivity"/>
+        <activity android:name=".homeScreen.alarm.walkAlarmActivity"/>
         <activity
             android:name=".homeScreen.Fab"
             android:parentActivityName=".homeActivity" />
