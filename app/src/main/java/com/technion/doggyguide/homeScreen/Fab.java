@@ -33,6 +33,11 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+<<<<<<< HEAD
+=======
+import com.google.firebase.firestore.SetOptions;
+import com.google.firebase.firestore.WriteBatch;
+>>>>>>> itay_new_branch_sprint_2
 import com.technion.doggyguide.DatePickerFabFragment;
 import com.technion.doggyguide.R;
 import com.technion.doggyguide.TimePickerFabFragment;
@@ -40,6 +45,7 @@ import com.technion.doggyguide.dataElements.PostElement;
 
 
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Map;
 
 
@@ -49,15 +55,18 @@ public class Fab extends AppCompatActivity implements DatePickerDialog.OnDateSet
     private final String TAG = "FAB POST";
 
     private int clicked_btn_id;
+<<<<<<< HEAD
+=======
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+>>>>>>> itay_new_branch_sprint_2
 
     private TextView postdate;
     private TextView poststarttime;
     private TextView postendtime;
     private EditText postdescription;
-
+    String mDogOwners = "dogOwners";
 
     private FirebaseAuth mAuth;
-    private FirebaseFirestore db;
 
     private String userID;
 
@@ -87,10 +96,16 @@ public class Fab extends AppCompatActivity implements DatePickerDialog.OnDateSet
         userID = mAuth.getCurrentUser().getUid();
 
         postsRef = db.collection("posts");
+<<<<<<< HEAD
         dogownersRef = db.collection("dogOwners");
         friendsRef = db.collection("dogOwners/" + userID + "/friends");
         userpostsRef = db.collection("dogOwners/" + userID + "/posts");
 
+=======
+        dogownersRef = db.collection(mDogOwners);
+        friendsRef = db.collection(mDogOwners + "/" + userID + "/friends");
+        userpostsRef = db.collection(mDogOwners + "/" + userID + "/posts");
+>>>>>>> itay_new_branch_sprint_2
     }
 
     @Override

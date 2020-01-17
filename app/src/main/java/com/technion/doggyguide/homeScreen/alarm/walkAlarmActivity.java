@@ -23,9 +23,13 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import java.text.DateFormat;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
+
 import com.google.firebase.auth.FirebaseAuth;
 
 
+import com.google.firebase.firestore.SetOptions;
 import com.technion.doggyguide.R;
 import com.technion.doggyguide.notifications.AlertReceiverWalk;
 import com.technion.doggyguide.notifications.TimePickerFragment;
@@ -44,7 +48,6 @@ public class walkAlarmActivity extends AppCompatActivity implements TimePickerDi
     private CollectionReference usersRef = db.collection(mDogOwners);
     String userUid = users.getCurrentUser().getUid();
     private CollectionReference alarmsByUserUidRef = usersRef.document(userUid).collection("Alarms");
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -8,18 +8,23 @@
         app:showAsAction="ifRoom"/>
 
     <item android:id="@+id/user_profile"
-        android:title="User Profile"
+        android:title="@string/user_profile"
         app:showAsAction="never"/>
 
     <item android:id="@+id/Dog_profile"
-        android:title="Dog Profile"
+        android:title="@string/dog_profile"
         app:showAsAction="never"/>
 
     <item android:id="@+id/all_users"
-        android:title="Users"
+        android:title="@string/users"
         app:showAsAction="never"/>
+
+    <item android:id="@+id/friends"
+        android:title="@string/friends"
+        app:showAsAction="never"/>
+
     <item android:id="@+id/Settings"
-        android:title="Settings"
+        android:title="@string/settings"
         app:showAsAction="never"/>
 
     <item android:id="@+id/Credits"
@@ -31,8 +36,7 @@
         app:showAsAction="never"/>
 
     <item android:id="@+id/logout"
-        android:title="Logout"
+        android:title="@string/logout"
         app:showAsAction="never"/>
-
 
 </menu>

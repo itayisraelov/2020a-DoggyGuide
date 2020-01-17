@@ -22,12 +22,15 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 import com.technion.doggyguide.R;
 import com.technion.doggyguide.notifications.AlertReceiverFeed;
 import com.technion.doggyguide.notifications.AlertReceiverWalk;
 import com.technion.doggyguide.notifications.TimePickerFragment;
 import java.text.DateFormat;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 public class eatAlarmActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener{
     private TextView mTextView, mTextView2, mTextView3;
@@ -41,6 +44,7 @@ public class eatAlarmActivity extends AppCompatActivity implements TimePickerDia
     private CollectionReference usersRef = db.collection(mDogOwners);
     String userUid = users.getCurrentUser().getUid();
     private CollectionReference alarmsByUserUidRef = usersRef.document(userUid).collection("Alarms");
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

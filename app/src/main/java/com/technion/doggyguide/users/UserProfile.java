@@ -24,6 +24,17 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.squareup.picasso.Picasso;
 import com.technion.doggyguide.R;
 import com.technion.doggyguide.dataElements.DogOwnerElement;
+<<<<<<< HEAD
+=======
+import com.technion.doggyguide.friends.Friends;
+
+import android.app.ProgressDialog;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
+>>>>>>> itay_new_branch_sprint_2
 
 import java.text.DateFormat;
 import java.util.Date;
@@ -191,6 +202,63 @@ public class UserProfile extends AppCompatActivity {
         mProgressDialog.show();
     }
 
+<<<<<<< HEAD
+=======
+    private void acceptFriends() {
+        final String currentDate = DateFormat.getDateTimeInstance().format(new Date());
+        DocumentReference docRef = usersRef.document(clickedUserUid);
+        docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                Map<String, Object> req_1 = new HashMap<>();
+                Friends friend_clicked = documentSnapshot.toObject(Friends.class);
+                if (friend_clicked != null){
+                    req_1.put("date", currentDate);
+                    req_1.put("mName", friend_clicked.getmName());
+                    req_1.put("mImageUrl", friend_clicked.getmImageUrl());
+                    req_1.put("mStatus", friend_clicked.getmStatus());
+//                    req_1.put("online", friend_clicked.getOnline());
+                    mFriendsCollection
+                            .document(mCurrentUserUid)
+                            .collection("friends")
+                            .document(clickedUserUid).set(req_1)
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    DocumentReference docRef = usersRef.document(mCurrentUserUid);
+                                    docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                            Map<String, Object> req_2 = new HashMap<>();
+                                            Friends friend_current = documentSnapshot.toObject(Friends.class);
+                                            if (friend_current != null){
+                                                req_2.put("date", currentDate);
+                                                req_2.put("mName", friend_current.getmName());
+                                                req_2.put("mImageUrl", friend_current.getmImageUrl());
+                                                req_2.put("mStatus", friend_current.getmStatus());
+//                                                req_2.put("online", friend_current.getOnline());
+                                                mFriendsCollection
+                                                        .document(clickedUserUid )
+                                                        .collection("friends")
+                                                        .document(mCurrentUserUid).set(req_2)
+                                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                            @Override
+                                                            public void onSuccess(Void aVoid) {
+                                                                reqSentAndNeedToCancel("friends", "UnFriend This Person");
+                                                            }
+                                                        });
+                                            }
+                                        }
+                                    });
+                                }
+                            });
+                }
+            }
+        });
+
+    }
+
+>>>>>>> itay_new_branch_sprint_2
     private void requestFeature() {
         mFriendReqCollection
                 .document(mCurrentUserUid)

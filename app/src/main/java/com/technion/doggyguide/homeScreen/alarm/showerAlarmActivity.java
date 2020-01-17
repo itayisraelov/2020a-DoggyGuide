@@ -22,11 +22,14 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 import com.technion.doggyguide.R;
 import com.technion.doggyguide.notifications.AlertReceiverShower;
 import com.technion.doggyguide.notifications.TimePickerFragment;
 import java.text.DateFormat;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 public class showerAlarmActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener{
     private TextView mTextView, mTextView2, mTextView3;
@@ -40,6 +43,8 @@ public class showerAlarmActivity extends AppCompatActivity implements TimePicker
     private CollectionReference usersRef = db.collection(mDogOwners);
     String userUid = users.getCurrentUser().getUid();
     private CollectionReference alarmsByUserUidRef = usersRef.document(userUid).collection("Alarms");
+
+
 
 
     @Override

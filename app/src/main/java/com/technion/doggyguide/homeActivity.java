@@ -22,11 +22,16 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
+import com.technion.doggyguide.friends.FriendsActivity;
 import com.technion.doggyguide.homeScreen.ChatFragment;
 import com.technion.doggyguide.homeScreen.EventsFragment;
 import com.technion.doggyguide.homeScreen.HomeFragment;
@@ -39,7 +44,9 @@ import com.technion.doggyguide.users.UsersActivity;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class homeActivity extends AppCompatActivity implements
            HomeFragment.OnFragmentInteractionListener,
@@ -49,7 +56,16 @@ public class homeActivity extends AppCompatActivity implements
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGSC;
     private GoogleSignInOptions mGSO;
+<<<<<<< HEAD
     private FirebaseFirestore db = FirebaseFirestore.getInstance();;
+=======
+
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    String mDogOwners = "dogOwners";
+    private CollectionReference usersRef = db.collection(mDogOwners);
+    FirebaseAuth users = FirebaseAuth.getInstance();
+
+>>>>>>> itay_new_branch_sprint_2
 
     private static final int[] TAB_ICONS = new int[] {R.drawable.ic_home,
             R.drawable.ic_chat_24px,
@@ -100,6 +116,11 @@ public class homeActivity extends AppCompatActivity implements
             case R.id.Dog_profile:
                 Intent intent_dog_profil = new Intent(homeActivity.this, DogProfileActivity.class);
                 startActivity(intent_dog_profil);
+                return true;
+
+            case R.id.friends:
+                Intent friends_intent = new Intent(homeActivity.this, FriendsActivity.class);
+                startActivity(friends_intent);
                 return true;
 
             case R.id.logout:
@@ -168,6 +189,41 @@ public class homeActivity extends AppCompatActivity implements
     @Override
     public void onFragmentInteraction(Uri uri) {
         //do nothing
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+//        if(users.getCurrentUser() != null){
+//            String mCurrentUserUid = users.getCurrentUser().getUid();
+//            final DocumentReference currentUserDocument = usersRef.document(mCurrentUserUid);
+//            currentUserDocument.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+//                @Override
+//                public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+//                    Map<String, Object> data = new HashMap<>();
+//                    data.put("online", "true");
+//                    currentUserDocument.set(data, SetOptions.merge());
+//                }
+//            });
+//        }
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+//        if(users.getCurrentUser() != null){
+//            String mCurrentUserUid = users.getCurrentUser().getUid();
+//            final DocumentReference currentUserDocument = usersRef.document(mCurrentUserUid);
+//            currentUserDocument.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+//                @Override
+//                public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+//                    Map<String, Object> data = new HashMap<>();
+//                    data.put("online", "true");
+//                    currentUserDocument.update("online","false");
+//                }
+//            });
+//        }
     }
 }
 
