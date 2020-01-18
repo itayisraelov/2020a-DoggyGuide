@@ -30,6 +30,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
+import com.technion.doggyguide.friends.FriendsActivity;
 import com.technion.doggyguide.homeScreen.ChatFragment;
 import com.technion.doggyguide.homeScreen.EventsFragment;
 import com.technion.doggyguide.homeScreen.HomeFragment;
@@ -102,6 +103,11 @@ public class homeActivity extends AppCompatActivity implements
             case R.id.Dog_profile:
                 Intent intent_dog_profil = new Intent(homeActivity.this, DogProfileActivity.class);
                 startActivity(intent_dog_profil);
+                return true;
+
+            case R.id.friends:
+                Intent friends_intent = new Intent(homeActivity.this, FriendsActivity.class);
+                startActivity(friends_intent);
                 return true;
 
             case R.id.logout:

@@ -1,6 +1,7 @@
 package com.technion.doggyguide.users;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -25,26 +26,28 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.squareup.picasso.Picasso;
+import com.technion.doggyguide.Chat.ChatActivity;
 import com.technion.doggyguide.R;
 import com.technion.doggyguide.dataElements.DogOwnerElement;
+import com.technion.doggyguide.friends.Friends;
 
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import de.hdodenhof.circleimageview.CircleImageView;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class UserProfile extends AppCompatActivity {
 
-    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
-    ImageView mFriendReqBtn, mDeclineReqBtn;
-    FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    ImageView mFriendReqBtn, mDeclineReqBtn, mChatBtn;
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    TextView mFriendshipStatus;
     String clickedUserUid;
     String mDogOwners = "dogOwners";
     FirebaseAuth users = FirebaseAuth.getInstance();
     private CircleImageView mImage;
-    private TextView mName, mStatus, mDogName, mFriendshipStatus;
+    private TextView mName, mStatus, mDogName, mfriendCount;
     private CollectionReference usersRef = db.collection(mDogOwners);
     private ProgressDialog mProgressDialog;
     private String mCurrent_state;
@@ -52,6 +55,8 @@ public class UserProfile extends AppCompatActivity {
     private CollectionReference mFriendReqCollection = db.collection("Friend_req");
     private CollectionReference mFriendsCollection = db.collection("Friends");
     private CollectionReference mNotificationsCollection = db.collection("notifications");
+
+    private String clickedName, currentName;
 
 
     @Override
@@ -70,7 +75,6 @@ public class UserProfile extends AppCompatActivity {
 
         getSupportActionBar().setHomeAsUpIndicator(R.mipmap.ic_up_button);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         initSomeFields();
         readFromDataBase();
         requestFeature();
@@ -97,6 +101,28 @@ public class UserProfile extends AppCompatActivity {
                 }
             }
         });
+
+        mChatBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                final DocumentReference docRef = usersRef.document(clickedUserUid);
+                docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        DogOwnerElement dogOwnerElement = documentSnapshot.toObject(DogOwnerElement.class);
+                        if (dogOwnerElement != null) {
+                            Intent chatIntent = new Intent(v.getContext(), ChatActivity.class);
+                            chatIntent.putExtra("user_id", clickedUserUid);
+                            chatIntent.putExtra("user_name", dogOwnerElement.getmName());
+                            chatIntent.putExtra("user_image", dogOwnerElement.getmImageUrl());
+                            chatIntent.putExtra("user_status", dogOwnerElement.getmStatus());
+                            v.getContext().startActivity(chatIntent);
+                        }
+                    }
+                });
+
+            }
+        });
     }
 
     @Override
@@ -115,48 +141,6 @@ public class UserProfile extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    private void acceptFriends() {
-        /*---Inserting to dogOwners/userId1/firends/userId2---*/
-        DocumentReference mNewFriend = db.document("dogOwners/" + clickedUserUid);
-        Map<String, DocumentReference> data = new HashMap<>();
-        data.put("reference", mNewFriend);
-        CollectionReference myFriends = db.collection("dogOwners/" + mCurrentUserUid + "/friends");
-        myFriends.document(clickedUserUid)
-                .set(data)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        reqSentAndNeedToCancel("friends", "UnFriend This Person");
-                    }
-                });
-
-        /*---Itay implementation---*/
-        final String currentDate = DateFormat.getDateTimeInstance().format(new Date());
-        Map<String, Object> req_1 = new HashMap<>();
-        req_1.put("date", currentDate);
-        mFriendsCollection
-                .document(mCurrentUserUid)
-                .collection("c")
-                .document(clickedUserUid).set(req_1)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Map<String, Object> req_2 = new HashMap<>();
-                        req_2.put("date", currentDate);
-                        mFriendsCollection
-                                .document(clickedUserUid )
-                                .collection("friends")
-                                .document(mCurrentUserUid).set(req_2)
-                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        reqSentAndNeedToCancel("friends", "UnFriend This Person");
-                                    }
-                                });
-                    }
-                });
     }
 
     private void cancelFriends() {
@@ -193,7 +177,7 @@ public class UserProfile extends AppCompatActivity {
                     public void onSuccess(Void aVoid) {
                         mCurrent_state = "not_friends";
                         mFriendReqBtn.setImageResource(R.drawable.ic_person_send_request);
-                        mFriendshipStatus.setText("Send Friend Request");
+                        mFriendshipStatus.setText("Send A Request");
                         mFriendReqBtn.setEnabled(true);
                         // Don't show the cancel button
                         mDeclineReqBtn.setVisibility(View.INVISIBLE);
@@ -205,15 +189,18 @@ public class UserProfile extends AppCompatActivity {
     }
 
     private void initSomeFields() {
+        clickedUserUid = getIntent().getStringExtra("user_id");
         mCurrent_state = "not_friends";
         mProgressDialog = new ProgressDialog(this);
         mName = findViewById(R.id.user_name_id);
         mStatus = findViewById(R.id.status_id);
-        mDogName = findViewById(R.id.dog_name);
-        mFriendshipStatus = findViewById(R.id.friendship_status);
+        mDogName = findViewById(R.id.name_of_the_dog_id);
         mFriendReqBtn = findViewById(R.id.friend_request);
         mDeclineReqBtn = findViewById(R.id.decline_friend_request);
         mImage = findViewById(R.id.user_image_id);
+        mFriendshipStatus = findViewById(R.id.friendship_status);
+        mChatBtn = findViewById(R.id.chat);
+
         // Don't show the cancel button
         mDeclineReqBtn.setVisibility(View.INVISIBLE);
         mDeclineReqBtn.setEnabled(false);
@@ -222,6 +209,75 @@ public class UserProfile extends AppCompatActivity {
         mProgressDialog.setMessage("Please wait while we upload and process the data.");
         mProgressDialog.setCanceledOnTouchOutside(false);
         mProgressDialog.show();
+    }
+
+    private void acceptFriends() {
+        /*---Inserting to dogOwners/userId1/firends/userId2---*/
+        DocumentReference mNewFriend = db.document("dogOwners/" + clickedUserUid);
+        Map<String, DocumentReference> data = new HashMap<>();
+        data.put("reference", mNewFriend);
+        CollectionReference myFriends = db.collection("dogOwners/" + mCurrentUserUid + "/friends");
+        myFriends.document(clickedUserUid)
+                .set(data)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        reqSentAndNeedToCancel("friends", "UnFriend This Person");
+                    }
+                });
+
+        /*---Itay implementation---*/
+        final String currentDate = DateFormat.getDateTimeInstance().format(new Date());
+        DocumentReference docRef = usersRef.document(clickedUserUid);
+        docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                Map<String, Object> req_1 = new HashMap<>();
+                Friends friend_clicked = documentSnapshot.toObject(Friends.class);
+                if (friend_clicked != null) {
+                    req_1.put("date", currentDate);
+                    req_1.put("mName", friend_clicked.getmName());
+                    req_1.put("mImageUrl", friend_clicked.getmImageUrl());
+                    req_1.put("mStatus", friend_clicked.getmStatus());
+//                    req_1.put("online", friend_clicked.getOnline());
+                    mFriendsCollection
+                            .document(mCurrentUserUid)
+                            .collection("friends")
+                            .document(clickedUserUid).set(req_1)
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    DocumentReference docRef = usersRef.document(mCurrentUserUid);
+                                    docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                            Map<String, Object> req_2 = new HashMap<>();
+                                            Friends friend_current = documentSnapshot.toObject(Friends.class);
+                                            if (friend_current != null) {
+                                                req_2.put("date", currentDate);
+                                                req_2.put("mName", friend_current.getmName());
+                                                req_2.put("mImageUrl", friend_current.getmImageUrl());
+                                                req_2.put("mStatus", friend_current.getmStatus());
+//                                                req_2.put("online", friend_current.getOnline());
+                                                mFriendsCollection
+                                                        .document(clickedUserUid)
+                                                        .collection("friends")
+                                                        .document(mCurrentUserUid).set(req_2)
+                                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                            @Override
+                                                            public void onSuccess(Void aVoid) {
+                                                                reqSentAndNeedToCancel("friends", "UnFriend This Person");
+                                                            }
+                                                        });
+                                            }
+                                        }
+                                    });
+                                }
+                            });
+                }
+            }
+        });
+
     }
 
     private void requestFeature() {
@@ -239,15 +295,15 @@ public class UserProfile extends AppCompatActivity {
                                 String req_type = documentSnapshot.get("request_type").toString();
                                 if (req_type.equals("received")) {
                                     mCurrent_state = "req_received";
-                                    //mFriendReqBtn.setText("Accept Friend Request");
-
+                                    mFriendReqBtn.setImageResource(R.drawable.ic_person_request_sent);
+                                    mFriendshipStatus.setText("Accept Request");
                                     // Don't show the cancel button
                                     mDeclineReqBtn.setVisibility(View.VISIBLE);
                                     mDeclineReqBtn.setEnabled(true);
                                 } else if (req_type.equals("sent")) {
                                     mCurrent_state = "req_sent";
                                     mFriendReqBtn.setImageResource(R.drawable.ic_person_request_sent);
-
+                                    mFriendshipStatus.setText("Decline Request");
                                     // Don't show the cancel button
                                     mDeclineReqBtn.setVisibility(View.INVISIBLE);
                                     mDeclineReqBtn.setEnabled(false);
@@ -266,7 +322,7 @@ public class UserProfile extends AppCompatActivity {
                                                 if (documentSnapshot.getData().containsKey("date")) {
                                                     mCurrent_state = "friends";
                                                     mFriendReqBtn.setImageResource(R.drawable.ic_person_friends);
-
+                                                    mFriendshipStatus.setText("Friends, tap to unfriend");
                                                     // Don't show the cancel button
                                                     mDeclineReqBtn.setVisibility(View.INVISIBLE);
                                                     mDeclineReqBtn.setEnabled(false);
@@ -301,11 +357,11 @@ public class UserProfile extends AppCompatActivity {
                         switch (text) {
                             case "Send Friend request":
                                 mFriendReqBtn.setImageResource(R.drawable.ic_person_send_request);
-                                mFriendshipStatus.setText(text);
+                                mFriendshipStatus.setText("Send A Request");
                                 break;
-                            default:
+                            case "UnFriend This Person":
                                 mFriendReqBtn.setImageResource(R.drawable.ic_person_friends);
-                                mFriendshipStatus.setText(text);
+                                mFriendshipStatus.setText("Friends, tap to unfriend");
                                 break;
                         }
 
@@ -338,11 +394,12 @@ public class UserProfile extends AppCompatActivity {
                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {
-                                            final Map<String, Object> notification = new HashMap<>();
+                                            Map<String, Object> notification = new HashMap<>();
                                             notification.put("from", mCurrentUserUid);
-                                            notification.put("type", "Friend request");
+                                            notification.put("type", "request");
                                             notification.put("receiverId", clickedUserUid);
-                                            notification.put("text", "Someone sent you a request. Tap to see who");
+                                            notification.put("text", currentName + " has sent you a friends request.");
+
                                             mNotificationsCollection
                                                     .document(clickedUserUid)
                                                     .collection("keysNotifications")
@@ -353,7 +410,7 @@ public class UserProfile extends AppCompatActivity {
                                                         public void onSuccess(Void aVoid) {
                                                             mCurrent_state = "req_sent";
                                                             mFriendReqBtn.setImageResource(R.drawable.ic_person_request_sent);
-                                                            mFriendshipStatus.setText("Cancel Friend Request");
+                                                            mFriendshipStatus.setText("Request set, tap to cancel");
                                                             // Don't show the cancel button
                                                             mDeclineReqBtn.setVisibility(View.INVISIBLE);
                                                             mDeclineReqBtn.setEnabled(false);
@@ -375,17 +432,30 @@ public class UserProfile extends AppCompatActivity {
     }
 
     private void readFromDataBase() {
+
         final DocumentReference docRef = usersRef.document(clickedUserUid);
         docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 DogOwnerElement dogOwnerElement = documentSnapshot.toObject(DogOwnerElement.class);
                 if (dogOwnerElement != null) {
+                    clickedName = dogOwnerElement.getmName();
                     mName.setText(dogOwnerElement.getmName());
                     mDogName.setText(dogOwnerElement.getmDogName());
                     mStatus.setText(dogOwnerElement.getmStatus());
                     Picasso.get().load(dogOwnerElement.getmImageUrl()).into(mImage);
                     mProgressDialog.dismiss();
+
+                }
+            }
+        });
+        final DocumentReference docRef2 = usersRef.document(mCurrentUserUid);
+        docRef2.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                DogOwnerElement dogOwnerElement = documentSnapshot.toObject(DogOwnerElement.class);
+                if (dogOwnerElement != null) {
+                    currentName = dogOwnerElement.getmName();
                 }
             }
         });
