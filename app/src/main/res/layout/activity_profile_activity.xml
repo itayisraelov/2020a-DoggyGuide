@@ -123,6 +123,7 @@
 
     <ImageView
         android:id="@+id/edit"
+        android:onClick="changeStatus"
         android:layout_width="30sp"
         android:layout_height="30sp"
         android:layout_below="@id/name_of_the_dog_id"
