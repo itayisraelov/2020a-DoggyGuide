@@ -78,17 +78,7 @@ public class homeActivity extends AppCompatActivity implements
 
         switch (item.getItemId()) {
             case R.id.search:
-                SearchView search = (SearchView) item.getActionView();
-                search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                    @Override
-                    public boolean onQueryTextSubmit(String query) {
-                        return false;
-                    }
-                    @Override
-                    public boolean onQueryTextChange(String newText) {
-                        return false;
-                    }
-                });
+                Toast.makeText(this, "Search", Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.Settings:
                 Toast.makeText(this, "Settings", Toast.LENGTH_SHORT).show();
