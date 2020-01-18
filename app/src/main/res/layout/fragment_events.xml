@@ -8,9 +8,10 @@
     <CalendarView
         android:id="@+id/calendar"
         android:layout_width="match_parent"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="50sp"
         android:layout_height="wrap_content"
-        android:layout_gravity="center|top" />
+        android:layout_gravity="center|top"
+        android:overScrollMode="always"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/events_recycler_view"

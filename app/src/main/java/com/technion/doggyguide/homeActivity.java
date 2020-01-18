@@ -8,6 +8,7 @@ import android.os.PersistableBundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -77,7 +78,17 @@ public class homeActivity extends AppCompatActivity implements
 
         switch (item.getItemId()) {
             case R.id.search:
-                Toast.makeText(this, "search", Toast.LENGTH_SHORT).show();
+                SearchView search = (SearchView) item.getActionView();
+                search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                    @Override
+                    public boolean onQueryTextSubmit(String query) {
+                        return false;
+                    }
+                    @Override
+                    public boolean onQueryTextChange(String newText) {
+                        return false;
+                    }
+                });
                 return true;
             case R.id.Settings:
                 Toast.makeText(this, "Settings", Toast.LENGTH_SHORT).show();

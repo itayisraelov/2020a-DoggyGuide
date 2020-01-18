@@ -7,8 +7,13 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.technion.doggyguide.Adapters.UsersAdapter;
 import com.technion.doggyguide.R;
+import com.technion.doggyguide.dataElements.DogOwnerElement;
+import com.technion.doggyguide.dataElements.Users;
+
 import android.os.Bundle;
+import android.view.MenuItem;
 
 
 public class UsersActivity extends AppCompatActivity {
@@ -24,16 +29,31 @@ public class UsersActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_users);
+        getSupportActionBar().setTitle("All Members");
+        getSupportActionBar().setHomeAsUpIndicator(R.mipmap.ic_up_button);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 
         db = FirebaseFirestore.getInstance();
 
         mUsersRef = db.collection(mDogOwners);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
     private void setUpRecyclerView() {
         Query query = mUsersRef.orderBy("mName", Query.Direction.ASCENDING);
-        FirestoreRecyclerOptions<Users> options = new FirestoreRecyclerOptions.Builder<Users>()
-                .setQuery(query, Users.class)
+        FirestoreRecyclerOptions<DogOwnerElement> options = new FirestoreRecyclerOptions.Builder<DogOwnerElement>()
+                .setQuery(query, DogOwnerElement.class)
                 .build();
 
         mAdapter = new UsersAdapter(options);

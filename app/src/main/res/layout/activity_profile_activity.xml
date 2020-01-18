@@ -1,129 +1,139 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/colorPrimaryDark"
     tools:context=".profile.UserProfileActivity">
 
     <Space
         android:layout_width="wrap_content"
-        android:layout_height="30dp"/>
+        android:layout_height="30dp" />
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/user_image_id"
-        android:layout_width="170dp"
-        android:layout_height="170dp"
-        android:layout_gravity="center"
-        android:src="@drawable/ic_event"
+        android:layout_width="110sp"
+        android:layout_height="110sp"
+        android:layout_alignParentTop="true"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="20sp"
+        android:src="@drawable/ic_person"
         app:civ_border_color="#FF000000"
-        app:civ_border_width="2dp"/>
+        app:civ_border_width="2dp" />
 
-    <Space
+
+    <ImageView
+        android:id="@+id/person"
+        android:layout_width="30sp"
+        android:layout_height="30sp"
+        android:layout_below="@id/user_image_id"
+        android:layout_marginLeft="10sp"
+        android:layout_marginTop="10sp"
+        android:src="@drawable/ic_person"
+        android:tint="@color/colorAccent" />
+
+    <TextView
+        android:id="@+id/name"
         android:layout_width="wrap_content"
-        android:layout_height="20dp"/>
+        android:layout_height="wrap_content"
+        android:layout_below="@id/person"
+        android:layout_marginLeft="10sp"
+        android:layout_toRightOf="@id/person"
+        android:text="Name"
+        android:textSize="14sp" />
+
     <TextView
         android:id="@+id/user_name_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/name"
+        android:layout_marginLeft="10sp"
+        android:layout_marginTop="5sp"
+        android:layout_marginBottom="15sp"
+        android:layout_toRightOf="@id/person"
         android:text="@string/user_name"
-        android:textSize="30sp"
-        android:layout_gravity="center"
-        android:textColor="@color/colorWhite"/>
+        android:textColor="#000000"
+        android:textSize="14sp" />
 
-    <Space
+    <TextView
+        android:id="@+id/dog_name"
         android:layout_width="wrap_content"
-        android:layout_height="10dp"/>
+        android:layout_height="wrap_content"
+        android:layout_below="@id/user_name_id"
+        android:layout_marginLeft="10sp"
+        android:layout_toRightOf="@id/person"
+        android:text="Dog's Name"
+        android:textSize="14sp" />
 
     <TextView
         android:id="@+id/name_of_the_dog_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/the_name_of_the_dog"
-        android:textSize="20sp"
-        android:layout_gravity="center"
-        android:textColor="@color/colorWhite"/>
+        android:layout_below="@id/dog_name"
+        android:layout_marginLeft="10sp"
+        android:layout_marginTop="5sp"
+        android:layout_marginBottom="15sp"
+        android:layout_toRightOf="@id/person"
+        android:text="@string/user_name"
+        android:textColor="#000000"
+        android:textSize="14sp" />
 
-    <Space
-        android:layout_width="wrap_content"
-        android:layout_height="10dp"/>
+
+    <View
+        android:layout_width="250sp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/name_of_the_dog_id"
+        android:layout_height="0.02sp"
+        android:background="@color/colorAccent" />
+
+
+    <ImageView
+        android:id="@+id/info"
+        android:layout_width="30sp"
+        android:layout_height="30sp"
+        android:layout_below="@id/name_of_the_dog_id"
+        android:layout_marginLeft="10sp"
+        android:layout_marginTop="10sp"
+        android:src="@drawable/ic_info_black_24dp"
+        android:tint="@color/colorAccent" />
 
     <TextView
-        android:id="@+id/name_of_the_organization_id"
+        android:id="@+id/status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/name_of_the_organization"
-        android:textSize="20sp"
-        android:layout_gravity="center"
-        android:textColor="@color/colorWhite"/>
-
-    <Space
-        android:layout_width="wrap_content"
-        android:layout_height="10dp"/>
-
-    <TextView
-        android:id="@+id/dog_breed_id"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/dog_breed"
-        android:textSize="20sp"
-        android:layout_gravity="center"
-        android:textColor="@color/colorWhite"/>
-
-
-
-
-    <Space
-        android:layout_width="wrap_content"
-        android:layout_height="10dp"/>
+        android:layout_below="@id/info"
+        android:layout_marginLeft="10sp"
+        android:layout_toRightOf="@id/info"
+        android:text="Status"
+        android:textSize="14sp" />
 
     <TextView
         android:id="@+id/status_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/status"
+        android:layout_marginLeft="10sp"
+        android:layout_marginTop="5sp"
+        android:layout_marginBottom="15sp"
+        android:layout_toRightOf="@id/info"
         android:text="@string/this_is_my_status"
-        android:textSize="20sp"
-        android:layout_gravity="center"
-        android:textColor="@color/colorWhite"/>
+        android:textColor="#000000"
+        android:textSize="14sp" />
+
+    <ImageView
+        android:id="@+id/edit"
+        android:layout_width="30sp"
+        android:layout_height="30sp"
+        android:layout_below="@id/name_of_the_dog_id"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="10sp"
+        android:layout_marginRight="10sp"
+        android:src="@drawable/ic_mode_edit_black_24dp" />
 
 
-
-    <Space
-    android:layout_width="wrap_content"
-    android:layout_height="30dp"/>
-
-
-    <Button
-        android:id="@+id/change_user_image_id"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="@string/change_image"
-        android:textStyle="bold"
-        android:textColor="@color/colorWhite"
-        android:background="@color/colorRed"/>
-
-    <Space
-        android:layout_width="wrap_content"
-        android:layout_height="20dp"/>
-
-    <Button
-        android:id="@+id/change_status_id"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="@string/change_status"
-        android:textStyle="bold"
-        android:textColor="@color/colorWhite"
-        android:background="@color/colorRed"/>
-
-
-</LinearLayout>
-
-
-
+</RelativeLayout>
 
 
 

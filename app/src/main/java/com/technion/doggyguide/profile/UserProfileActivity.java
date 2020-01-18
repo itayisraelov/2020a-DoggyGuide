@@ -1,6 +1,7 @@
 package com.technion.doggyguide.profile;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -18,12 +19,19 @@ import com.technion.doggyguide.R;
 import com.technion.doggyguide.dataElements.DogOwnerElement;
 import com.theartofdev.edmodo.cropper.CropImage;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import java.io.ByteArrayOutputStream;
@@ -33,9 +41,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import id.zelory.compressor.Compressor;
 
 public class UserProfileActivity extends AppCompatActivity {
-    TextView user_name_tv, dog_breed_tv, name_of_the_dog_tv, name_of_the_organization_tv
+    TextView user_name_tv, name_of_the_dog_tv
             , status_tv;
-    Button change_user_image_bt, change_status_bt;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     FirebaseAuth users = FirebaseAuth.getInstance();
     String mDogOwners = "dogOwners";
@@ -45,13 +52,16 @@ public class UserProfileActivity extends AppCompatActivity {
     private static final int GALLERY_PICK = 1;
     private StorageReference mStorageRef;
     private ProgressDialog mProgressDialog;
-
+    private ImageView edit_icon;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_activity);
+        getSupportActionBar().setTitle("Profile");
+        getSupportActionBar().setHomeAsUpIndicator(R.mipmap.ic_up_button);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mStorageRef = FirebaseStorage.getInstance().getReference();
         mProgressDialog = new ProgressDialog(this);
 
@@ -60,16 +70,22 @@ public class UserProfileActivity extends AppCompatActivity {
         readFromDataBase();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.profile_menu, menu);
+        return true;
+    }
+
+
     private void init_text_view_and_buttons() {
         user_name_tv = findViewById(R.id.user_name_id);
-        dog_breed_tv = findViewById(R.id.dog_breed_id);
         name_of_the_dog_tv = findViewById(R.id.name_of_the_dog_id);
-        name_of_the_organization_tv = findViewById(R.id.name_of_the_organization_id);
         status_tv = findViewById(R.id.status_id);
         mCircleImageView = findViewById(R.id.user_image_id);
 
-        change_user_image_bt = findViewById(R.id.change_user_image_id);
-        change_user_image_bt.setOnClickListener(new View.OnClickListener() {
+
+        mCircleImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent galleryIntent = new Intent();
@@ -79,15 +95,27 @@ public class UserProfileActivity extends AppCompatActivity {
             }
         });
 
-        change_status_bt = findViewById(R.id.change_status_id);
-        change_status_bt.setOnClickListener(new View.OnClickListener() {
+    }
+
+    private boolean changeStatus(MenuItem item) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                .setTitle("Change Status");
+        final EditText input = new EditText(this);
+        builder.setView(input);
+        builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                Intent intent_status = new Intent(UserProfileActivity.this, StatusActivity.class);
-                startActivity(intent_status);
-                finish();
+            public void onClick(DialogInterface dialog, int which) {
+                status_tv.setText(input.getText().toString());
+                dialog.dismiss();
+            }
+        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
             }
         });
+        builder.create();
+        return true;
     }
 
     private void readFromDataBase() {
@@ -97,11 +125,9 @@ public class UserProfileActivity extends AppCompatActivity {
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 DogOwnerElement dogOwnerElement = documentSnapshot.toObject(DogOwnerElement.class);
                 if (dogOwnerElement != null){
-                    user_name_tv.setText("User name:   " + dogOwnerElement.getmName());
-                    dog_breed_tv.setText("Dog food:   " + dogOwnerElement.getmDogBreed());
-                    name_of_the_dog_tv.setText("Name of the dog:   " + dogOwnerElement.getmDogName());
-                    name_of_the_organization_tv.setText("Organization id:   " + dogOwnerElement.getmOrgId());
-                    status_tv.setText("Status is:   " + dogOwnerElement.getmStatus());
+                    user_name_tv.setText(dogOwnerElement.getmName());
+                    name_of_the_dog_tv.setText(dogOwnerElement.getmDogName());
+                    status_tv.setText(dogOwnerElement.getmStatus());
                     Picasso.get().load(dogOwnerElement.getmImageUrl()).into(mCircleImageView);
                 }
             }

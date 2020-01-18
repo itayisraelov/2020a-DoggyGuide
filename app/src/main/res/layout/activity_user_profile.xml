@@ -6,7 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/colorPrimaryDark"
     tools:context=".profile.UserProfileActivity">
 
     <Space
@@ -15,10 +14,10 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/user_image_id_"
-        android:layout_width="170dp"
-        android:layout_height="170dp"
+        android:layout_width="110sp"
+        android:layout_height="110sp"
         android:layout_gravity="center"
-        android:src="@drawable/ic_event"
+        android:src="@drawable/ic_person"
         app:civ_border_color="#FF000000"
         app:civ_border_width="2dp"/>
 
