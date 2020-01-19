@@ -6,7 +6,9 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ServerValue;
@@ -18,12 +20,18 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.squareup.picasso.Picasso;
 import com.technion.doggyguide.R;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -37,6 +45,7 @@ public class ChatActivity extends AppCompatActivity {
     private ImageButton mChatSendBtn;
     private EditText mChatMessageView;
     private String mChatUser;
+    private String mChatUserId;
     private String mUserStatus;
     private String mUserImage;
     private String mCurrentUserId;
@@ -45,6 +54,7 @@ public class ChatActivity extends AppCompatActivity {
     private CollectionReference chatRef = db.collection("Chat");
     private CollectionReference messagesRef = db.collection("messages");
     private CollectionReference usersRef = db.collection("dogOwners");
+    private static final int GALLERY_PICK = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,39 +72,86 @@ public class ChatActivity extends AppCompatActivity {
 
         mChatSendBtn = findViewById(R.id.chat_send_btn);
         mChatMessageView = findViewById(R.id.chat_message_view);
+        mChatAddBtn = findViewById(R.id.chat_add_btn);
+
 
         mAuth = FirebaseAuth.getInstance();
         mCurrentUserId = mAuth.getCurrentUser().getUid();
 
+        initChatForThisUser();
 
+        loadMessages();
+
+        mChatSendBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sendMessage();
+            }
+        });
+        mChatAddBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent galleryIntent = new Intent();
+                galleryIntent.setType("image/*");
+                galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(galleryIntent, "SELECT IMAGE"), GALLERY_PICK);
+
+            }
+        });
+
+    }
+
+    private void loadMessages() {
+
+    }
+
+    private void initChatForThisUser() {
         chatRef.document(mCurrentUserId).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                if(documentSnapshot!= null){
+                final Date date = new Date();
+                if(documentSnapshot != null){
                     chatRef.document(mCurrentUserId)
                             .collection("friends")
-                            .document(mChatUser).get()
+                            .document(mChatUserId).get()
                             .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                    DocumentSnapshot doc = task.getResult();
-                                    if (!doc.exists()) {
-                                        Map chatAddMap = new HashMap();
-                                        chatAddMap.put("seen", false);
-                                        chatAddMap.put("timestamp", ServerValue.TIMESTAMP);
-
-                                        Map chatUserMap = new HashMap();
-                                        chatUserMap.put("Chat/" + mCurrentUserId + "/friends/" + mChatUser, chatAddMap);
-                                        chatUserMap.put("Chat/" + mChatUser + "/friends/" + mCurrentUserId, chatAddMap);
-                                    }
-                                }
-                            });
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()) {
+                                DocumentSnapshot document = task.getResult();
+                                if (!document.exists()) {
+                                    Map<String, Object> chatAddMap = new HashMap<>();
+                                    chatAddMap.put("seen", false);
+                                    chatAddMap.put("date", date);
+                                    chatRef.document(mCurrentUserId)
+                                            .collection("friends")
+                                            .document(mChatUserId)
+                                            .set(chatAddMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            Map<String, Object> chatAddMap = new HashMap<>();
+                                            chatAddMap.put("seen", false);
+                                            chatAddMap.put("date", date);
+                                            chatRef.document(mChatUserId)
+                                                    .collection("friends")
+                                                    .document(mCurrentUserId )
+                                                    .set(chatAddMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {}
+                                            });
+                                        }
+                                    });
+                                } else { }
+                            } else { }
+                        }
+                    });
                 }
             }
         });
     }
 
     private void setInformationForToolBar() {
+        mChatUserId = getIntent().getStringExtra("user_id");
         mChatUser  = getIntent().getStringExtra("user_name");
         mTitleView.setText(mChatUser );
         mUserStatus = getIntent().getStringExtra("user_status");
@@ -117,50 +174,67 @@ public class ChatActivity extends AppCompatActivity {
         actionBar.setDisplayShowTitleEnabled(false);
     }
 
+    private void sendMessage(){
+        String message = mChatMessageView.getText().toString();
+        if(!TextUtils.isEmpty(message)){
+            final Map<String, Object> messageMap = new HashMap<>();
+            messageMap.put("message", message);
+            messageMap.put("seen", false);
+            messageMap.put("type", "text");
+            messageMap.put("time", new Date());
+            messageMap.put("from", mCurrentUserId);
 
-//    private void sendMessage() {
-//        String message = mChatMessageView.getText().toString();
-//        if(!TextUtils.isEmpty(message)){
-//
-//            String current_user_ref = "messages/" + mCurrentUserId + "/" + mChatUser;
-//            String chat_user_ref = "messages/" + mChatUser + "/" + mCurrentUserId;
-//
-//            DatabaseReference user_message_push = chatRef.child("messages")
-//                    .child(mCurrentUserId).child(mChatUser).push();
-//
-//            String push_id = user_message_push.getKey();
-//
-//            Map messageMap = new HashMap();
-//            messageMap.put("message", message);
-//            messageMap.put("seen", false);
-//            messageMap.put("type", "text");
-//            messageMap.put("time", ServerValue.TIMESTAMP);
-//            messageMap.put("from", mCurrentUserId);
-//
-//            Map messageUserMap = new HashMap();
-//            messageUserMap.put(current_user_ref + "/" + push_id, messageMap);
-//            messageUserMap.put(chat_user_ref + "/" + push_id, messageMap);
-//
-//            mChatMessageView.setText("");
-//
-//            chatRef.child("Chat").child(mCurrentUserId).child(mChatUser).child("seen").setValue(true);
-//            chatRef.child("Chat").child(mCurrentUserId).child(mChatUser).child("timestamp").setValue(ServerValue.TIMESTAMP);
-//
-//            chatRef.child("Chat").child(mChatUser).child(mCurrentUserId).child("seen").setValue(false);
-//            chatRef.child("Chat").child(mChatUser).child(mCurrentUserId).child("timestamp").setValue(ServerValue.TIMESTAMP);
-//
-//            chatRef.updateChildren(messageUserMap, new DatabaseReference.CompletionListener() {
-//                @Override
-//                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-//
-//                    if(databaseError != null){
-//
-//                        Log.d("CHAT_LOG", databaseError.getMessage().toString());
-//
-//                    }
-//                }
-//            });
-//        }
-//    }
+            messagesRef.document(mCurrentUserId)
+                    .collection("friends")
+                    .document(mChatUserId).
+                    collection("messages")
+                    .document().set(messageMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    messagesRef.document(mChatUserId )
+                            .collection("friends")
+                            .document(mCurrentUserId).
+                            collection("messages")
+                            .document().set(messageMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            mChatMessageView.setText("");
+                        }
+                    });
+                }
+            });
+            chatRef.document(mCurrentUserId)
+                    .collection("friends")
+                    .document(mChatUserId).update("date", new Date()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    chatRef.document(mCurrentUserId)
+                            .collection("friends")
+                            .document(mChatUserId).update("seen", true).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            chatRef.document(mChatUserId )
+                                    .collection("friends")
+                                    .document(mCurrentUserId).update("date", new Date()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    chatRef.document(mChatUserId )
+                                            .collection("friends")
+                                            .document(mCurrentUserId).update("seen", false).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    }
+
+
 }
 
