@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -17,10 +18,15 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.squareup.picasso.Picasso;
 import com.technion.doggyguide.R;
 import com.technion.doggyguide.dataElements.DogOwnerElement;
+
+
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MessageAdapter extends FirestoreRecyclerAdapter<Messages, MessageAdapter.MessageViewHolder> {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    FirebaseAuth users = FirebaseAuth.getInstance();
+    String userUid = users.getCurrentUser().getUid();
 
     MessageAdapter(@NonNull FirestoreRecyclerOptions<Messages> options) {
         super(options);
@@ -39,6 +45,7 @@ public class MessageAdapter extends FirestoreRecyclerAdapter<Messages, MessageAd
         CircleImageView profileImage;
         TextView displayName;
         ImageView messageImage;
+        TextView timestamp;
 
         public MessageViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -47,6 +54,8 @@ public class MessageAdapter extends FirestoreRecyclerAdapter<Messages, MessageAd
             profileImage = itemView.findViewById(R.id.message_profile_layout);
             displayName = itemView.findViewById(R.id.name_text_layout);
             messageImage =  itemView.findViewById(R.id.message_image_layout);
+            timestamp = itemView.findViewById(R.id.time_text_layout);
+
         }
     }
 

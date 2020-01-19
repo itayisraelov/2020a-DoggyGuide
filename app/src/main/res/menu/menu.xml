@@ -28,9 +28,6 @@
         android:title="@string/settings"
         app:showAsAction="never"/>
 
-    <item android:id="@+id/friends"
-        android:title="@string/friends"
-        app:showAsAction="never"/>
 
     <item android:id="@+id/Credits"
         android:title="@string/credits"
