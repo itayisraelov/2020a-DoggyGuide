@@ -2,7 +2,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item android:id="@+id/post"
-        android:title="@string/post"
-        android:onClick="postbtnHandler"
+        android:icon="@drawable/ic_alarm_add"
+        android:title="add alarm"
+        android:onClick="alarmbtnHandler"
         app:showAsAction="ifRoom"/>
 </menu>

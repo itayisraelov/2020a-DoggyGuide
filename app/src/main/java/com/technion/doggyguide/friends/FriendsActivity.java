@@ -10,6 +10,10 @@ import com.google.firebase.firestore.Query;
 import androidx.appcompat.app.AppCompatActivity;
 import com.technion.doggyguide.R;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+
 
 
 public class FriendsActivity extends AppCompatActivity {
@@ -23,15 +27,34 @@ public class FriendsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friends);
-
+        getSupportActionBar().setTitle("Friends");
+        getSupportActionBar().setHomeAsUpIndicator(R.mipmap.ic_up_button);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         mFriendsRef = db.collection("Friends")
                 .document(mCurrentUserUid)
                 .collection("friends");
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.user_profile_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     private void setUpRecyclerView() {
-        Query query = mFriendsRef.orderBy("mName", Query.Direction.DESCENDING);
+        Query query = mFriendsRef.orderBy("mName", Query.Direction.ASCENDING);
         FirestoreRecyclerOptions<Friends> options = new FirestoreRecyclerOptions.Builder<Friends>()
                 .setQuery(query, Friends.class)
                 .build();
@@ -51,3 +74,4 @@ public class FriendsActivity extends AppCompatActivity {
         setUpRecyclerView();
     }
 }
+

@@ -13,7 +13,9 @@ import android.os.Build;
 
 import androidx.core.app.NotificationCompat;
 
+import com.technion.doggyguide.MainActivity;
 import com.technion.doggyguide.R;
+import com.technion.doggyguide.homeScreen.EventsFragment;
 
 class NotificationHelperEvent extends ContextWrapper {
     public static final String channelID = "channelID";
@@ -45,10 +47,14 @@ class NotificationHelperEvent extends ContextWrapper {
         return mManager;
     }
     public NotificationCompat.Builder getChannelNotification(String title, String description) {
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
         return new NotificationCompat.Builder(getApplicationContext(), channelID)
                 .setContentTitle(title)
                 .setContentText(description)
                 .setSmallIcon(R.mipmap.ic_launcher_round)
+                .setContentIntent(pendingIntent)
                 .setAutoCancel(true);
     }
 }

@@ -96,8 +96,7 @@
             android:layout_alignParentTop="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="What's on your mind?"
-            android:backgroundTint="#FFFFFF"/>
+            android:hint="What's on your mind?"/>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 

@@ -33,6 +33,7 @@ public class FCMService extends FirebaseMessagingService {
         super.onMessageReceived(payload);
         NotificationManager mNotifyMgr = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         NotificationChannel mChannel;
+
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             mChannel = new NotificationChannel(
                     CHANNEL_ID, CHANNEL_ID, NotificationManager.IMPORTANCE_DEFAULT);
@@ -41,6 +42,7 @@ public class FCMService extends FirebaseMessagingService {
             mChannel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
             mNotifyMgr.createNotificationChannel(mChannel);
         }
+
         switch (payload.getData().get("notification_type")) {
             case "POST":
                 intent = new Intent(this, MainActivity.class);

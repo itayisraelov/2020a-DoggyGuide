@@ -1,4 +1,4 @@
-package com.technion.doggyguide.users;
+package com.technion.doggyguide.Adapters;
 
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -11,18 +11,22 @@ import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.squareup.picasso.Picasso;
 import com.technion.doggyguide.R;
+import com.technion.doggyguide.dataElements.DogOwnerElement;
+import com.technion.doggyguide.users.UserProfile;
+import com.technion.doggyguide.dataElements.Users;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
 
-public class UsersAdapter extends FirestoreRecyclerAdapter<Users, UsersAdapter.UsersViewHolder> {
+public class UsersAdapter extends FirestoreRecyclerAdapter<DogOwnerElement, UsersAdapter.UsersViewHolder> {
     private final String TAG = "Users Adapter";
 
-    public UsersAdapter(@NonNull FirestoreRecyclerOptions<Users> options) {
+    public UsersAdapter(@NonNull FirestoreRecyclerOptions<DogOwnerElement> options) {
         super(options);
     }
 
     @Override
-    protected void onBindViewHolder(@NonNull UsersViewHolder holder, int position, @NonNull Users model) {
+    protected void onBindViewHolder(@NonNull UsersViewHolder holder, int position, @NonNull DogOwnerElement model) {
         holder.setName(model.getmName());
         holder.setUri(model.getmImageUrl());
         holder.setStatus(model.getmStatus());

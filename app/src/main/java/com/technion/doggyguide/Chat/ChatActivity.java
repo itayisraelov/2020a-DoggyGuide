@@ -1,15 +1,16 @@
 package com.technion.doggyguide.Chat;
 
+
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -18,8 +19,6 @@ import com.squareup.picasso.Picasso;
 import com.technion.doggyguide.R;
 import android.content.Context;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -61,7 +60,6 @@ public class ChatActivity extends AppCompatActivity {
 
         setInformationForToolBar();
 
-        mChatAddBtn = findViewById(R.id.chat_add_btn);
         mChatSendBtn = findViewById(R.id.chat_send_btn);
         mChatMessageView = findViewById(R.id.chat_message_view);
 
@@ -73,20 +71,24 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                 if(documentSnapshot!= null){
-                    boolean res = chatRef.document(mCurrentUserId)
+                    chatRef.document(mCurrentUserId)
                             .collection("friends")
-                            .document(mChatUser).get().getResult().exists();
+                            .document(mChatUser).get()
+                            .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                    DocumentSnapshot doc = task.getResult();
+                                    if (!doc.exists()) {
+                                        Map chatAddMap = new HashMap();
+                                        chatAddMap.put("seen", false);
+                                        chatAddMap.put("timestamp", ServerValue.TIMESTAMP);
 
-                    if(!res){
-                        Map chatAddMap = new HashMap();
-                        chatAddMap.put("seen", false);
-                        chatAddMap.put("timestamp", ServerValue.TIMESTAMP);
-
-                        Map chatUserMap = new HashMap();
-                        chatUserMap.put("Chat/" + mCurrentUserId + "/friends/" + mChatUser, chatAddMap);
-                        chatUserMap.put("Chat/" + mChatUser + "/friends/" + mCurrentUserId, chatAddMap);
-
-                    }
+                                        Map chatUserMap = new HashMap();
+                                        chatUserMap.put("Chat/" + mCurrentUserId + "/friends/" + mChatUser, chatAddMap);
+                                        chatUserMap.put("Chat/" + mChatUser + "/friends/" + mCurrentUserId, chatAddMap);
+                                    }
+                                }
+                            });
                 }
             }
         });
@@ -112,6 +114,7 @@ public class ChatActivity extends AppCompatActivity {
         assert inflater != null;
         View action_bar_view = inflater.inflate(R.layout.chat_custom_bar, null);
         actionBar.setCustomView(action_bar_view);
+        actionBar.setDisplayShowTitleEnabled(false);
     }
 
 
@@ -160,3 +163,4 @@ public class ChatActivity extends AppCompatActivity {
 //        }
 //    }
 }
+

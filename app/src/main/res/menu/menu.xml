@@ -5,7 +5,8 @@
     <item android:id="@+id/search"
         android:icon="@drawable/ic_search"
         android:title="@string/overflow"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="ifRoom|collapseActionView"
+        app:actionViewClass="androidx.appcompat.widget.SearchView$SearchAutoComplete"/>
 
     <item android:id="@+id/user_profile"
         android:title="@string/user_profile"
@@ -25,6 +26,10 @@
 
     <item android:id="@+id/Settings"
         android:title="@string/settings"
+        app:showAsAction="never"/>
+
+    <item android:id="@+id/friends"
+        android:title="@string/friends"
         app:showAsAction="never"/>
 
     <item android:id="@+id/Credits"

@@ -1,5 +1,6 @@
 package com.technion.doggyguide;
 
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -7,11 +8,13 @@ import android.os.PersistableBundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -71,7 +74,6 @@ public class homeActivity extends AppCompatActivity implements
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
         super.onCreate(savedInstanceState, persistentState);
-
         mAuth = FirebaseAuth.getInstance();
 
     }
@@ -88,7 +90,7 @@ public class homeActivity extends AppCompatActivity implements
 
         switch (item.getItemId()) {
             case R.id.search:
-                Toast.makeText(this, "search", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Search", Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.Settings:
                 Toast.makeText(this, "Settings", Toast.LENGTH_SHORT).show();
@@ -173,6 +175,7 @@ public class homeActivity extends AppCompatActivity implements
         // Initialize Firebase Authentication
         mAuth = FirebaseAuth.getInstance();
 
+
         mGSO = new GoogleSignInOptions
                 .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.Web_Client_ID))
@@ -180,6 +183,7 @@ public class homeActivity extends AppCompatActivity implements
                 .build();
 
         mGSC = GoogleSignIn.getClient(this, mGSO);
+
     }
 
     @Override

@@ -95,4 +95,6 @@
     <string name="logout">Logout</string>
     <string name="last_seen">Last Seen</string>
     <string name="enter_message">Enter Message...</string>
+
 </resources>
+
