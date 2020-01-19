@@ -4,9 +4,10 @@ public class Friends {
     private String mName;
     private String mImageUrl;
     private String mStatus;
-//    private String online;
 
-    public Friends() { }
+
+    public Friends() {
+    }
 
     public Friends(String mName, String mImageUrl, String mStatus) {
         this.mName = mName;
