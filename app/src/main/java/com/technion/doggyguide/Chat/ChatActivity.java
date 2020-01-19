@@ -64,6 +64,8 @@ public class ChatActivity extends AppCompatActivity {
     private SwipeRefreshLayout mRefreshLayout;
     private static final int TOTAL_ITEMS_TO_LOAD = 10;
     private int mCurrentPage = 1;
+    private RecyclerView mMessagesListRecycleView;
+    private MessageAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +78,7 @@ public class ChatActivity extends AppCompatActivity {
         mTitleView = findViewById(R.id.custom_bar_title);
         mStatusView = findViewById(R.id.custom_bar_status);
         mProfileImage = findViewById(R.id.custom_bar_image);
-
+        mRefreshLayout = findViewById(R.id.message_swipe_layout);
         setInformationForToolBar();
 
         mChatSendBtn = findViewById(R.id.chat_send_btn);
@@ -88,7 +90,7 @@ public class ChatActivity extends AppCompatActivity {
         mCurrentUserId = mAuth.getCurrentUser().getUid();
 
         initChatForThisUser();
-
+        setUpRecyclerView();
         loadMessages();
 
         mChatSendBtn.setOnClickListener(new View.OnClickListener() {
@@ -108,7 +110,7 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
-        mRefreshLayout = findViewById(R.id.message_swipe_layout);
+
         mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -118,6 +120,9 @@ public class ChatActivity extends AppCompatActivity {
                 //itemPos = 0;
 
                 loadMoreMessages();
+                mMessagesListRecycleView.
+                        smoothScrollToPosition(mAdapter.getItemCount());
+                mRefreshLayout.setRefreshing(false);
 
 
             }
@@ -159,8 +164,7 @@ public class ChatActivity extends AppCompatActivity {
                                                     .document(mCurrentUserId )
                                                     .set(chatAddMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                                                 @Override
-                                                public void onSuccess(Void aVoid) {}
-                                            });
+                                                public void onSuccess(Void aVoid) { }                                            });
                                         }
                                     });
                                 } else { }
@@ -245,7 +249,8 @@ public class ChatActivity extends AppCompatActivity {
                                             .document(mCurrentUserId).update("seen", false).addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {
-
+                                            mMessagesListRecycleView.
+                                                    smoothScrollToPosition(mAdapter.getItemCount());
                                         }
                                     });
                                 }
@@ -266,8 +271,8 @@ public class ChatActivity extends AppCompatActivity {
                 .setQuery(query, Messages.class)
                 .build();
 
-        final MessageAdapter mAdapter = new MessageAdapter(options);
-        final RecyclerView mMessagesListRecycleView = findViewById(R.id.MessagesRecyclerView_id);
+        mAdapter = new MessageAdapter(options);
+        mMessagesListRecycleView = findViewById(R.id.MessagesRecyclerView_id);
         mMessagesListRecycleView.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         mMessagesListRecycleView.setLayoutManager(linearLayoutManager);
@@ -279,14 +284,21 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        setUpRecyclerView();
+
     }
 
     private void loadMessages() {
-//        messagesRef.document(mCurrentUserId)
-//                .collection("friends")
-//                .document(mChatUserId)
-//                .collection("messages").
+        messagesRef.document(mCurrentUserId)
+                .collection("friends")
+                .document(mChatUserId)
+                .collection("messages").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                mMessagesListRecycleView.
+                        smoothScrollToPosition(mAdapter.getItemCount());
+            }
+        });
+
     }
 
 }
