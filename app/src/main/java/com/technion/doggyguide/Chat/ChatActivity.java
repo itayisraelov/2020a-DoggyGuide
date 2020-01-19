@@ -14,8 +14,11 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.common.net.InternetDomainName;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FieldValue;
@@ -23,10 +26,18 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 import com.technion.doggyguide.R;
+import com.technion.doggyguide.profile.UserProfileActivity;
+import com.theartofdev.edmodo.cropper.CropImage;
+
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -34,9 +45,17 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
+
 import de.hdodenhof.circleimageview.CircleImageView;
+import id.zelory.compressor.Compressor;
 
 
 public class ChatActivity extends AppCompatActivity {
@@ -62,10 +81,11 @@ public class ChatActivity extends AppCompatActivity {
             .document(mCurrentUserUid)
             .collection("friends");
     private SwipeRefreshLayout mRefreshLayout;
-    private static final int TOTAL_ITEMS_TO_LOAD = 10;
-    private int mCurrentPage = 1;
     private RecyclerView mMessagesListRecycleView;
     private MessageAdapter mAdapter;
+    // Storage Firebase
+    private StorageReference mImageStorage;
+    private StorageReference mStorageRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +93,7 @@ public class ChatActivity extends AppCompatActivity {
         setContentView(R.layout.activity_chat);
 
         initToolBar();
-
+        mStorageRef = FirebaseStorage.getInstance().getReference();
         // ---- Custom Action bar Items ----
         mTitleView = findViewById(R.id.custom_bar_title);
         mStatusView = findViewById(R.id.custom_bar_status);
@@ -96,7 +116,8 @@ public class ChatActivity extends AppCompatActivity {
         mChatSendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                sendMessage();
+                String message = mChatMessageView.getText().toString();
+                sendMessage(message, "text");
             }
         });
         mChatAddBtn.setOnClickListener(new View.OnClickListener() {
@@ -114,12 +135,6 @@ public class ChatActivity extends AppCompatActivity {
         mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-
-                mCurrentPage++;
-
-                //itemPos = 0;
-
-                loadMoreMessages();
                 mMessagesListRecycleView.
                         smoothScrollToPosition(mAdapter.getItemCount());
                 mRefreshLayout.setRefreshing(false);
@@ -127,10 +142,6 @@ public class ChatActivity extends AppCompatActivity {
 
             }
         });
-    }
-
-    private void loadMoreMessages() {
-
     }
 
     private void initChatForThisUser() {
@@ -200,13 +211,12 @@ public class ChatActivity extends AppCompatActivity {
         actionBar.setDisplayShowTitleEnabled(false);
     }
 
-    private void sendMessage(){
-        String message = mChatMessageView.getText().toString();
+    private void sendMessage(String message, String type){
         if(!TextUtils.isEmpty(message)){
             final Map<String, Object> messageMap = new HashMap<>();
             messageMap.put("message", message);
             messageMap.put("seen", false);
-            messageMap.put("type", "text");
+            messageMap.put("type", type);
             messageMap.put("time", FieldValue.serverTimestamp());
             messageMap.put("from", mCurrentUserId);
 
@@ -249,8 +259,7 @@ public class ChatActivity extends AppCompatActivity {
                                             .document(mCurrentUserId).update("seen", false).addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {
-                                            mMessagesListRecycleView.
-                                                    smoothScrollToPosition(mAdapter.getItemCount());
+                                            loadMessages();
                                         }
                                     });
                                 }
@@ -298,8 +307,95 @@ public class ChatActivity extends AppCompatActivity {
                         smoothScrollToPosition(mAdapter.getItemCount());
             }
         });
+    }
 
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == GALLERY_PICK && resultCode == RESULT_OK) {
+            Uri imageUri = data.getData();
+            CropImage.activity(imageUri)
+                    .setAspectRatio(1, 1)
+                    .start(this);
+        }
+
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == RESULT_OK) {
+
+                Uri resultUri = result.getUri();
+                //compressedImage
+                File filePath = new File(resultUri.getPath());
+                final byte[] data_;
+                data_ = compressedImage(filePath);
+                long res = generateRandom(10);
+                final StorageReference thumbs_filepath = mStorageRef.child("uploads")
+                        .child(mCurrentUserId + mChatUserId + (res) + ".jpg");
+
+                thumbs_filepath.putFile(resultUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            UploadTask uploadTask = thumbs_filepath.putBytes(data_);
+                            uploadTask.addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> compressed_task) {
+                                    if (compressed_task.isSuccessful()) {
+                                        if (compressed_task.getResult() != null) {
+                                            thumbs_filepath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                                @Override
+                                                public void onSuccess(Uri uri) {
+                                                    sendMessage(uri.toString(), "image");
+                                                }
+                                            });
+                                        }
+                                    } else {
+
+                                    }
+                                }
+                            });
+                        } else {
+
+                        }
+                    }
+                });
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Exception error = result.getError();
+            }
+        }
+    }
+
+    public static long generateRandom(int length) {
+        Random random = new Random();
+        char[] digits = new char[length];
+        digits[0] = (char) (random.nextInt(9) + '1');
+        for (int i = 1; i < length; i++) {
+            digits[i] = (char) (random.nextInt(10) + '0');
+        }
+        return Long.parseLong(new String(digits));
+    }
+
+    private byte[] compressedImage(File filePath) {
+        byte[] data_;
+        Bitmap compressedImageBitmap = null;
+        try {
+            compressedImageBitmap = new Compressor(this)
+                    .setMaxWidth(200)
+                    .setMaxHeight(200)
+                    .setQuality(75)
+                    .compressToBitmap(filePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        compressedImageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        data_ = baos.toByteArray();
+        return data_;
     }
 
 }
+
 
