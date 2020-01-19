@@ -56,16 +56,12 @@ public class homeActivity extends AppCompatActivity implements
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGSC;
     private GoogleSignInOptions mGSO;
-<<<<<<< HEAD
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();;
-=======
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     String mDogOwners = "dogOwners";
     private CollectionReference usersRef = db.collection(mDogOwners);
     FirebaseAuth users = FirebaseAuth.getInstance();
 
->>>>>>> itay_new_branch_sprint_2
 
     private static final int[] TAB_ICONS = new int[] {R.drawable.ic_home,
             R.drawable.ic_chat_24px,

@@ -6,11 +6,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -24,18 +22,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.squareup.picasso.Picasso;
 import com.technion.doggyguide.R;
 import com.technion.doggyguide.dataElements.DogOwnerElement;
-<<<<<<< HEAD
-=======
 import com.technion.doggyguide.friends.Friends;
-
-import android.app.ProgressDialog;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
->>>>>>> itay_new_branch_sprint_2
-
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -93,48 +80,6 @@ public class UserProfile extends AppCompatActivity {
                 }
             }
         });
-    }
-
-    private void acceptFriends() {
-        /*---Inserting to dogOwners/userId1/firends/userId2---*/
-        DocumentReference mNewFriend = db.document("dogOwners/" + clickedUserUid);
-        Map<String, DocumentReference> data = new HashMap<>();
-        data.put("reference", mNewFriend);
-        CollectionReference myFriends = db.collection("dogOwners/" + mCurrentUserUid + "/friends");
-        myFriends.document(clickedUserUid)
-                .set(data)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        reqSentAndNeedToCancel("friends", "UnFriend This Person");
-                    }
-                });
-
-        /*---Itay implementation---*/
-        final String currentDate = DateFormat.getDateTimeInstance().format(new Date());
-        Map<String, Object> req_1 = new HashMap<>();
-        req_1.put("date", currentDate);
-        mFriendsCollection
-                .document(mCurrentUserUid)
-                .collection("c")
-                .document(clickedUserUid).set(req_1)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Map<String, Object> req_2 = new HashMap<>();
-                        req_2.put("date", currentDate);
-                        mFriendsCollection
-                                .document(clickedUserUid )
-                                .collection("friends")
-                                .document(mCurrentUserUid).set(req_2)
-                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        reqSentAndNeedToCancel("friends", "UnFriend This Person");
-                                    }
-                                });
-                    }
-                });
     }
 
     private void cancelFriends() {
@@ -202,8 +147,6 @@ public class UserProfile extends AppCompatActivity {
         mProgressDialog.show();
     }
 
-<<<<<<< HEAD
-=======
     private void acceptFriends() {
         final String currentDate = DateFormat.getDateTimeInstance().format(new Date());
         DocumentReference docRef = usersRef.document(clickedUserUid);
@@ -258,7 +201,6 @@ public class UserProfile extends AppCompatActivity {
 
     }
 
->>>>>>> itay_new_branch_sprint_2
     private void requestFeature() {
         mFriendReqCollection
                 .document(mCurrentUserUid)
