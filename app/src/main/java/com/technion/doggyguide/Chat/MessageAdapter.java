@@ -18,7 +18,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.squareup.picasso.Picasso;
 import com.technion.doggyguide.R;
 import com.technion.doggyguide.dataElements.DogOwnerElement;
-
+import java.text.SimpleDateFormat;
 
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -64,6 +64,11 @@ public class MessageAdapter extends FirestoreRecyclerAdapter<Messages, MessageAd
 
         final String from_user = model.getFrom();
         String message_type = model.getType();
+        //time
+        String pattern = "  HH:mm:ss    MM-dd-yyyy";
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+        String date = simpleDateFormat.format(model.getTime().toDate());
+        holder.timestamp.setText(date);
 
         final String mDogOwners = "dogOwners";
         db.collection(mDogOwners)

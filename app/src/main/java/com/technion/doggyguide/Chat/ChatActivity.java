@@ -8,6 +8,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -20,6 +22,7 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
 import com.technion.doggyguide.R;
 import android.content.Context;
@@ -58,6 +61,9 @@ public class ChatActivity extends AppCompatActivity {
     CollectionReference mFriendsRef = db.collection("messages")
             .document(mCurrentUserUid)
             .collection("friends");
+    private SwipeRefreshLayout mRefreshLayout;
+    private static final int TOTAL_ITEMS_TO_LOAD = 10;
+    private int mCurrentPage = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,10 +108,24 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
+        mRefreshLayout = findViewById(R.id.message_swipe_layout);
+        mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+
+                mCurrentPage++;
+
+                //itemPos = 0;
+
+                loadMoreMessages();
+
+
+            }
+        });
     }
 
-    private void loadMessages() {
-        //TODO
+    private void loadMoreMessages() {
+
     }
 
     private void initChatForThisUser() {
@@ -246,18 +266,27 @@ public class ChatActivity extends AppCompatActivity {
                 .setQuery(query, Messages.class)
                 .build();
 
-        MessageAdapter mAdapter = new MessageAdapter(options);
-        RecyclerView mMessagesListRecycleView = findViewById(R.id.MessagesRecyclerView_id);
+        final MessageAdapter mAdapter = new MessageAdapter(options);
+        final RecyclerView mMessagesListRecycleView = findViewById(R.id.MessagesRecyclerView_id);
         mMessagesListRecycleView.setHasFixedSize(true);
-        mMessagesListRecycleView.setLayoutManager(new LinearLayoutManager(this));
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        mMessagesListRecycleView.setLayoutManager(linearLayoutManager);
         mMessagesListRecycleView.setAdapter(mAdapter);
         mAdapter.startListening();
+
     }
 
     @Override
     public void onStart() {
         super.onStart();
         setUpRecyclerView();
+    }
+
+    private void loadMessages() {
+//        messagesRef.document(mCurrentUserId)
+//                .collection("friends")
+//                .document(mChatUserId)
+//                .collection("messages").
     }
 
 }
