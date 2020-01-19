@@ -25,6 +25,17 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="552dp">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/MessagesRecyclerView_id"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </RelativeLayout>
+
 
     <LinearLayout
         android:id="@+id/linearLayout"

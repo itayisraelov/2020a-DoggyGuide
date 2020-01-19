@@ -6,32 +6,31 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ServerValue;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
 import com.squareup.picasso.Picasso;
 import com.technion.doggyguide.R;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -53,8 +52,12 @@ public class ChatActivity extends AppCompatActivity {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference chatRef = db.collection("Chat");
     private CollectionReference messagesRef = db.collection("messages");
-    private CollectionReference usersRef = db.collection("dogOwners");
     private static final int GALLERY_PICK = 1;
+    FirebaseAuth users = FirebaseAuth.getInstance();
+    private String mCurrentUserUid = users.getCurrentUser().getUid();
+    CollectionReference mFriendsRef = db.collection("messages")
+            .document(mCurrentUserUid)
+            .collection("friends");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,14 +105,13 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void loadMessages() {
-
+        //TODO
     }
 
     private void initChatForThisUser() {
         chatRef.document(mCurrentUserId).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                final Date date = new Date();
                 if(documentSnapshot != null){
                     chatRef.document(mCurrentUserId)
                             .collection("friends")
@@ -122,7 +124,7 @@ public class ChatActivity extends AppCompatActivity {
                                 if (!document.exists()) {
                                     Map<String, Object> chatAddMap = new HashMap<>();
                                     chatAddMap.put("seen", false);
-                                    chatAddMap.put("date", date);
+                                    chatAddMap.put("time", FieldValue.serverTimestamp());
                                     chatRef.document(mCurrentUserId)
                                             .collection("friends")
                                             .document(mChatUserId)
@@ -131,7 +133,7 @@ public class ChatActivity extends AppCompatActivity {
                                         public void onSuccess(Void aVoid) {
                                             Map<String, Object> chatAddMap = new HashMap<>();
                                             chatAddMap.put("seen", false);
-                                            chatAddMap.put("date", date);
+                                            chatAddMap.put("time", FieldValue.serverTimestamp());
                                             chatRef.document(mChatUserId)
                                                     .collection("friends")
                                                     .document(mCurrentUserId )
@@ -181,7 +183,7 @@ public class ChatActivity extends AppCompatActivity {
             messageMap.put("message", message);
             messageMap.put("seen", false);
             messageMap.put("type", "text");
-            messageMap.put("time", new Date());
+            messageMap.put("time", FieldValue.serverTimestamp());
             messageMap.put("from", mCurrentUserId);
 
             messagesRef.document(mCurrentUserId)
@@ -205,7 +207,7 @@ public class ChatActivity extends AppCompatActivity {
             });
             chatRef.document(mCurrentUserId)
                     .collection("friends")
-                    .document(mChatUserId).update("date", new Date()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    .document(mChatUserId).update("time", FieldValue.serverTimestamp()).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
                     chatRef.document(mCurrentUserId)
@@ -215,7 +217,7 @@ public class ChatActivity extends AppCompatActivity {
                         public void onSuccess(Void aVoid) {
                             chatRef.document(mChatUserId )
                                     .collection("friends")
-                                    .document(mCurrentUserId).update("date", new Date()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    .document(mCurrentUserId).update("time", FieldValue.serverTimestamp()).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
                                     chatRef.document(mChatUserId )
@@ -235,6 +237,28 @@ public class ChatActivity extends AppCompatActivity {
         }
     }
 
+
+    private void setUpRecyclerView() {
+        Query query = mFriendsRef.document(mChatUserId)
+                .collection("messages")
+                .orderBy("time", Query.Direction.ASCENDING);
+        FirestoreRecyclerOptions<Messages> options = new FirestoreRecyclerOptions.Builder<Messages>()
+                .setQuery(query, Messages.class)
+                .build();
+
+        MessageAdapter mAdapter = new MessageAdapter(options);
+        RecyclerView mMessagesListRecycleView = findViewById(R.id.MessagesRecyclerView_id);
+        mMessagesListRecycleView.setHasFixedSize(true);
+        mMessagesListRecycleView.setLayoutManager(new LinearLayoutManager(this));
+        mMessagesListRecycleView.setAdapter(mAdapter);
+        mAdapter.startListening();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        setUpRecyclerView();
+    }
 
 }
 
