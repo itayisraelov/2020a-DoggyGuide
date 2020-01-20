@@ -18,28 +18,27 @@
         android:text="@string/credits"
         android:layout_gravity="center"
         android:textColor="@color/colorAccent"
-        android:textStyle="bold"
         android:textSize="30sp"/>
     <Space
         android:layout_width="match_parent"
         android:layout_height="50dp"/>
 
     <TextView
+        android:id="@+id/home_screen"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="@string/photo_by_berkay_gumustekin_on_unsplash"
-        android:textStyle="bold"
         android:textSize="18sp"/>
     <Space
         android:layout_width="match_parent"
         android:layout_height="20dp"/>
     <TextView
+        android:id="@+id/shower"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text= "@string/photo_by_autri_taheri_on_unsplash"
-        android:textStyle="bold"
         android:textSize="18sp"/>
 
     <Space
@@ -47,22 +46,22 @@
         android:layout_height="20dp"/>
 
     <TextView
+        android:id="@+id/walk"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="@string/photo_by_anthony_fomin_on_unsplash"
-        android:textStyle="bold"
         android:textSize="18sp"/>
 
     <Space
         android:layout_width="match_parent"
         android:layout_height="20dp"/>
     <TextView
+        android:id="@+id/feed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="@string/photo_by_paul_trienekens_on_unsplash"
-        android:textStyle="bold"
         android:textSize="18sp"/>
 
 

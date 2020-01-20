@@ -95,9 +95,6 @@ public class homeActivity extends AppCompatActivity implements
                     }
                 });
                 return true;
-            case R.id.Settings:
-                Toast.makeText(this, "Settings", Toast.LENGTH_SHORT).show();
-                return true;
             case R.id.Credits:
                 Intent intent__ = new Intent(homeActivity.this, Credits.class);
                 startActivity(intent__);
