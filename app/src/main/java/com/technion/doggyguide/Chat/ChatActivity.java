@@ -93,26 +93,15 @@ public class ChatActivity extends AppCompatActivity {
         setContentView(R.layout.activity_chat);
 
         initToolBar();
-        mStorageRef = FirebaseStorage.getInstance().getReference();
-        // ---- Custom Action bar Items ----
-        mTitleView = findViewById(R.id.custom_bar_title);
-        mStatusView = findViewById(R.id.custom_bar_status);
-        mProfileImage = findViewById(R.id.custom_bar_image);
-        mRefreshLayout = findViewById(R.id.message_swipe_layout);
+        initFields();
         setInformationForToolBar();
-
-        mChatSendBtn = findViewById(R.id.chat_send_btn);
-        mChatMessageView = findViewById(R.id.chat_message_view);
-        mChatAddBtn = findViewById(R.id.chat_add_btn);
-
-
-        mAuth = FirebaseAuth.getInstance();
-        mCurrentUserId = mAuth.getCurrentUser().getUid();
-
         initChatForThisUser();
         setUpRecyclerView();
         loadMessages();
+        initOnClickListeners();
+    }
 
+    private void initOnClickListeners() {
         mChatSendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -127,23 +116,29 @@ public class ChatActivity extends AppCompatActivity {
                 galleryIntent.setType("image/*");
                 galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
                 startActivityForResult(Intent.createChooser(galleryIntent, "SELECT IMAGE"), GALLERY_PICK);
-
             }
         });
-
-
         mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 mMessagesListRecycleView.
                         smoothScrollToPosition(mAdapter.getItemCount());
                 mRefreshLayout.setRefreshing(false);
-
-
             }
         });
     }
-
+    private void initFields() {
+        mStorageRef = FirebaseStorage.getInstance().getReference();
+        mTitleView = findViewById(R.id.custom_bar_title);
+        mStatusView = findViewById(R.id.custom_bar_status);
+        mProfileImage = findViewById(R.id.custom_bar_image);
+        mRefreshLayout = findViewById(R.id.message_swipe_layout);
+        mChatSendBtn = findViewById(R.id.chat_send_btn);
+        mChatMessageView = findViewById(R.id.chat_message_view);
+        mChatAddBtn = findViewById(R.id.chat_add_btn);
+        mAuth = FirebaseAuth.getInstance();
+        mCurrentUserId = mAuth.getCurrentUser().getUid();
+    }
     private void initChatForThisUser() {
         chatRef.document(mCurrentUserId).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
@@ -153,50 +148,48 @@ public class ChatActivity extends AppCompatActivity {
                             .collection("friends")
                             .document(mChatUserId).get()
                             .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                            if (task.isSuccessful()) {
-                                DocumentSnapshot document = task.getResult();
-                                if (!document.exists()) {
-                                    Map<String, Object> chatAddMap = new HashMap<>();
-                                    chatAddMap.put("seen", false);
-                                    chatAddMap.put("time", FieldValue.serverTimestamp());
-                                    chatRef.document(mCurrentUserId)
-                                            .collection("friends")
-                                            .document(mChatUserId)
-                                            .set(chatAddMap).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void aVoid) {
+                                @Override
+                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                    if (task.isSuccessful()) {
+                                        DocumentSnapshot document = task.getResult();
+                                        if (!document.exists()) {
                                             Map<String, Object> chatAddMap = new HashMap<>();
                                             chatAddMap.put("seen", false);
                                             chatAddMap.put("time", FieldValue.serverTimestamp());
-                                            chatRef.document(mChatUserId)
+                                            chatRef.document(mCurrentUserId)
                                                     .collection("friends")
-                                                    .document(mCurrentUserId )
+                                                    .document(mChatUserId)
                                                     .set(chatAddMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                                                 @Override
-                                                public void onSuccess(Void aVoid) { }                                            });
-                                        }
-                                    });
-                                } else { }
-                            } else { }
-                        }
-                    });
+                                                public void onSuccess(Void aVoid) {
+                                                    Map<String, Object> chatAddMap = new HashMap<>();
+                                                    chatAddMap.put("seen", false);
+                                                    chatAddMap.put("time", FieldValue.serverTimestamp());
+                                                    chatRef.document(mChatUserId)
+                                                            .collection("friends")
+                                                            .document(mCurrentUserId )
+                                                            .set(chatAddMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                        @Override
+                                                        public void onSuccess(Void aVoid) { }                                            });
+                                                }
+                                            });
+                                        } else { }
+                                    } else { }
+                                }
+                            });
                 }
             }
         });
     }
-
     private void setInformationForToolBar() {
         mChatUserId = getIntent().getStringExtra("user_id");
         mChatUser  = getIntent().getStringExtra("user_name");
-        mTitleView.setText(mChatUser );
+        mTitleView.setText(mChatUser);
         mUserStatus = getIntent().getStringExtra("user_status");
         mStatusView.setText(mUserStatus);
         mUserImage = getIntent().getStringExtra("user_image");
         Picasso.get().load(mUserImage).into(mProfileImage);
     }
-
     private void initToolBar() {
         Toolbar mChatToolbar = findViewById(R.id.chat_app_bar);
         setSupportActionBar(mChatToolbar);
@@ -210,7 +203,6 @@ public class ChatActivity extends AppCompatActivity {
         actionBar.setCustomView(action_bar_view);
         actionBar.setDisplayShowTitleEnabled(false);
     }
-
     private void sendMessage(String message, String type){
         if(!TextUtils.isEmpty(message)){
             final Map<String, Object> messageMap = new HashMap<>();
@@ -270,8 +262,6 @@ public class ChatActivity extends AppCompatActivity {
             });
         }
     }
-
-
     private void setUpRecyclerView() {
         Query query = mFriendsRef.document(mChatUserId)
                 .collection("messages")
@@ -289,113 +279,101 @@ public class ChatActivity extends AppCompatActivity {
         mAdapter.startListening();
 
     }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-    }
-
     private void loadMessages() {
         messagesRef.document(mCurrentUserId)
                 .collection("friends")
                 .document(mChatUserId)
                 .collection("messages").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-            @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                mMessagesListRecycleView.
-                        smoothScrollToPosition(mAdapter.getItemCount());
-            }
-        });
-    }
-
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == GALLERY_PICK && resultCode == RESULT_OK) {
-            Uri imageUri = data.getData();
-            CropImage.activity(imageUri)
-                    .setAspectRatio(1, 1)
-                    .start(this);
-        }
-
-        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
-            CropImage.ActivityResult result = CropImage.getActivityResult(data);
-            if (resultCode == RESULT_OK) {
-
-                Uri resultUri = result.getUri();
-                //compressedImage
-                File filePath = new File(resultUri.getPath());
-                final byte[] data_;
-                data_ = compressedImage(filePath);
-                long res = generateRandom(10);
-                final StorageReference thumbs_filepath = mStorageRef.child("uploads")
-                        .child(mCurrentUserId + mChatUserId + (res) + ".jpg");
-
-                thumbs_filepath.putFile(resultUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                     @Override
-                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            UploadTask uploadTask = thumbs_filepath.putBytes(data_);
-                            uploadTask.addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> compressed_task) {
-                                    if (compressed_task.isSuccessful()) {
-                                        if (compressed_task.getResult() != null) {
-                                            thumbs_filepath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                                @Override
-                                                public void onSuccess(Uri uri) {
-                                                    sendMessage(uri.toString(), "image");
-                                                }
-                                            });
-                                        }
-                                    } else {
-
-                                    }
-                                }
-                            });
-                        } else {
-
-                        }
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        mMessagesListRecycleView.
+                                smoothScrollToPosition(mAdapter.getItemCount());
                     }
                 });
-            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
-                Exception error = result.getError();
-            }
-        }
     }
-
-    public static long generateRandom(int length) {
-        Random random = new Random();
-        char[] digits = new char[length];
-        digits[0] = (char) (random.nextInt(9) + '1');
-        for (int i = 1; i < length; i++) {
-            digits[i] = (char) (random.nextInt(10) + '0');
-        }
-        return Long.parseLong(new String(digits));
-    }
-
-    private byte[] compressedImage(File filePath) {
-        byte[] data_;
-        Bitmap compressedImageBitmap = null;
-        try {
-            compressedImageBitmap = new Compressor(this)
-                    .setMaxWidth(200)
-                    .setMaxHeight(200)
-                    .setQuality(75)
-                    .compressToBitmap(filePath);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        compressedImageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        data_ = baos.toByteArray();
-        return data_;
-    }
-
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//
+//        if (requestCode == GALLERY_PICK && resultCode == RESULT_OK) {
+//            Uri imageUri = data.getData();
+//            CropImage.activity(imageUri)
+//                    .setAspectRatio(1, 1)
+//                    .start(this);
+//        }
+//
+//        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+//            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+//            if (resultCode == RESULT_OK) {
+//
+//                Uri resultUri = result.getUri();
+//                //compressedImage
+//                File filePath = new File(resultUri.getPath());
+//                final byte[] data_;
+//                data_ = compressedImage(filePath);
+//                long res = generateRandom(10);
+//                final StorageReference thumbs_filepath = mStorageRef.child("uploads")
+//                        .child(mCurrentUserId + mChatUserId + (res) + ".jpg");
+//
+//                thumbs_filepath.putFile(resultUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+//                        if (task.isSuccessful()) {
+//                            UploadTask uploadTask = thumbs_filepath.putBytes(data_);
+//                            uploadTask.addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+//                                @Override
+//                                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> compressed_task) {
+//                                    if (compressed_task.isSuccessful()) {
+//                                        if (compressed_task.getResult() != null) {
+//                                            thumbs_filepath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+//                                                @Override
+//                                                public void onSuccess(Uri uri) {
+//                                                    sendMessage(uri.toString(), "image");
+//                                                }
+//                                            });
+//                                        }
+//                                    } else {
+//
+//                                    }
+//                                }
+//                            });
+//                        } else {
+//
+//                        }
+//                    }
+//                });
+//            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+//                Exception error = result.getError();
+//            }
+//        }
+//    }
+//    public static long generateRandom(int length) {
+//        Random random = new Random();
+//        char[] digits = new char[length];
+//        digits[0] = (char) (random.nextInt(9) + '1');
+//        for (int i = 1; i < length; i++) {
+//            digits[i] = (char) (random.nextInt(10) + '0');
+//        }
+//        return Long.parseLong(new String(digits));
+//    }
+//    private byte[] compressedImage(File filePath) {
+//        byte[] data_;
+//        Bitmap compressedImageBitmap = null;
+//        try {
+//            compressedImageBitmap = new Compressor(this)
+//                    .setMaxWidth(200)
+//                    .setMaxHeight(200)
+//                    .setQuality(75)
+//                    .compressToBitmap(filePath);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//
+//        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//        compressedImageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+//        data_ = baos.toByteArray();
+//        return data_;
+//    }
 }
 
 

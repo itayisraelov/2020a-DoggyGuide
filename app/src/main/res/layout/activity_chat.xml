@@ -29,11 +29,12 @@
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/message_swipe_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="552dp"
         android:layout_above="@+id/linearLayout"
-        android:layout_alignParentStart="true"
         android:layout_below="@+id/chat_app_bar"
+        android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
+        android:layout_marginTop="0dp"
         tools:ignore="NotSibling">
 
         <androidx.recyclerview.widget.RecyclerView
@@ -41,8 +42,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@+id/linearLayout"
-            android:layout_alignParentStart="true"
             android:layout_below="@+id/chat_app_bar"
+            android:layout_alignParentStart="true"
             android:layout_alignParentLeft="true">
 
         </androidx.recyclerview.widget.RecyclerView>

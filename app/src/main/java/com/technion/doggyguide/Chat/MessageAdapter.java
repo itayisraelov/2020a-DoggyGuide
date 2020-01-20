@@ -24,10 +24,8 @@ import java.text.SimpleDateFormat;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MessageAdapter extends FirestoreRecyclerAdapter<Messages, MessageAdapter.MessageViewHolder> {
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    FirebaseAuth users = FirebaseAuth.getInstance();
-    String userUid = users.getCurrentUser().getUid();
 
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
     MessageAdapter(@NonNull FirestoreRecyclerOptions<Messages> options) {
         super(options);
     }
@@ -83,7 +81,7 @@ public class MessageAdapter extends FirestoreRecyclerAdapter<Messages, MessageAd
                                 String image = dogOwnerElement.getmImageUrl();
 
                                 holder.displayName.setText(name);
-                                Picasso.get().load(image).placeholder(R.drawable.ic_event).into(holder.profileImage);
+                                Picasso.get().load(image).into(holder.profileImage);
                             }
                         }
                     }
@@ -94,7 +92,7 @@ public class MessageAdapter extends FirestoreRecyclerAdapter<Messages, MessageAd
             holder.messageImage.setVisibility(View.INVISIBLE);
         } else {
             holder.messageText.setVisibility(View.INVISIBLE);
-            Picasso.get().load(model.getMessage()).placeholder(R.drawable.ic_event).into(holder.messageImage);
+            Picasso.get().load(model.getMessage()).into(holder.messageImage);
         }
     }
 
