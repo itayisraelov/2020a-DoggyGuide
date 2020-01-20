@@ -61,6 +61,32 @@ exports.postNotification = firebaseTriggers
 });
 
 
+exports.sendMessageInChatNotification = firebaseTriggers
+      .document('Receiver/{senderId}/friends/{recieverId}/messages/{messageId}').onCreate((snap, context) => {
+      const notifcationRecieverId = context.params.recieverId;
+      console.log('reciever_id is ' + notifcationRecieverId);
+      const name = snap.data().fromName;
+      const payload = {
+        data: {
+            notification_type: 'CHAT',
+            title: 'message from: ' + name,
+            body: snap.data().message,
+            sender_id: snap.data().from,
+            reciever_id: context.params.recieverId,
+            notification_id: context.params.messageId
+        }
+      };
+      return db.collection('dogOwners')
+        .doc(notifcationRecieverId)
+        .get()
+        .then(recieverDoc => {
+            console.log('Retrieving FCM tokens');
+            const tokens = recieverDoc.data().mTokens;
+            console.log('Sending notification payload');
+            return admin.messaging().sendToDevice(tokens, payload);
+        });
+});
+
 exports.onAcceptPost = firebaseTriggers
       .document('dogOwners/{userId}/acceptedPosts/{postId}').onCreate((snap, context) => {
       const postId = context.params.postId;

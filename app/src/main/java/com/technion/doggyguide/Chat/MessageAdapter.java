@@ -60,6 +60,10 @@ public class MessageAdapter extends FirestoreRecyclerAdapter<Messages, MessageAd
     @Override
     protected void onBindViewHolder(@NonNull final MessageViewHolder holder, int position, @NonNull Messages model) {
 
+
+        if(model.getTime() == null){
+            return;
+        }
         final String from_user = model.getFrom();
         String message_type = model.getType();
         //time
