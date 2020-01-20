@@ -7,11 +7,14 @@ import android.os.PersistableBundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
+
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -35,28 +38,27 @@ import com.technion.doggyguide.profile.DogProfileActivity;
 import com.technion.doggyguide.profile.UserProfileActivity;
 import com.technion.doggyguide.ui.main.HomeSectionsPagerAdapter;
 import com.technion.doggyguide.users.UsersActivity;
+
 import java.util.List;
 
 
 public class homeActivity extends AppCompatActivity implements
-           HomeFragment.OnFragmentInteractionListener,
-           EventsFragment.OnFragmentInteractionListener,
-           ChatFragment.OnFragmentInteractionListener, NotificationsFragment.OnFragmentInteractionListener {
+        HomeFragment.OnFragmentInteractionListener,
+        EventsFragment.OnFragmentInteractionListener,
+        ChatFragment.OnFragmentInteractionListener, NotificationsFragment.OnFragmentInteractionListener {
 
-    private FirebaseAuth mAuth;
-    private GoogleSignInClient mGSC;
-    private GoogleSignInOptions mGSO;
-
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
-    String mDogOwners = "dogOwners";
-    private CollectionReference usersRef = db.collection(mDogOwners);
-    FirebaseAuth users = FirebaseAuth.getInstance();
-
-
-    private static final int[] TAB_ICONS = new int[] {R.drawable.ic_home,
+    private static final int[] TAB_ICONS = new int[]{R.drawable.ic_home,
             R.drawable.ic_chat_24px,
             R.drawable.ic_alarm_add,
             R.drawable.ic_event};
+    final String FILTER = "filter";
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    String mDogOwners = "dogOwners";
+    FirebaseAuth users = FirebaseAuth.getInstance();
+    private FirebaseAuth mAuth;
+    private GoogleSignInClient mGSC;
+    private GoogleSignInOptions mGSO;
+    private CollectionReference usersRef = db.collection(mDogOwners);
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
@@ -77,7 +79,21 @@ public class homeActivity extends AppCompatActivity implements
 
         switch (item.getItemId()) {
             case R.id.search:
-                Toast.makeText(this, "Search", Toast.LENGTH_SHORT).show();
+                androidx.appcompat.widget.SearchView searchView = (androidx.appcompat.widget.SearchView) item.getActionView();
+                searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
+                searchView.setOnQueryTextListener(new androidx.appcompat.widget.SearchView.OnQueryTextListener() {
+                    @Override
+                    public boolean onQueryTextSubmit(String query) {
+                        Intent intent = new Intent(homeActivity.this, UsersActivity.class);
+                        intent.putExtra(FILTER, query);
+                        startActivity(intent);
+                        return false;
+                    }
+                    @Override
+                    public boolean onQueryTextChange(String newText) {
+                        return false;
+                    }
+                });
                 return true;
             case R.id.Settings:
                 Toast.makeText(this, "Settings", Toast.LENGTH_SHORT).show();
@@ -85,10 +101,6 @@ public class homeActivity extends AppCompatActivity implements
             case R.id.Credits:
                 Intent intent__ = new Intent(homeActivity.this, Credits.class);
                 startActivity(intent__);
-                return true;
-            case R.id.all_users:
-                Intent intent_users = new Intent(homeActivity.this, UsersActivity.class);
-                startActivity(intent_users);
                 return true;
             case R.id.About:
                 Intent intent_ = new Intent(homeActivity.this, About.class);
@@ -111,23 +123,23 @@ public class homeActivity extends AppCompatActivity implements
             case R.id.logout:
                 final DocumentReference userRef = db.document("dogOwners/" + mAuth.getCurrentUser().getUid());
                 userRef.get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        final List<String> mTokens = (List<String>) documentSnapshot.get("mTokens");
-                        FirebaseInstanceId
-                                .getInstance()
-                                .getInstanceId()
-                                .addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
-                                    @Override
-                                    public void onSuccess(InstanceIdResult instanceIdResult) {
-                                        String mDeviceToken = instanceIdResult.getToken();
-                                        mTokens.remove((String) mDeviceToken);
-                                        userRef.update("mTokens", mTokens);
-                                    }
-                                });
-                    }
-                });
+                        .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                            @Override
+                            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                final List<String> mTokens = (List<String>) documentSnapshot.get("mTokens");
+                                FirebaseInstanceId
+                                        .getInstance()
+                                        .getInstanceId()
+                                        .addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
+                                            @Override
+                                            public void onSuccess(InstanceIdResult instanceIdResult) {
+                                                String mDeviceToken = instanceIdResult.getToken();
+                                                mTokens.remove((String) mDeviceToken);
+                                                userRef.update("mTokens", mTokens);
+                                            }
+                                        });
+                            }
+                        });
                 mAuth.signOut();
                 mGSC.signOut().addOnCompleteListener(this, new OnCompleteListener<Void>() {
                     @Override
@@ -148,7 +160,7 @@ public class homeActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         HomeSectionsPagerAdapter homesectionsPagerAdapter = new HomeSectionsPagerAdapter(this,
-                                                                                    getSupportFragmentManager());
+                getSupportFragmentManager());
         ViewPager viewPager = findViewById(R.id.home_view_pager);
         viewPager.setAdapter(homesectionsPagerAdapter);
         TabLayout tabs = findViewById(R.id.home_tabs);

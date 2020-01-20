@@ -1,31 +1,32 @@
 package com.technion.doggyguide.friends;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.squareup.picasso.Picasso;
+import com.technion.doggyguide.Chat.ChatActivity;
 import com.technion.doggyguide.R;
-import com.technion.doggyguide.users.UserProfile;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
+public class FriendsChatAdapter extends
+        FirestoreRecyclerAdapter<Friends, FriendsChatAdapter.FriendsChatViewHolder> {
+    private final String TAG = "Friends Chat Adapter";
 
-public class FriendsAdapter extends FirestoreRecyclerAdapter<Friends, FriendsAdapter.FriendsViewHolder> {
-
-    private final String TAG = "Friends Adapter";
-
-    FriendsAdapter(@NonNull FirestoreRecyclerOptions<Friends> options) {
+    public FriendsChatAdapter(@NonNull FirestoreRecyclerOptions<Friends> options) {
         super(options);
     }
 
     @Override
-    protected void onBindViewHolder(@NonNull FriendsAdapter.FriendsViewHolder holder,
+    protected void onBindViewHolder(@NonNull FriendsChatAdapter.FriendsChatViewHolder holder,
                                     int position, @NonNull final Friends model) {
         holder.setName(model.getmName());
         holder.setUri(model.getmImageUrl());
@@ -37,31 +38,31 @@ public class FriendsAdapter extends FirestoreRecyclerAdapter<Friends, FriendsAda
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
-                Intent profileIntent = new Intent(v.getContext(), UserProfile.class);
-                profileIntent.putExtra("user_id", user_id);
-                profileIntent.putExtra("user_name", model.getmName());
-                profileIntent.putExtra("user_image", model.getmImageUrl());
-                profileIntent.putExtra("user_status", model.getmStatus());
-                v.getContext().startActivity(profileIntent);
+                Intent chatIntent = new Intent(v.getContext(), ChatActivity.class);
+                chatIntent.putExtra("user_id", user_id);
+                chatIntent.putExtra("user_name", model.getmName());
+                chatIntent.putExtra("user_image", model.getmImageUrl());
+                chatIntent.putExtra("user_status", model.getmStatus());
+                v.getContext().startActivity(chatIntent);
             }
         });
     }
 
     @NonNull
     @Override
-    public FriendsAdapter.FriendsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public FriendsChatAdapter.FriendsChatViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.users_single_layout,
                 parent, false);
-        return new FriendsAdapter.FriendsViewHolder(v);
+        return new FriendsChatAdapter.FriendsChatViewHolder(v);
     }
 
-    public class FriendsViewHolder extends RecyclerView.ViewHolder {
+    public class FriendsChatViewHolder extends RecyclerView.ViewHolder {
         View mView;
         TextView mUserNameView;
         CircleImageView mUserUrlView;
         TextView mUserStatusView;
 
-        FriendsViewHolder(@NonNull View itemView) {
+        FriendsChatViewHolder(@NonNull View itemView) {
             super(itemView);
             mView = itemView;
         }
@@ -82,4 +83,3 @@ public class FriendsAdapter extends FirestoreRecyclerAdapter<Friends, FriendsAda
         }
     }
 }
-

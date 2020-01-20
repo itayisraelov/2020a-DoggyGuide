@@ -1,13 +1,18 @@
 package com.technion.doggyguide.users;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.technion.doggyguide.Adapters.UsersAdapter;
+import com.technion.doggyguide.Adapters.UsersCustomAdapter;
 import com.technion.doggyguide.R;
 import com.technion.doggyguide.dataElements.DogOwnerElement;
 import com.technion.doggyguide.dataElements.Users;
@@ -19,6 +24,7 @@ import android.view.MenuItem;
 public class UsersActivity extends AppCompatActivity {
 
     private CollectionReference mUsersRef;
+    private UsersCustomAdapter mAdapter;
     String mDogOwners = "dogOwners";
 
 
@@ -26,13 +32,16 @@ public class UsersActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_users);
-        getSupportActionBar().setTitle("All Members");
+        String filter = getIntent().getStringExtra("filter");
+        getSupportActionBar().setTitle("Search results for " + filter);
         getSupportActionBar().setHomeAsUpIndicator(R.mipmap.ic_up_button);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         mUsersRef = db.collection(mDogOwners);
+
+        setUpRecyclerView(filter);
     }
 
     @Override
@@ -46,24 +55,26 @@ public class UsersActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void setUpRecyclerView() {
+    private void setUpRecyclerView(final String filter) {
         Query query = mUsersRef.orderBy("mName", Query.Direction.ASCENDING);
-        FirestoreRecyclerOptions<DogOwnerElement> options = new FirestoreRecyclerOptions.Builder<DogOwnerElement>()
-                .setQuery(query, DogOwnerElement.class)
-                .build();
+        query.get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        mAdapter = new UsersCustomAdapter(task.getResult().toObjects(DogOwnerElement.class));
+                        mAdapter.getFilter().filter(filter);
+                        RecyclerView mUsersListRecycleView = findViewById(R.id.recyclerView_id);
+                        mUsersListRecycleView.setHasFixedSize(true);
+                        mUsersListRecycleView.setLayoutManager(new LinearLayoutManager(UsersActivity.this));
+                        mUsersListRecycleView.setAdapter(mAdapter);
+                    }
+                });
 
-        UsersAdapter mAdapter = new UsersAdapter(options);
-        RecyclerView mUsersListRecycleView = findViewById(R.id.recyclerView_id);
-        mUsersListRecycleView.setHasFixedSize(true);
-        mUsersListRecycleView.setLayoutManager(new LinearLayoutManager(this));
 
-        mUsersListRecycleView.setAdapter(mAdapter);
-        mAdapter.startListening();
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        setUpRecyclerView();
     }
 }

@@ -9,7 +9,9 @@ public class DogOwnerElement {
     private String mDogName;
     private String mDogBreed;
     private String mImageUrl;
+    private String mDogImageUrl;
     private String mStatus;
+    private String mAboutDog;
     private List<String> mTokens;
 
 
@@ -27,6 +29,7 @@ public class DogOwnerElement {
         this.mImageUrl = mImageUrl;
         this.mStatus = mStatus;
         this.mTokens = mTokens;
+        this.mAboutDog = "My name is " + mDogName + " and I am a " + mDogBreed;
     }
 
     public String getmOrgId() {
@@ -61,7 +64,13 @@ public class DogOwnerElement {
         return mTokens;
     }
 
+    public String getmAboutDog() {
+        return mAboutDog;
+    }
+
     public void setmStatus(String mStatus) {
         this.mStatus = mStatus;
     }
+
+    public String getmDogImageUrl() { return mDogImageUrl; }
 }

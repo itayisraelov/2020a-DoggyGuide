@@ -56,9 +56,12 @@
         <activity
             android:name=".DogOwnerSignUp"
             android:parentActivityName=".MainActivity" />
+
         <activity
             android:name=".homeActivity"
-            android:label="Doggy Guide" />
+            android:label="DoggyGuide"/>
+
+
         <activity
             android:name=".MainActivity"
             android:label="DoggyGuide"

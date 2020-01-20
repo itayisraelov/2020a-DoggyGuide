@@ -23,7 +23,7 @@
             android:layout_height="60sp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:src="@drawable/ic_person"
+            android:src="@drawable/ic_person_black_24dp"
             android:padding="4sp"/>
 
         <TextView
