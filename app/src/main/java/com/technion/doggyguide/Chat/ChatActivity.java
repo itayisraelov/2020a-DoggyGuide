@@ -31,6 +31,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 import com.technion.doggyguide.R;
+import com.technion.doggyguide.dataElements.DogOwnerElement;
 import com.technion.doggyguide.profile.UserProfileActivity;
 import com.theartofdev.edmodo.cropper.CropImage;
 
@@ -73,7 +74,11 @@ public class ChatActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference chatRef = db.collection("Chat");
+    private CollectionReference receiverMessageRef = db.collection("Receiver");
     private CollectionReference messagesRef = db.collection("messages");
+    String mDogOwners = "dogOwners";
+    private CollectionReference usersRef = db.collection(mDogOwners);
+
     private static final int GALLERY_PICK = 1;
     FirebaseAuth users = FirebaseAuth.getInstance();
     private String mCurrentUserUid = users.getCurrentUser().getUid();
@@ -227,10 +232,41 @@ public class ChatActivity extends AppCompatActivity {
                         @Override
                         public void onSuccess(Void aVoid) {
                             mChatMessageView.setText("");
+                            loadMessages();
                         }
                     });
                 }
             });
+            final Map<String, Object> messageMap_ = new HashMap<>();
+            messageMap_.put("message", message);
+            messageMap_.put("seen", false);
+            messageMap_.put("type", type);
+            messageMap_.put("time", FieldValue.serverTimestamp());
+            messageMap_.put("from", mCurrentUserId);
+
+            final DocumentReference docRef = usersRef.document(mCurrentUserId);
+            docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                @Override
+                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                    DogOwnerElement dogOwnerElement = documentSnapshot.toObject(DogOwnerElement.class);
+                    if (dogOwnerElement != null) {
+                        String name = dogOwnerElement.getmName();
+                        messageMap_.put("fromName", name);
+                        receiverMessageRef.document(mCurrentUserId)
+                                .collection("friends")
+                                .document(mChatUserId).
+                                collection("messages")
+                                .document().set(messageMap_).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) { }
+                        });
+                    }
+                }
+            });
+
+
+
+
             chatRef.document(mCurrentUserId)
                     .collection("friends")
                     .document(mChatUserId).update("time", FieldValue.serverTimestamp()).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -251,7 +287,7 @@ public class ChatActivity extends AppCompatActivity {
                                             .document(mCurrentUserId).update("seen", false).addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {
-                                            loadMessages();
+
                                         }
                                     });
                                 }
@@ -291,89 +327,6 @@ public class ChatActivity extends AppCompatActivity {
                     }
                 });
     }
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//
-//        if (requestCode == GALLERY_PICK && resultCode == RESULT_OK) {
-//            Uri imageUri = data.getData();
-//            CropImage.activity(imageUri)
-//                    .setAspectRatio(1, 1)
-//                    .start(this);
-//        }
-//
-//        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
-//            CropImage.ActivityResult result = CropImage.getActivityResult(data);
-//            if (resultCode == RESULT_OK) {
-//
-//                Uri resultUri = result.getUri();
-//                //compressedImage
-//                File filePath = new File(resultUri.getPath());
-//                final byte[] data_;
-//                data_ = compressedImage(filePath);
-//                long res = generateRandom(10);
-//                final StorageReference thumbs_filepath = mStorageRef.child("uploads")
-//                        .child(mCurrentUserId + mChatUserId + (res) + ".jpg");
-//
-//                thumbs_filepath.putFile(resultUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-//                        if (task.isSuccessful()) {
-//                            UploadTask uploadTask = thumbs_filepath.putBytes(data_);
-//                            uploadTask.addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-//                                @Override
-//                                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> compressed_task) {
-//                                    if (compressed_task.isSuccessful()) {
-//                                        if (compressed_task.getResult() != null) {
-//                                            thumbs_filepath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-//                                                @Override
-//                                                public void onSuccess(Uri uri) {
-//                                                    sendMessage(uri.toString(), "image");
-//                                                }
-//                                            });
-//                                        }
-//                                    } else {
-//
-//                                    }
-//                                }
-//                            });
-//                        } else {
-//
-//                        }
-//                    }
-//                });
-//            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
-//                Exception error = result.getError();
-//            }
-//        }
-//    }
-//    public static long generateRandom(int length) {
-//        Random random = new Random();
-//        char[] digits = new char[length];
-//        digits[0] = (char) (random.nextInt(9) + '1');
-//        for (int i = 1; i < length; i++) {
-//            digits[i] = (char) (random.nextInt(10) + '0');
-//        }
-//        return Long.parseLong(new String(digits));
-//    }
-//    private byte[] compressedImage(File filePath) {
-//        byte[] data_;
-//        Bitmap compressedImageBitmap = null;
-//        try {
-//            compressedImageBitmap = new Compressor(this)
-//                    .setMaxWidth(200)
-//                    .setMaxHeight(200)
-//                    .setQuality(75)
-//                    .compressToBitmap(filePath);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//
-//        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-//        compressedImageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-//        data_ = baos.toByteArray();
-//        return data_;
-//    }
 }
 
 

@@ -13,10 +13,17 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.technion.doggyguide.Chat.ChatActivity;
 import com.technion.doggyguide.MainActivity;
 import com.technion.doggyguide.R;
+import com.technion.doggyguide.dataElements.DogOwnerElement;
 import com.technion.doggyguide.users.UserProfile;
 
 import java.util.Map;
@@ -26,6 +33,9 @@ public class FCMService extends FirebaseMessagingService {
     private String CHANNEL_ID = "Push Notifications";
     private Intent intent;
     private PendingIntent pendingIntent;
+    String mDogOwners = "dogOwners";
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private CollectionReference usersRef = db.collection(mDogOwners);
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
@@ -44,15 +54,35 @@ public class FCMService extends FirebaseMessagingService {
         }
 
         switch (payload.getData().get("notification_type")) {
+
+            case "CHAT":
+                final String from_user_id_chat = payload.getData().get("sender_id");
+                final DocumentReference docRef = usersRef.document(from_user_id_chat);
+                intent = new Intent(this, ChatActivity.class);
+                docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        DogOwnerElement dogOwnerElement = documentSnapshot.toObject(DogOwnerElement.class);
+                        if (dogOwnerElement != null) {
+                            intent.putExtra("user_id", from_user_id_chat);
+                            intent.putExtra("user_name", dogOwnerElement.getmName());
+                            intent.putExtra("user_status", dogOwnerElement.getmStatus());
+                            intent.putExtra("user_image", dogOwnerElement.getmImageUrl());
+                        }
+                    }
+                });
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+                break;
             case "POST":
                 intent = new Intent(this, MainActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
                 break;
             case "Friend_Req":
-                String from_user_id = payload.getData().get("sender_id");
+                String from_user_id_friend_req = payload.getData().get("sender_id");
                 intent = new Intent(this, UserProfile.class);
-                intent.putExtra("user_id", from_user_id);
+                intent.putExtra("user_id", from_user_id_friend_req);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
                 break;
