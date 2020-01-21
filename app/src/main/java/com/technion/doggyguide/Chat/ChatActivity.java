@@ -116,8 +116,10 @@ public class ChatActivity extends AppCompatActivity {
         mChatSendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mChatSendBtn.setEnabled(false);
                 String message = mChatMessageView.getText().toString();
                 sendMessage(message, "text");
+                mChatSendBtn.setEnabled(true);
             }
         });
         mChatAddBtn.setOnClickListener(new View.OnClickListener() {
