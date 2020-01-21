@@ -21,11 +21,12 @@ import com.technion.doggyguide.dataElements.DogOwnerElement;
 public class StatusActivity extends AppCompatActivity {
     EditText mEditText;
     Button mSaveChanges;
+    String mDogOwners = "dogOwners";
     TextView mStatus;
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     FirebaseAuth users = FirebaseAuth.getInstance();
-    private CollectionReference usersRef = db.collection("dog owners");
+    private CollectionReference usersRef = db.collection(mDogOwners);
     String userUid = users.getCurrentUser().getUid();
 
     @Override

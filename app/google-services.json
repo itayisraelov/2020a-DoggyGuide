@@ -15,6 +15,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "1054789748992-7rpn98n1n225bv7at65vp03qk7suijp1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.technion.doggyguide",
+            "certificate_hash": "df3e674f172267b452b971c398b773cb9c24dd2f"
+          }
+        },
+        {
+          "client_id": "1054789748992-19jf59kgjndtleveonerls5quseqjr9i.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.technion.doggyguide",
+            "certificate_hash": "fe61a4e14ba574d799e1a5e410676dc5058444a2"
+          }
+        },
+        {
           "client_id": "1054789748992-9a32i49l57iogqhj3aakjlq269eirdh3.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

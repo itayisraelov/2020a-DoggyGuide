@@ -36,6 +36,7 @@ import java.util.Calendar;
 public class EventElementAdapter extends
         FirestoreRecyclerAdapter<EventElement, EventElementAdapter.EventHolder> {
     private final String TAG = "Event Adapter";
+    String mDogOwners = "dogOwners";
 
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -47,8 +48,8 @@ public class EventElementAdapter extends
     @Override
     protected void onBindViewHolder(@NonNull EventHolder holder, int position, @NonNull EventElement model) {
         final String userId = mAuth.getCurrentUser().getUid();
-        final DocumentReference eventDocRef = db.collection("dog owners/"
-                + userId + "/events by date").document(model.getDate())
+        final DocumentReference eventDocRef = db.collection(  mDogOwners + "/"
+                + userId + "/eventsByDate").document(model.getDate())
                 .collection("events").document(model.getEventId());
         holder.textViewTitle.setText(model.getTitle());
         holder.textViewTime.setText(model.getStart_time() + "-" + model.getEnd_time());
@@ -134,7 +135,7 @@ public class EventElementAdapter extends
                     AlarmManager alarmManager = (AlarmManager) itemView.getContext().getSystemService(Context.ALARM_SERVICE);
                     Intent intent = new Intent(itemView.getContext(), AlertRecieverEvent.class);
                     intent.putExtra(TITLE, textViewTitle.getText().toString());
-                    intent.putExtra(DESCRIPTION, textViewDescription.getText().toString());
+                    intent.putExtra(DESCRIPTION, textViewDescription.getText().toString() + " in 10 minutes");
                     PendingIntent pendingIntent = PendingIntent.getBroadcast(itemView.getContext(),
                             startHour * 3600 + startMinute * 60, intent, 0);
                     alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);

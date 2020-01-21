@@ -30,6 +30,8 @@ import com.technion.doggyguide.MainActivity;
 import com.technion.doggyguide.R;
 import com.technion.doggyguide.dataElements.EventElement;
 
+import java.util.Date;
+
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
@@ -52,6 +54,7 @@ public class EventsFragment extends Fragment {
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
+    String mDogOwners = "dogOwners";
 
     private String userID;
 
@@ -94,7 +97,7 @@ public class EventsFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
         userID = mAuth.getCurrentUser().getUid();
-        eventsbydateRef = db.collection("dog owners/" + userID + "/events by date");
+        eventsbydateRef = db.collection(mDogOwners + "/" + userID + "/eventsByDate");
     }
 
     @Override
@@ -105,8 +108,7 @@ public class EventsFragment extends Fragment {
         calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
-                String eventDocId = (String.valueOf(dayOfMonth) + "-" +
-                        String.valueOf(month + 1) + "-" + String.valueOf(year));
+                String eventDocId = dayOfMonth + "-" + (month + 1) + "-" + year;
                 eventsondateRef = eventsbydateRef
                         .document(eventDocId)
                         .collection("events");

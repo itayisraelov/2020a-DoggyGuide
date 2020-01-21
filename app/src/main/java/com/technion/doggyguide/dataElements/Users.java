@@ -1,4 +1,4 @@
-package com.technion.doggyguide.users;
+package com.technion.doggyguide.dataElements;
 
 public class Users {
     private String mName;

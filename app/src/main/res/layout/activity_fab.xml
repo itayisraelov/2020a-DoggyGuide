@@ -87,35 +87,18 @@
     <Space
         android:layout_width="match_parent"
         android:layout_height="25dp"/>
-
-    <EditText
-        android:id="@+id/post_description"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:ems="12"
-        android:hint="Description"
-        android:inputType="text"/>
-
-    <Space
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="25dp"/>
+        android:layout_height="match_parent">
+
+        <EditText
+            android:id="@+id/post_description"
+            android:layout_alignParentTop="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="What's on your mind?"/>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 
-
-    <Button
-        android:id="@+id/post_createpost"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:background="@drawable/round_bg"
-        android:onClick="postbtnHandler"
-        android:text="Post"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.458"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/post_options"
-        app:layout_constraintVertical_bias="0.046" />
 
 </LinearLayout>

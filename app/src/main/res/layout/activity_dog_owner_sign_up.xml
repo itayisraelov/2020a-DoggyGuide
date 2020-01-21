@@ -14,8 +14,10 @@
         android:layout_width="90dp"
         android:layout_height="90dp"
         android:layout_gravity="center"
-        android:src="@drawable/ic_person"
-        android:padding="4dp"/>
+        android:src="@drawable/ic_person_black_24dp"
+        android:padding="4dp"
+        app:civ_border_color="#AAAAAA"
+        app:civ_border_width="1dp"/>
 
     <ProgressBar
         android:id="@+id/progress_bar"

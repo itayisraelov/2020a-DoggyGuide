@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -18,7 +17,6 @@
         android:text="@string/about_app"
         android:layout_gravity="center"
         android:textColor="@color/colorAccent"
-        android:textStyle="bold"
         android:textSize="30sp"/>
 
     <Space
@@ -33,7 +31,6 @@
         android:ems="10"
         android:layout_margin="@dimen/activity_horizontal_margin"
         android:layout_gravity="center"
-        android:textStyle="bold"
         android:textSize="18sp"
         android:text="@string/the_purpose_of_our_app_is_first_to_help_the_dog_owner_with_daily_care_such_as_alerting_him_to_feed_the_dog_or_take_him_out_for_walk_secondly_the_goal_is_to_help_the_dog_owner_to_communicate_with_other_dog_owners_at_the_technion_in_a_convenient_way_such_as_finding_someone_who_can_keep_the_dog_when_needed_or_play_dates_with_other_dogs_and_finally_its_goal_is_to_conveniently_link_the_dog_owner_to_the_organization_such_as_announcing_vaccines_training_or_treatments_that_should_occur_soon"/>
 

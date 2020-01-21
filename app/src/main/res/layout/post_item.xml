@@ -19,11 +19,11 @@
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/post_image"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="60sp"
+            android:layout_height="60sp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:src="@drawable/ic_person"
+            android:src="@drawable/ic_person_black_24dp"
             android:padding="4sp"/>
 
         <TextView
@@ -33,9 +33,10 @@
             android:text="Assel Qizel"
             android:layout_toRightOf="@id/post_image"
             android:layout_toEndOf="@id/post_image"
+            android:layout_marginLeft="14sp"
             android:textStyle="bold"
             android:textColor="#000000"
-            android:textSize="12sp"/>
+            android:textSize="14sp"/>
         <TextView
             android:id="@+id/posted_date"
             android:layout_width="wrap_content"
@@ -43,6 +44,7 @@
             android:text="dd/mm/yyyy hh:mm"
             android:layout_toRightOf="@id/post_image"
             android:layout_toEndOf="@id/post_image"
+            android:layout_marginLeft="14sp"
             android:layout_below="@id/post_name"/>
         <Space
             android:layout_width="10dp"
@@ -55,12 +57,13 @@
             android:id="@+id/post_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/posted_date"
-            android:layout_toStartOf="@id/post_accept"
-            android:layout_toLeftOf="@id/post_accept"
-            android:layout_toEndOf="@id/post_image"
-            android:layout_toRightOf="@id/post_image"
-            android:text="Marco Is Looking For a DogSitter" />
+            android:layout_below="@id/post_image"
+            android:layout_alignParentLeft="true"
+            android:layout_marginTop="8sp"
+            android:layout_marginStart="15sp"
+            android:layout_marginLeft="15sp"
+            android:textColor="#000000"
+            android:text="Marco Is Looking For a DoggySitter" />
 
         <TextView
             android:id="@+id/post_date"
@@ -88,7 +91,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toLeftOf="@id/post_ignore"
-            android:layout_below="@id/post_time"
+            android:layout_below="@id/post_description"
             android:padding="8dp"
             android:textColor="#008000"
             android:text="@string/accept" />
@@ -99,7 +102,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:layout_below="@id/post_time"
+            android:layout_below="@id/post_description"
             android:padding="8dp"
             android:textColor="#B22222"
             android:text="@string/ignore" />

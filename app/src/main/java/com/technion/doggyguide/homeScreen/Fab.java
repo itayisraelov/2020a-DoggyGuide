@@ -6,22 +6,24 @@ import android.icu.text.SimpleDateFormat;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -29,13 +31,10 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.WriteBatch;
 import com.technion.doggyguide.DatePickerFabFragment;
 import com.technion.doggyguide.R;
 import com.technion.doggyguide.TimePickerFabFragment;
 import com.technion.doggyguide.dataElements.PostElement;
-
-
 import java.util.Calendar;
 import java.util.Map;
 
@@ -47,14 +46,16 @@ public class Fab extends AppCompatActivity implements DatePickerDialog.OnDateSet
 
     private int clicked_btn_id;
 
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+
     private TextView postdate;
     private TextView poststarttime;
     private TextView postendtime;
     private EditText postdescription;
-
+    String mDogOwners = "dogOwners";
 
     private FirebaseAuth mAuth;
-    private FirebaseFirestore db;
 
     private String userID;
 
@@ -66,7 +67,7 @@ public class Fab extends AppCompatActivity implements DatePickerDialog.OnDateSet
     //start and end time for the post event
     private String start_time;
     private String end_time;
-    private String posting_time;
+    private Timestamp posting_time;
 
 
     @Override
@@ -84,10 +85,17 @@ public class Fab extends AppCompatActivity implements DatePickerDialog.OnDateSet
         userID = mAuth.getCurrentUser().getUid();
 
         postsRef = db.collection("posts");
-        dogownersRef = db.collection("dog owners");
-        friendsRef = db.collection("dog owners/" + userID + "/friends");
-        userpostsRef = db.collection("dog owners/" + userID + "/posts");
+        dogownersRef = db.collection(mDogOwners);
+        friendsRef = db.collection(mDogOwners + "/" + userID + "/friends");
+        userpostsRef = db.collection(mDogOwners + "/" + userID + "/posts");
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.post_menu, menu);
+        return true;
     }
 
     public void datePickerHandler(View view) {
@@ -108,7 +116,7 @@ public class Fab extends AppCompatActivity implements DatePickerDialog.OnDateSet
         endtimepicker.show(getSupportFragmentManager(), "end time picker");
     }
 
-    public void postbtnHandler(View view) {
+    public boolean postbtnHandler(MenuItem item) {
         //TODO: create a post and post it to all friends feed
         int startHour = Integer.parseInt(start_time.split(":")[0]);
         int startMinute = Integer.parseInt(start_time.split(":")[1]);
@@ -117,18 +125,19 @@ public class Fab extends AppCompatActivity implements DatePickerDialog.OnDateSet
         if (endHour < startHour) {
             Toast.makeText(this,
                     "End time cannot be earlier than start time!\nTry Again", Toast.LENGTH_LONG).show();
-            return;
+            return true;
         } else if (endHour == startHour && endMinute < startMinute) {
             Toast.makeText(this,
                     "End time cannot be earlier than start time!\nTry Again", Toast.LENGTH_LONG).show();
-            return;
+            return true;
         }
-        posting_time = Calendar.getInstance().getTime().toString();
-        final String postID = userID + posting_time;
+        posting_time = Timestamp.now();
+        final String postID = userID + posting_time.toDate().toString();
         addPostToDatabase(postID);
         Toast.makeText(this,
                 "You have successfully posted a request!", Toast.LENGTH_LONG).show();
         finish();
+        return true;
     }
 
 
@@ -138,12 +147,11 @@ public class Fab extends AppCompatActivity implements DatePickerDialog.OnDateSet
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        String name = documentSnapshot.getString("name");
+                        String name = documentSnapshot.getString("mName");
                         String description = postdescription.getText().toString();
                         PostElement post = new PostElement(name, userID, start_time, end_time,
                                 postdate.getText().toString(), posting_time, description, postID);
                         postsRef.document(postID).set(post);
-                        addPostRefToUser(post, postID);
                         addPostRefToFriends(post, postID);
                     }
                 })
@@ -151,22 +159,6 @@ public class Fab extends AppCompatActivity implements DatePickerDialog.OnDateSet
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.d(TAG, "failed to retrieve data from database");
-                    }
-                });
-    }
-
-    private void addPostRefToUser(PostElement post, String postID) {
-        userpostsRef.document(postID).set(post)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "added post to user successfully");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, e.getMessage());
                     }
                 });
     }

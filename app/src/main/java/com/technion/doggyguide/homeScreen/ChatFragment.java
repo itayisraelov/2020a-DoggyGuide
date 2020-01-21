@@ -3,15 +3,23 @@ package com.technion.doggyguide.homeScreen;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.technion.doggyguide.R;
+import com.technion.doggyguide.friends.Friends;
+import com.technion.doggyguide.friends.FriendsAdapter;
+import com.technion.doggyguide.friends.FriendsChatAdapter;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -30,6 +38,12 @@ public class ChatFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+
+    private CollectionReference mFriendsRef;
+    private FirebaseAuth users = FirebaseAuth.getInstance();
+    private String mCurrentUserUid = users.getCurrentUser().getUid();
+    private FriendsChatAdapter mAdapter;
 
     private OnFragmentInteractionListener mListener;
 
@@ -62,6 +76,10 @@ public class ChatFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        mFriendsRef = db.collection("Friends")
+                .document(mCurrentUserUid)
+                .collection("friends");
     }
 
     @Override
@@ -69,6 +87,21 @@ public class ChatFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_chat, container, false);
         return view;
+    }
+
+    private void setUpRecyclerView() {
+        Query query = mFriendsRef.orderBy("mName", Query.Direction.ASCENDING);
+        FirestoreRecyclerOptions<Friends> options = new FirestoreRecyclerOptions.Builder<Friends>()
+                .setQuery(query, Friends.class)
+                .build();
+
+        mAdapter = new FriendsChatAdapter(options);
+        RecyclerView mFriendsListRecycleView = getView().findViewById(R.id.chat_recycler_view);
+        mFriendsListRecycleView.setHasFixedSize(true);
+        mFriendsListRecycleView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        mFriendsListRecycleView.setAdapter(mAdapter);
+        mAdapter.startListening();
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -90,9 +123,18 @@ public class ChatFragment extends Fragment {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        setUpRecyclerView();
+    }
+
+    @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
+        if (mAdapter != null) {
+            mAdapter.stopListening();
+        }
     }
 
     /**
