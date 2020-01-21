@@ -97,6 +97,12 @@ public class ChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
+        mChatUserId = getIntent().getStringExtra("user_id");
+        mChatUser  = getIntent().getStringExtra("user_name");
+        mUserImage = getIntent().getStringExtra("user_image");
+        mUserStatus = getIntent().getStringExtra("user_status");
+
+
         initToolBar();
         initFields();
         setInformationForToolBar();
@@ -187,12 +193,8 @@ public class ChatActivity extends AppCompatActivity {
         });
     }
     private void setInformationForToolBar() {
-        mChatUserId = getIntent().getStringExtra("user_id");
-        mChatUser  = getIntent().getStringExtra("user_name");
         mTitleView.setText(mChatUser);
-        mUserStatus = getIntent().getStringExtra("user_status");
         mStatusView.setText(mUserStatus);
-        mUserImage = getIntent().getStringExtra("user_image");
         Picasso.get().load(mUserImage).into(mProfileImage);
     }
     private void initToolBar() {
@@ -251,7 +253,11 @@ public class ChatActivity extends AppCompatActivity {
                     DogOwnerElement dogOwnerElement = documentSnapshot.toObject(DogOwnerElement.class);
                     if (dogOwnerElement != null) {
                         String name = dogOwnerElement.getmName();
+                        String status = dogOwnerElement.getmStatus();
+                        String image = dogOwnerElement.getmImageUrl();
                         messageMap_.put("fromName", name);
+                        messageMap_.put("user_status", status);
+                        messageMap_.put("user_image", image);
                         receiverMessageRef.document(mCurrentUserId)
                                 .collection("friends")
                                 .document(mChatUserId).

@@ -56,21 +56,15 @@ public class FCMService extends FirebaseMessagingService {
         switch (payload.getData().get("notification_type")) {
 
             case "CHAT":
-                final String from_user_id_chat = payload.getData().get("sender_id");
-                final DocumentReference docRef = usersRef.document(from_user_id_chat);
+                String user_id = payload.getData().get("sender_id");
+                String status = payload.getData().get("user_status");
+                String image = payload.getData().get("user_image");
+                String name = payload.getData().get("user_name");
                 intent = new Intent(this, ChatActivity.class);
-                docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        DogOwnerElement dogOwnerElement = documentSnapshot.toObject(DogOwnerElement.class);
-                        if (dogOwnerElement != null) {
-                            intent.putExtra("user_id", from_user_id_chat);
-                            intent.putExtra("user_name", dogOwnerElement.getmName());
-                            intent.putExtra("user_status", dogOwnerElement.getmStatus());
-                            intent.putExtra("user_image", dogOwnerElement.getmImageUrl());
-                        }
-                    }
-                });
+                intent.putExtra("user_id", user_id);
+                intent.putExtra("user_name", name);
+                intent.putExtra("user_status", status);
+                intent.putExtra("user_image", image);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
                 break;
