@@ -11,9 +11,6 @@ exports.friendReqNotification = firebaseTriggers
       const notifcationRecieverId = snap.data().receiverId;
       console.log('reciever_id is ' + notifcationRecieverId);
       const payload = {
-        notification:{
-          click_action: "com.technion.doggyguide_TARGET_NOTIFICATION"
-        },
         data: {
             notification_type: 'Friend_Req',
             title: snap.data().type,
@@ -73,7 +70,10 @@ exports.sendMessageInChatNotification = firebaseTriggers
             body: snap.data().message,
             sender_id: snap.data().from,
             reciever_id: context.params.recieverId,
-            notification_id: context.params.messageId
+            notification_id: context.params.messageId,
+            user_name: snap.data().fromName,
+            user_status: snap.data().user_status,
+            user_image: snap.data().user_image
         }
       };
       return db.collection('dogOwners')
