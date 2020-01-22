@@ -9,7 +9,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.technion.doggyguide.loginScreen.DogOwnerConnectionFragment;
-import com.technion.doggyguide.loginScreen.OrganizationConnectionFragment;
 import com.technion.doggyguide.R;
 
 /**
@@ -19,7 +18,7 @@ import com.technion.doggyguide.R;
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     @StringRes
-    private static final int[] TAB_TITLES = new int[]{R.string.tab_text_1, R.string.tab_text_2};
+    private static final int[] TAB_TITLES = new int[]{R.string.tab_text_1};
     private final Context mContext;
 
     public SectionsPagerAdapter(Context context, FragmentManager fm) {
@@ -33,9 +32,6 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
         switch (position) {
             case 0:
                 fragment = DogOwnerConnectionFragment.newInstance("param1", "param2");
-                break;
-            case 1:
-                fragment = OrganizationConnectionFragment.newInstance("param1", "param2");
                 break;
         }
         return fragment;
